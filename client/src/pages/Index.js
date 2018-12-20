@@ -99,6 +99,18 @@ class Index extends React.Component {
     this.setState({ open: false });
   };
 
+  componentDidMount() { 
+    this.callApi().then(res => {
+      console.log('and the response is', res)
+    });
+  }
+
+  callApi = async () => {
+    const response = await fetch('/api/hello');
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  };
 
   render() {
     const { classes, theme } = this.props;
@@ -120,7 +132,7 @@ class Index extends React.Component {
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
               Media Cruncherrr
-            </Typography> 
+            </Typography>
           </Toolbar>
         </AppBar>
         <Drawer
