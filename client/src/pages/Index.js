@@ -100,13 +100,13 @@ class Index extends React.Component {
   };
 
   componentDidMount() { 
-    this.callApi().then(res => {
+    this.getDownloads().then(res => {
       console.log('and the response is', res)
     });
   }
 
-  callApi = async () => {
-    const response = await fetch('/api/hello');
+  getDownloads = async () => {
+    const response = await fetch('/api/downloads');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     return body;
