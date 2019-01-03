@@ -9,12 +9,12 @@ console.log('config loaded', config);
 const downloads = require('./server/downloads');
 const port = config.portNumber;
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/downloads', (req, res) => {
-  const filesAndFolders = downloads.getFilesAndFolders();
-  res.json({ filesAndFolders });
+  const currentDownloads = downloads.getFilesAndFolders();
+  res.json({ currentDownloads });
 });
 
 app.post('/api/world', (req, res) => {
