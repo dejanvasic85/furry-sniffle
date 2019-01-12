@@ -99,18 +99,18 @@ class Index extends React.Component {
     this.setState({ open: false });
   };
 
-  componentDidMount() { 
-    this.getDownloads().then(res => {
-      console.log('and the response is', res)
-    });
-  }
+  // componentDidMount() { 
+  //   this.getDownloads().then(res => {
+  //     console.log('and the response is', res)
+  //   });
+  // }
 
-  getDownloads = async () => {
-    const response = await fetch('/api/downloads');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
-  };
+  // getDownloads = async () => {
+  //   const response = await fetch('/api/downloads');
+  //   const body = await response.json();
+  //   if (response.status !== 200) throw Error(body.message);
+  //   return body;
+  // };
 
   render() {
     const { classes, theme } = this.props;

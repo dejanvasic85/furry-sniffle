@@ -3,25 +3,23 @@ require('dotenv').config(); // dv: Loads any environment variables from .env fil
 const bodyParser = require('body-parser');
 const app = express();
 const config = require('./server/config');
+const clients = require('./server/clients');
+const db = require('./server/db');
+const logger = require('./server/logger');
 
-console.log('config loaded', config);
-
-const downloads = require('./server/downloads');
 const port = config.portNumber;
 
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/clients', clients);
 
-app.get('/api/downloads', (req, res) => {
-  const currentDownloads = downloads.getFilesAndFolders();
-  res.json({ currentDownloads });
+app.listen(port, () => {
+  logger.info('Testing db connection');
+  db.query('select now()', (err, res) => {
+     if (err) {
+       throw new Error("Database connnection failed", err);
+     }
+     console.log('res', res);
+  });
+  logger.info(`Listening on port ${port}`);
 });
-
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
-});
-
-app.listen(port, () => console.log(`Listening on port ${port}`));
