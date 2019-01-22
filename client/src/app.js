@@ -86,7 +86,7 @@ const styles = theme => ({
   },
 });
 
-class Index extends React.Component {
+class App extends React.Component {
   state = {
     open: false,
   };
@@ -98,19 +98,6 @@ class Index extends React.Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   };
-
-  // componentDidMount() { 
-  //   this.getDownloads().then(res => {
-  //     console.log('and the response is', res)
-  //   });
-  // }
-
-  // getDownloads = async () => {
-  //   const response = await fetch('/api/downloads');
-  //   const body = await response.json();
-  //   if (response.status !== 200) throw Error(body.message);
-  //   return body;
-  // };
 
   render() {
     const { classes, theme } = this.props;
@@ -131,7 +118,7 @@ class Index extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Agento
+              testng
             </Typography>
           </Toolbar>
         </AppBar>
@@ -158,7 +145,7 @@ class Index extends React.Component {
   }
 }
 
-Index.propTypes = {
+App.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
