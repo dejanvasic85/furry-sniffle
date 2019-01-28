@@ -86,7 +86,7 @@ const styles = theme => ({
   },
 });
 
-class Index extends React.Component {
+class Home extends React.Component {
   state = {
     open: false,
   };
@@ -158,9 +158,9 @@ class Index extends React.Component {
   }
 }
 
-Index.propTypes = {
+Home.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default withRoot(withStyles(styles, { withTheme: true })(Index));
+export default withRoot(withStyles(styles, { withTheme: true })(Home));

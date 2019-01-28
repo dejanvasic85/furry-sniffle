@@ -26,7 +26,7 @@ function Menu(props) {
                     <ListItemIcon>
                         <InboxIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Inbox" />
+                    <ListItemText primary="Inbox"/>
                 </ListItem>
             </List>
             <Divider />
