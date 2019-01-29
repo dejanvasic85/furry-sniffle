@@ -145,24 +145,11 @@ class App extends React.Component {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/about">About</Link>
-              </li>
-              <li>
-                <Link to="/topics">Topics</Link>
-              </li>
-            </ul>
-
-            <hr />
-
+            <Typography>
             <Route path="/" exact component={Home} />
             <Route path="/clients" exact component={Clients} />
             <Route path="/campaigns" exact component={Campaigns} />
-            <Typography noWrap>{'You think water moves fast? You should see ice.'}</Typography>
+            </Typography>
           </main>
         </div>
       </Router>
