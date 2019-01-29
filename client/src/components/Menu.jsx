@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
     root: {
@@ -22,16 +23,22 @@ function Menu(props) {
     return (
         <div className={classes.root}>
             <List component="nav">
-                <ListItem button>
+                <ListItem component={Link} to="/" button>
                     <ListItemIcon>
                         <InboxIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Inbox"/>
+                    <ListItemText primary="Inbox" />
                 </ListItem>
             </List>
             <Divider />
             <List>
-                <ListItem button>
+                <ListItem component={Link} to="/clients" button>
+                    <ListItemIcon>
+                        <DraftsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Drafts" />
+                </ListItem>
+                <ListItem component={Link} to="/campaigns" button>
                     <ListItemIcon>
                         <DraftsIcon />
                     </ListItemIcon>
