@@ -6,8 +6,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
+import HomeIcon from '@material-ui/icons/Home';
+import PeopleIcon from '@material-ui/icons/People';
+import QueueIcon from '@material-ui/icons/Queue';
+import PowerOffIcon from '@material-ui/icons/PowerOffOutlined';
 import { Link } from 'react-router-dom';
 
 const styles = theme => ({
@@ -19,30 +21,36 @@ const styles = theme => ({
 });
 
 function Menu(props) {
-    const { classes } = props;
+    const { classes, onLogout } = props;
     return (
         <div className={classes.root}>
             <List component="nav">
                 <ListItem component={Link} to="/" button>
                     <ListItemIcon>
-                        <InboxIcon />
+                        <HomeIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Inbox" />
+                    <ListItemText primary="Home" />
+                </ListItem>
+                <ListItem component={Link} to="/clients" button>
+                    <ListItemIcon>
+                        <PeopleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Clients" />
+                </ListItem>
+                <ListItem component={Link} to="/campaigns" button>
+                    <ListItemIcon>
+                        <QueueIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Campaigns" />
                 </ListItem>
             </List>
             <Divider />
             <List>
-                <ListItem component={Link} to="/clients" button>
+                <ListItem onClick={onLogout} button>
                     <ListItemIcon>
-                        <DraftsIcon />
+                        <PowerOffIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Drafts" />
-                </ListItem>
-                <ListItem component={Link} to="/campaigns" button>
-                    <ListItemIcon>
-                        <DraftsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Drafts" />
+                    <ListItemText primary="Logout" />
                 </ListItem>
             </List>
         </div>
@@ -51,6 +59,7 @@ function Menu(props) {
 
 Menu.propTypes = {
     classes: PropTypes.object.isRequired,
+    onLogout: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(Menu);
