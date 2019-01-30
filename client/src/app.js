@@ -12,18 +12,20 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
-// Pages
-import Home from './pages/Home';
-import Clients from './pages/Clients';
-import Campaigns from './pages/Campaigns';
-
 // Icons
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-// custom components
+// Custom components
+import Home from './pages/Home';
+import Clients from './pages/Clients';
+import Campaigns from './pages/Campaigns';
+import AuthCallback from './auth/AuthCallback';
 import Menu from './components/Menu';
+import PrivateRoute from './auth/PrivateRoute';
+import AuthService from './auth/AuthService';
+const authService = new AuthService();
 
 const drawerWidth = 240;
 
@@ -106,6 +108,7 @@ class App extends React.Component {
   };
 
   render() {
+
     const { classes, theme } = this.props;
 
     return <>
@@ -141,15 +144,15 @@ class App extends React.Component {
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
               </IconButton>
             </div>
-            <Menu onLogout={()=> {console.log('logging out biatch');}} />
+            <Menu onLogout={()=> authService.logout() }/>
           </Drawer>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-          
+            <Route path="/login" exact component={() => authService.login()} /> 
             <Route path="/" exact component={Home} />
             <Route path="/clients" component={Clients} />
             <Route path="/campaigns" component={Campaigns} />
-           
+            <Route path="/callback" component={AuthCallback} auth={authService}/>
           </main>
         </div>
       </Router>

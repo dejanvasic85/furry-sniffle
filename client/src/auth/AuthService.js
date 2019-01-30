@@ -1,6 +1,6 @@
 import auth0 from 'auth0-js';
-import {appConfig} from './config';
-import history from './history';
+import {appConfig} from '../config';
+import history from '../history';
 
 export default class Auth {
   accessToken;
@@ -12,7 +12,7 @@ export default class Auth {
     clientID: appConfig.clientId,
     redirectUri: appConfig.callbackUrl,
     responseType: 'token id_token',
-    scope: 'openid'
+    scope: 'openid email'
   });
 
   login = () => {
