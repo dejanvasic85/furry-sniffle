@@ -141,15 +141,15 @@ class App extends React.Component {
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
               </IconButton>
             </div>
-            <Menu />
+            <Menu onLogout={()=> {console.log('logging out biatch');}} />
           </Drawer>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <Typography>
+          
             <Route path="/" exact component={Home} />
-            <Route path="/clients" exact component={Clients} />
-            <Route path="/campaigns" exact component={Campaigns} />
-            </Typography>
+            <Route path="/clients" component={Clients} />
+            <Route path="/campaigns" component={Campaigns} />
+           
           </main>
         </div>
       </Router>
