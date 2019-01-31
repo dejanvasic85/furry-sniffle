@@ -1,8 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import withRoot from './withRoot';
 
 // Components
@@ -22,6 +21,7 @@ import Home from './pages/Home';
 import Clients from './pages/Clients';
 import Campaigns from './pages/Campaigns';
 import AuthCallback from './auth/AuthCallback';
+import Login from './auth/Login';
 import Menu from './components/Menu';
 import PrivateRoute from './auth/PrivateRoute';
 import AuthService from './auth/AuthService';
@@ -107,6 +107,12 @@ class App extends React.Component {
     this.setState({ open: false });
   };
 
+
+  logout = () => {
+    authService.logout();
+    authService.login();
+  }
+
   render() {
 
     const { classes, theme } = this.props;
@@ -144,15 +150,24 @@ class App extends React.Component {
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
               </IconButton>
             </div>
-            <Menu onLogout={()=> authService.logout() }/>
+            <Menu onLogout={() => this.logout() }/>
           </Drawer>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <Route path="/login" exact component={() => authService.login()} /> 
-            <Route path="/" exact component={Home} />
-            <Route path="/clients" component={Clients} />
-            <Route path="/campaigns" component={Campaigns} />
-            <Route path="/callback" component={AuthCallback} auth={authService}/>
+            <Switch>
+              {/* Auth Routes */}
+              <Route path="/login" render={(props) => <Login {...props} auth={authService} /> }/> 
+              <Route path="/callback" render={(props) => <AuthCallback {...props} auth={authService} /> }/>
+              
+              {/* Private Routes */}
+              <PrivateRoute path="/" exact component={Home} auth={authService}/>
+              <PrivateRoute path="/clients" component={Clients} auth={authService}/>
+              <PrivateRoute path="/campaigns" component={Campaigns} auth={authService}/>
+
+              {/* Fallback - Not found */}
+              <Route render={() => <div>Sorry, the page you are looking for cannot be found! </div>} />
+              
+            </Switch>
           </main>
         </div>
       </Router>
@@ -160,4 +175,4 @@ class App extends React.Component {
   }
 }
 
-export default withRoot(withStyles(styles, { withTheme: true })(App));
+export default withRoot(withRouter((withStyles(styles, { withTheme: true })(App))));

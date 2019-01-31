@@ -1,18 +1,18 @@
 import auth0 from 'auth0-js';
 import {appConfig} from '../config';
-import history from '../history';
 
 export default class Auth {
   accessToken;
   idToken;
   expiresAt;
+  profile;
 
   auth0 = new auth0.WebAuth({
     domain: appConfig.domain,
     clientID: appConfig.clientId,
     redirectUri: appConfig.callbackUrl,
     responseType: 'token id_token',
-    scope: 'openid email'
+    scope: 'openid email profile'
   });
 
   login = () => {
@@ -26,22 +26,22 @@ export default class Auth {
     let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
+    this.profile = authResult.idTokenPayload;
     this.expiresAt = expiresAt;
-
-    // navigate to the home route
-    history.replace('/');
   }
 
   handleAuthentication = () => {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+    return new Promise((resolve, reject) => {
+      this.auth0.parseHash((err, authResult) => {
+        if (err) return reject(err);
+        console.log(authResult);
+        if (!authResult || !authResult.idToken) {
+          return reject(err);
+        }
         this.setSession(authResult);
-      } else if(err) {
-        history.replace('/');
-        console.log('err', err);
-        alert('boom, something went wrong');
-      }
-    });
+        resolve();
+      });
+    })
   }
 
   renewSession = () => {
@@ -64,11 +64,8 @@ export default class Auth {
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
-
-    // navigate to the home route
-    history.replace('/home');
   }
-
+  
   isAuthenticated = () => {
     // Check whether the current time is past the
     // access token's expiry time
