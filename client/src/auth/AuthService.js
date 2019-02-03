@@ -4,7 +4,6 @@ import {appConfig} from '../config';
 export default class Auth {
   accessToken;
   idToken;
-  expiresAt;
   profile;
 
   auth0 = new auth0.WebAuth({
@@ -20,14 +19,14 @@ export default class Auth {
   }
 
   setSession = (authResult) => {
-    localStorage.setItem('isLoggedIn', true);
-
-    // Set the time that the access token will expire at
     let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+
+    localStorage.setItem('isLoggedIn', true);
+    localStorage.setItem('expiresAt', expiresAt);
+
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.profile = authResult.idTokenPayload;
-    this.expiresAt = expiresAt;
   }
 
   handleAuthentication = () => {
@@ -60,16 +59,16 @@ export default class Auth {
     // Remove tokens and expiry time
     this.accessToken = null;
     this.idToken = null;
-    this.expiresAt = 0;
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('expiresAt');
   }
   
   isAuthenticated = () => {
     // Check whether the current time is past the
     // access token's expiry time
-    let expiresAt = this.expiresAt;
+    let expiresAt = localStorage.getItem('expiresAt');
     return new Date().getTime() < expiresAt;
   }
 }
