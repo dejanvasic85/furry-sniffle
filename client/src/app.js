@@ -18,14 +18,14 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 // Custom components
 import Home from './pages/Home';
-import Clients from './pages/Clients';
+import ClientsPage from './pages/ClientsPage';
+import NewClientPage from './pages/NewClientPage';
 import Campaigns from './pages/Campaigns';
 import AuthCallback from './auth/AuthCallback';
 import Login from './auth/Login';
 import Menu from './components/Menu';
 import PrivateRoute from './auth/PrivateRoute';
 import AuthService from './auth/AuthService';
-import NewClientPage from './pages/NewClientPage';
 
 const authService = new AuthService();
 
@@ -38,6 +38,7 @@ const styles = theme => ({
     overflow: 'hidden',
     position: 'relative',
     display: 'flex',
+    minHeight: '600px'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -108,7 +109,6 @@ class App extends React.Component {
     this.setState({ open: false });
   };
 
-
   logout = () => {
     authService.logout();
     authService.login();
@@ -162,7 +162,7 @@ class App extends React.Component {
               
               {/* Private Routes */}
               <PrivateRoute path="/" exact component={Home} auth={authService}/>
-              <PrivateRoute path="/clients" exact component={Clients} auth={authService}/>
+              <PrivateRoute path="/clients" exact component={ClientsPage} auth={authService}/>
               <PrivateRoute path="/clients/new" exact component={NewClientPage} auth={authService} />
               <PrivateRoute path="/campaigns" component={Campaigns} auth={authService}/>
 
