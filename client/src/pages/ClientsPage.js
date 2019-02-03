@@ -7,8 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
   root: {
-    position: 'relative',
-    minHeight: 600,  
+    position: 'relative'
   },
   fab: {
     position: 'absolute',
@@ -28,7 +27,7 @@ class ClientsPage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log('props', this.props)
+    
     return <div>
       <Typography variant="h6">Client Management</Typography>
       <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
