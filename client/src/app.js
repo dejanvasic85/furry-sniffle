@@ -25,6 +25,8 @@ import Login from './auth/Login';
 import Menu from './components/Menu';
 import PrivateRoute from './auth/PrivateRoute';
 import AuthService from './auth/AuthService';
+import NewClientPage from './pages/NewClientPage';
+
 const authService = new AuthService();
 
 const drawerWidth = 240;
@@ -32,7 +34,6 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 440,
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -161,7 +162,8 @@ class App extends React.Component {
               
               {/* Private Routes */}
               <PrivateRoute path="/" exact component={Home} auth={authService}/>
-              <PrivateRoute path="/clients" component={Clients} auth={authService}/>
+              <PrivateRoute path="/clients" exact component={Clients} auth={authService}/>
+              <PrivateRoute path="/clients/new" exact component={NewClientPage} auth={authService} />
               <PrivateRoute path="/campaigns" component={Campaigns} auth={authService}/>
 
               {/* Fallback - Not found */}
