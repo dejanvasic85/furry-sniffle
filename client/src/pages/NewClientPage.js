@@ -2,12 +2,12 @@ import React from 'react';
 
 // Material UI
 import { withStyles } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+
+import emailValidator from '../services/emailValidator';
 
 const styles = theme => ({
   paper: {
@@ -22,10 +22,16 @@ const styles = theme => ({
 class NewClientPage extends React.Component {
   state = {
     formData: {
-      firstName: null,
-      lastName: null,
-      email: null,
-      phone: null
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      touched: {
+        firstName: false,
+        lastName: false,
+        email: false,
+        phone: false
+      }
     }
   }
 
@@ -33,39 +39,81 @@ class NewClientPage extends React.Component {
     console.log('todo , save client', this.state.formData);
   }
 
-  handleChange = event =>  {
+  handleChange = event => {
     const { formData } = this.state;
-    formData[event.target.name] = event.target.value;
+    const input = event.target;
+    formData[event.target.name] = input.value;
     this.setState({ formData });
   }
 
+  handleBlur = field => {
+    const formData = {
+      ...this.state.formData,
+      touched: {
+        ...this.state.formData.touched,
+        [field]: true
+      }
+    }
+
+    this.setState({ formData });
+  }
+
+  validate = ({ firstName, lastName, email, phone }) => {
+    const errors = {
+      firstName: firstName.length === 0,
+      lastName: lastName.length === 0,
+      email: email.length === 0 || !emailValidator(email),
+      phone: phone.length === 0 || !(/^\d+$/.test(phone))
+    };
+    return errors;
+  }
 
   render() {
     const { classes } = this.props;
+    const validation = this.validate(this.state.formData);
+    const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
+    const showValidation = field => validation[field] && this.state.formData.touched[field] === true;
 
     return <React.Fragment>
       <Paper className={classes.paper}>
-        <Typography variant="h6" gutterBottom align="center">New Client</Typography>
+        {/* <Typography variant="h6" gutterBottom align="center">New Client</Typography> */}
         <Grid container spacing={24}>
           <Grid item xs={12} md={6}>
-            <TextField required id="firstName" name="firstName" label="First Name" fullWidth onChange={this.handleChange} />
+            <TextField id="firstName" name="firstName" label="First Name*" fullWidth
+              onChange={this.handleChange}
+              onBlur={() => this.handleBlur('firstName')}
+              error={showValidation('firstName')}
+              helperText={showValidation('firstName') && "First name is required"} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField required id="lastName" name="lastName" label="Last Name" fullWidth onChange={this.handleChange} />
+            <TextField id="lastName" name="lastName" label="Last Name*" fullWidth
+              onChange={this.handleChange}
+              onBlur={() => this.handleBlur('lastName')}
+              error={showValidation('lastName')}
+              helperText={showValidation('lastName') && "Last name is required"} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField required id="email" name="email" label="Email" type="email" fullWidth onChange={this.handleChange} />
+            <TextField id="email" name="email" label="Email*" type="email" fullWidth
+              onChange={this.handleChange}
+              onBlur={() => this.handleBlur('email')}
+              error={showValidation('email')}
+              helperText={showValidation('email') && "Please provide a valid email"} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField required id="phone" name="phone" label="Phone" fullWidth onChange={this.handleChange} />
+            <TextField id="phone" name="phone" label="Phone*" fullWidth
+              onChange={this.handleChange}
+              onBlur={() => this.handleBlur('phone')}
+              error={showValidation('phone')}
+              helperText={showValidation('phone') && "Please provide a valid phone number"} />
           </Grid>
-         
+
           <Grid item xs={12}>
             <div className={classes.buttons}>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={this.handleSave}
+                disabled={isSaveDisabled}
               >
                 Save
             </Button>
