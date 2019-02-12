@@ -3,7 +3,7 @@ require('dotenv').config(); // dv: Loads any environment variables from .env fil
 const bodyParser = require('body-parser');
 const app = express();
 const config = require('./server/config');
-const clients = require('./server/clients/clients');
+const clients = require('./server/routes/clients');
 const db = require('./server/db');
 const logger = require('./server/logger');
 
