@@ -1,17 +1,5 @@
-const { Pool } = require('pg');
-const logger = require('../logger');
+const Sequelize = require('sequelize');
+// Or you can simply use a connection uri
+const db = new Sequelize('postgres://postgres@localhost:54320/agento');
 
-const pool = new Pool();
-
-module.exports = {
-  query: (text, params, callback) => {
-    const start = Date.now();
-    return pool.query(text, params, (err, res) => {
-      const duration = Date.now() - start;
-      logger.info(`db query text: ${text}, duration: ${duration}`);
-      if (callback) {
-        callback(err, res);
-      }
-    });
-  }
-};
+module.exports = db;
