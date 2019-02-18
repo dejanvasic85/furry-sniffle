@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "client": "cd client && yarn start",
-    "server": "nodemon api.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "server": "npm run db:migrate && nodemon api.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "db:migrate": "./node_modules/.bin/sequelize db:migrate"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
 import emailValidator from '../services/emailValidator';
+import {apiClient} from '../apiClient';
 
 const styles = theme => ({
   paper: {
@@ -36,7 +37,7 @@ class NewClientPage extends React.Component {
   }
 
   handleSave = () => {
-    console.log('todo , save client', this.state.formData);
+    apiClient.createClient(this.state.formData);
   }
 
   handleChange = event => {
