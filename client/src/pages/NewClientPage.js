@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 // Material UI
 import { withStyles } from '@material-ui/core';
@@ -8,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
 import emailValidator from '../services/emailValidator';
-import {apiClient} from '../apiClient';
+import { apiClient } from '../apiClient';
 
 const styles = theme => ({
   paper: {
@@ -33,11 +34,14 @@ class NewClientPage extends React.Component {
         email: false,
         phone: false
       }
-    }
+    },
+    savedSuccessfully: false
   }
 
   handleSave = () => {
-    apiClient.createClient(this.state.formData);
+    apiClient.createClient(this.state.formData).then(() => {
+      this.setState({savedSuccessfully: true});
+    });
   }
 
   handleChange = event => {
@@ -70,6 +74,10 @@ class NewClientPage extends React.Component {
   }
 
   render() {
+    if (this.state.savedSuccessfully === true) {
+      return <Redirect to="/clients" />
+    }
+
     const { classes } = this.props;
     const validation = this.validate(this.state.formData);
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
@@ -77,7 +85,6 @@ class NewClientPage extends React.Component {
 
     return <React.Fragment>
       <Paper className={classes.paper}>
-        {/* <Typography variant="h6" gutterBottom align="center">New Client</Typography> */}
         <Grid container spacing={24}>
           <Grid item xs={12} md={6}>
             <TextField id="firstName" name="firstName" label="First Name*" fullWidth
