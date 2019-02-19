@@ -1,9 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const Client = require('../db/models/client');
+const Sequelize = require('sequelize');
+
+const Op = Sequelize.Op;
 
 router.get('/', (req, res) => {
-  res.json();
+  Client.findAll({
+    where: {
+      createdAt: {
+        [Op.ne]: null
+      }
+    }
+  }).then(results => {
+    res.json(results);
+  });
 });
 
 router.post('/', (req, res) => {
