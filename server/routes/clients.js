@@ -17,6 +17,13 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/:id', (req, res) => {
+  console.log('client.getById', req.params.id);
+  Client.findOne({ where: { id: req.params.id } }).then(client => {
+    res.json(client);
+  });
+});
+
 router.post('/', (req, res) => {
   if (!req.body) {
     res.status(401).json({ message: 'missing client details in request bodyu' });
