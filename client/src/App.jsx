@@ -27,6 +27,7 @@ import Menu from './components/Menu';
 import PrivateRoute from './auth/PrivateRoute';
 import AuthService from './auth/AuthService';
 import { ClientDetailsPage } from './pages/ClientDetailsPage';
+import { ClientEditPage } from './pages/ClientEditPage';
 
 const authService = new AuthService();
 
@@ -167,6 +168,7 @@ class App extends React.Component {
               <PrivateRoute path="/clients/new" exact component={NewClientPage} auth={authService} />
               <PrivateRoute path="/campaigns" component={Campaigns} auth={authService}/>
               <PrivateRoute path="/clients/:id" component={ClientDetailsPage} auth={authService} />
+              <PrivateRoute path="/clients/:id/edit" component={ClientEditPage} auth={authService} />
 
               {/* Fallback - Not found */}
               <Route render={() => <div>Sorry, the page you are looking for cannot be found! </div>} />

@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { apiClient } from '../apiClient';
 
@@ -15,7 +13,7 @@ const styles = theme => ({
   }
 });
 
-export class ClientDetailsPage extends React.Component {
+export class ClientEditPage extends React.Component {
   state = {
     client: {}
   };
@@ -46,13 +44,11 @@ export class ClientDetailsPage extends React.Component {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button variant="contained" color="primary" component={RouterLink} to={`/clients/${client.id}/edit`}>
-            Edit
-      </Button>
+          <Button size="small">Edit</Button>
         </CardActions>
       </Card>
     </>;
   }
 }
 
-export default withStyles(styles)(ClientDetailsPage);
+export default withStyles(styles)(ClientEditPage);

@@ -63,14 +63,16 @@ class ClientsPage extends React.Component {
           {clients.map(c => (
             <TableRow key={c.id}>
               <TableCell component="th" scope="row">
-                {c.firstName} {c.lastName}
+                <RouterLink to={`/clients/${ c.id }`}>
+                  {c.firstName} {c.lastName}
+                </RouterLink>
               </TableCell>
               <TableCell align="right">{c.email}</TableCell>
               <TableCell align="right">{c.phone}</TableCell>
               <TableCell align="right"></TableCell>
               <TableCell align="right"></TableCell>
               <TableCell align="right">
-                <RouterLink to={`/clients/${c.id}`} >
+                <RouterLink to={`/clients/${ c.id }/edit`} >
                   <PencilIcon />
                 </RouterLink>
               </TableCell>
