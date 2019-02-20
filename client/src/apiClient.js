@@ -7,7 +7,7 @@ class Api {
   post(path, data) {
     const url = appConfig.apiBaseUrl + path;
     console.log('POST', url, data);
-    return fetch(appConfig + path, {
+    return fetch(url, {
       method: 'POST',
       mode: 'cors',
       headers: {
