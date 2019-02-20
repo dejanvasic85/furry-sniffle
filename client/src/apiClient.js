@@ -15,7 +15,7 @@ class Api {
         "Authorization": agentId
       },
       body: JSON.stringify(data)
-    }).then(res => res.json());
+    }).then(this.processResponse);
   }
  
   get(path) {
@@ -28,7 +28,15 @@ class Api {
         "Content-Type": "application/json",
         "Authorization": agentId
       },
-    }).then(res => res.json());
+    }).then(this.processResponse);
+  }
+
+  processResponse(res) {
+    if (res.ok) {
+      return res.json();
+    }
+
+    throw new Error("API call was not successfully", res);
   }
 
   createClient(client) {
@@ -37,6 +45,10 @@ class Api {
 
   getClients() {
     return this.get('/clients');
+  }
+
+  getClient(id) {
+    return this.get(`/clients/${id}`);
   }
 }
 

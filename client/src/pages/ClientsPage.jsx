@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
+// Material 
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,6 +11,8 @@ import TableRow from '@material-ui/core/TableRow';
 import { withRouter } from 'react-router-dom';
 import { Fab, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import PencilIcon from '@material-ui/icons/Create';
+import Link from '@material-ui/icons/Link';
 
 import { apiClient } from '../apiClient';
 
@@ -32,7 +36,7 @@ class ClientsPage extends React.Component {
   };
 
   componentDidMount() {
-    apiClient.getClients().then(clients => this.setState({clients}));
+    apiClient.getClients().then(clients => this.setState({ clients }));
   }
 
   addClient = () => {
@@ -52,6 +56,7 @@ class ClientsPage extends React.Component {
             <TableCell align="right">Phone</TableCell>
             <TableCell align="right">Referral Code</TableCell>
             <TableCell align="right">Referral Count</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -64,6 +69,11 @@ class ClientsPage extends React.Component {
               <TableCell align="right">{c.phone}</TableCell>
               <TableCell align="right"></TableCell>
               <TableCell align="right"></TableCell>
+              <TableCell align="right">
+                <RouterLink to={`/clients/${c.id}`} >
+                  <PencilIcon />
+                </RouterLink>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
