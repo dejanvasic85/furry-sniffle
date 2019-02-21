@@ -6,6 +6,7 @@ const config = require('./server/config');
 const clients = require('./server/routes/clients');
 const db = require('./server/db');
 const logger = require('./server/logger');
+const auth = require('./server/security/agentAuth');
 
 const port = config.portNumber;
 
@@ -23,7 +24,8 @@ app.use((req, res, next) => {
   }
   next();
 })
-app.use('/clients', clients);
+
+app.use('/clients', auth, clients);
 
 app.get('/health', (req, res) => { res.send('ok'); });
 

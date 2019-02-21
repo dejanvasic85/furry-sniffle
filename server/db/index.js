@@ -1,5 +1,10 @@
 const Sequelize = require('sequelize');
-// Or you can simply use a connection uri
 const db = new Sequelize('postgres://postgres@localhost:54320/agento');
 
-module.exports = db;
+const ClientModel = require('./models/client');
+const Client = ClientModel(db, Sequelize);
+
+module.exports = {
+  db,
+  Client
+};

@@ -6,6 +6,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 router.get('/', (req, res) => {
+  console.log('clients.getAll agentId:', req.agentId);
   Client.findAll({
     where: {
       createdAt: {
@@ -18,7 +19,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  console.log('client.getById', req.params.id);
+  console.log('client.getById', req.params.id, 'agentId: ', req.agentId);
+  
   Client.findOne({ where: { id: req.params.id } }).then(client => {
     res.json(client);
   });

@@ -1,17 +1,28 @@
-
-const DataTypes = require('sequelize');
-const db = require('../index');
-
-const Client = db.define('Client', {
-  firstName: DataTypes.STRING,
-  lastName: DataTypes.STRING,
-  email: DataTypes.STRING,
-  phone: DataTypes.STRING,
-  createdAt: DataTypes.DATE,
-  updatedAt: DataTypes.DATE
-}, {});
-Client.associate = function (models) {
-  // associations can be defined here
+module.exports = (sequelize, type) => {
+  return sequelize.define('Client', {
+    id: {
+      type: type.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    firstName: {
+      type: type.STRING,
+      allowNull: false
+    },
+    firstName: {
+      type: type.STRING,
+      allowNull: false
+    },
+    email: {
+      type: type.STRING,
+      unique: true
+    },
+    phone: DataTypes.STRING,
+    agentId: {
+      type: type.INTEGER
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
+  }, {});
 };
-
-module.exports = Client;
