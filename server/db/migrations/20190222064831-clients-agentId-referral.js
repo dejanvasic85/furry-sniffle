@@ -4,6 +4,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     const agentId = queryInterface.addColumn('Clients', 'agentId', {
       type: Sequelize.INTEGER,
+      allowNull: false,
       references: {
         model: 'Agents',
         key: 'id'
