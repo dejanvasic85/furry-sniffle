@@ -20,7 +20,6 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   console.log('client.getById', req.params.id, 'agentId: ', req.agentId);
-  
   Client.findOne({ where: { id: req.params.id } }).then(client => {
     res.json(client);
   });
@@ -32,8 +31,14 @@ router.post('/', (req, res) => {
     return;
   }
 
-  const client = Client.create(req.body).then();
-  res.status(200).json({ created: true, client });
+  const newClient = Object.assign({}, req.body, {agentId: req.agentId});
+  console.log('Adding newClient', newClient);
+
+  Client.create(req.body).then(result => {
+    res.status(200).json({ created: true, result });
+  }).catch(err => {
+    res.status(401).send(err);
+  });
 });
 
 module.exports = router;

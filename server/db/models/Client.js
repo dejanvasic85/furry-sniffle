@@ -6,6 +6,18 @@ module.exports = (sequelize, type) => {
       autoIncrement: true,
       allowNull: false
     },
+    agentId: {
+      type: type.INTEGER,
+      references: {
+        model: 'Agents',
+        id: 'id'
+      },
+      allowNull: false,
+    },
+    referralCode: {
+      type: type.STRING,
+      allowNull: false
+    },
     firstName: {
       type: type.STRING,
       allowNull: false
@@ -19,9 +31,6 @@ module.exports = (sequelize, type) => {
       unique: true
     },
     phone: type.STRING,
-    agentId: {
-      type: type.INTEGER
-    },
     createdAt: type.DATE,
     updatedAt: type.DATE
   }, {});
