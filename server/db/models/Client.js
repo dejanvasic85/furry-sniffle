@@ -18,11 +18,11 @@ module.exports = (sequelize, type) => {
       type: type.STRING,
       unique: true
     },
-    phone: DataTypes.STRING,
+    phone: type.STRING,
     agentId: {
       type: type.INTEGER
     },
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
+    createdAt: type.DATE,
+    updatedAt: type.DATE
   }, {});
 };
