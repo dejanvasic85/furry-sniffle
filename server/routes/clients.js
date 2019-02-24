@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Client} = require('../db');
+const { db, Client } = require('../db');
 const Sequelize = require('sequelize');
 
 const Op = Sequelize.Op;
@@ -31,14 +31,24 @@ router.post('/', (req, res) => {
     return;
   }
 
-  const newClient = Object.assign({}, req.body, {agentId: req.agentId});
+  const newClient = Object.assign({}, req.body, { agentId: req.agentId });
   console.log('Adding newClient', newClient);
 
-  Client.create(req.body).then(result => {
-    res.status(200).json({ created: true, result });
+  // db.transaction(t => {
+  //console.log('Transaction', t);
+  Client.findOrCreate({
+    where: {
+      email: newClient.email,
+    },
+    defaults: newClient
+  }).spread((client, created) => {
+    console.log('client', client, ' created ', created);
+    res.status(201).json(client);
   }).catch(err => {
-    res.status(401).send(err);
+    console.log('what the ', err);
+    res.status(500).json(err) 
   });
+
 });
 
 module.exports = router;
