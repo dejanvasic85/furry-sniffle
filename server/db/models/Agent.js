@@ -16,7 +16,8 @@ module.exports = (sequelize, type) => {
     },
     email: {
       type: type.STRING,
-      unique: true
+      unique: true,
+      allowNull: false
     },
     businessName: type.STRING,
     abn: type.STRING,
