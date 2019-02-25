@@ -44,12 +44,12 @@ router.put('/:id', agentAuth, (req, res) => {
     abn
   }, {
       where: {
-        id: req.params.id
+        id: agentId
       },
       returning: true
     }).spread((recordsAffected, result) => {
       if (recordsAffected === 0) {
-        res.status(400).json({ error: 'Update failed' });
+        res.status(400).json({ error: `Update failed. Agent ${agentId} may not be found` });
       } else {
         res.status(200).json(result);
       }

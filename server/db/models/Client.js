@@ -14,6 +14,7 @@ module.exports = (sequelize, type) => {
       },
       allowNull: false,
     },
+    isActive: type.BOOLEAN,
     referralCode: {
       type: type.STRING,
       allowNull: false

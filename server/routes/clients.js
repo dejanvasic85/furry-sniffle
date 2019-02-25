@@ -9,9 +9,8 @@ router.get('/', (req, res) => {
   console.log('clients.getAll agentId:', req.agentId);
   Client.findAll({
     where: {
-      createdAt: {
-        [Op.ne]: null
-      }
+      agentId: req.agentId,
+      isActive: true
     }
   }).then(results => {
     res.json(results);
@@ -27,26 +26,33 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   if (!req.body) {
-    res.status(401).json({ message: 'missing client details in request bodyu' });
+    res.status(400).json({ error: 'missing client details in request bodyu' });
     return;
   }
 
-  const newClient = Object.assign({}, req.body, { agentId: req.agentId });
+  const newClient = Object.assign({}, req.body, {
+    agentId: req.agentId,
+    isActive: true
+  });
+  
   console.log('Adding newClient', newClient);
 
-  // db.transaction(t => {
-  //console.log('Transaction', t);
   Client.findOrCreate({
     where: {
       email: newClient.email,
+      isActive: true,
+      agentId: newClient.agentId
     },
     defaults: newClient
   }).spread((client, created) => {
-    console.log('client', client, ' created ', created);
-    res.status(201).json(client);
+    if (created === true) {
+      res.status(201).json(client);
+    } else {
+      res.status(400).json({ error: `Unable to save client. Email ${ newClient.email } may already exist` });
+    }
   }).catch(err => {
     console.log('what the ', err);
-    res.status(500).json(err) 
+    res.status(500).json(err)
   });
 
 });
