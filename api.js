@@ -3,7 +3,10 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const app = express();
 const config = require('./server/config');
+
 const clients = require('./server/routes/clients');
+const agents = require('./server/routes/agents');
+
 const {db} = require('./server/db');
 const logger = require('./server/logger');
 const auth = require('./server/security/agentAuth');
@@ -26,6 +29,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/clients', auth, clients);
+app.use('/agents', agents);
 
 app.get('/health', (req, res) => { res.send('ok'); });
 
