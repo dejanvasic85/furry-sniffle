@@ -3,8 +3,9 @@ const notAuthorized = {
 };
 
 module.exports = function(req, res, next) {
+  console.log('authorizing', req.get('authorization'));
   if (!req.get('authorization')) {
-    res.status(403).json(notAuthorized);
+    res.status(401).json(notAuthorized);
   }
 
   // Todo - read the agent auth token instead of just an id in the header

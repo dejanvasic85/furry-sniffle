@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { db, Agent } = require('../db');
 const Sequelize = require('sequelize');
+
+const { db, Agent } = require('../db');
+const agentAuth = require('../security/agentAuth');
 
 router.post('/', (req, res) => {
   const newAgent = Object.assign({}, req.body, { agentId: req.agentId });
@@ -20,23 +22,40 @@ router.post('/', (req, res) => {
   });
 });
 
-router.put('/:id', (req, res) => {
-  console.log(`agents/update/${ req.params.id }`);
-  const { firstName } = req.body;
+router.put('/:id', agentAuth, (req, res) => {
+  const agentId = parseInt(req.params.id);
+  console.log(`Agent ${ req.agentId } attempting to update agent ${ agentId }`);
 
-  Agent.update({ firstName: firstName }, {
-    where: {
-      id: req.params.id
-    },
-    returning: true
-  }).spread((recordsAffected, result) => {
-    if (recordsAffected === 0) {
-      res.status(400).json({ error: 'Update failed' });
-    }
-    res.status(200).json(result);
-  }).catch(err => {
-    res.status(500).json(err);
-  });
+  if (req.agentId !== agentId) {
+    res.status(401).json({
+      error: 'Not authorized'
+    });
+    return;
+  }
+
+  console.log(`agents/update/${ req.params.id }`);
+  const { firstName, lastName, phone, businessName, abn } = req.body;
+
+  Agent.update({
+    firstName,
+    lastName,
+    phone,
+    businessName,
+    abn
+  }, {
+      where: {
+        id: req.params.id
+      },
+      returning: true
+    }).spread((recordsAffected, result) => {
+      if (recordsAffected === 0) {
+        res.status(400).json({ error: 'Update failed' });
+      } else {
+        res.status(200).json(result);
+      }
+    }).catch(err => {
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
