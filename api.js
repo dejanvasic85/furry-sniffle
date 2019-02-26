@@ -12,22 +12,20 @@ const logger = require('./server/logger');
 
 const auth = require('./server/middleware/agentAuth');
 const jwtAuth = require('./server/middleware/jwtAuth');
+const errorHandler = require('./server/middleware/errorHandler');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Some basic logging (for the moment)
 app.use((req, res, next) => {
   if (req.method === 'POST') {
     console.log('method: POST, body: ', req.body);
   }
   next();
 });
-
-// Routes
 app.use('/api/clients', auth, clients);
 app.use('/api/agents', agents);
-app.get('/api/health', (req, res) => { res.send('ok'); });
+app.get('/api/health', jwtAuth, (req, res) => { res.send('ok'); });
+app.use(errorHandler);
 app.get('/*', (req, res) => {
   res.status(404).json({error: "Sorry, we looked everywhere but cannot find what you're looking for."});
 });
