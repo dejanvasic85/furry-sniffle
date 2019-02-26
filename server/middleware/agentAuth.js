@@ -3,12 +3,6 @@ const notAuthorized = {
 };
 
 module.exports = function (req, res, next) {
-  console.log('authorizing', req.headers, req.method);
-  if (req.method === 'OPTIONS') {
-    res.send(200);
-    return;
-  }
-
   if (!req.get('Authorization')) {
     res.status(401).json(notAuthorized);
   } else {

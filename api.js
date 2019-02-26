@@ -13,17 +13,10 @@ const logger = require('./server/logger');
 const auth = require('./server/middleware/agentAuth');
 const jwtAuth = require('./server/middleware/jwtAuth');
 
-// cors - todo remove later
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, AgentId, Options");
-  next();
-});
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Some basic logging
+// Some basic logging (for the moment)
 app.use((req, res, next) => {
   if (req.method === 'POST') {
     console.log('method: POST, body: ', req.body);
