@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
     agentId: req.agentId,
     isActive: true
   });
-  
+
   console.log('Adding newClient', newClient);
 
   Client.findOrCreate({
@@ -51,7 +51,6 @@ router.post('/', (req, res) => {
       res.status(400).json({ error: `Unable to save client. Email ${ newClient.email } may already exist` });
     }
   }).catch(err => {
-    console.log('what the ', err);
     res.status(500).json(err)
   });
 

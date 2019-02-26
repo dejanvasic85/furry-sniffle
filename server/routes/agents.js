@@ -36,26 +36,17 @@ router.put('/:id', agentAuth, (req, res) => {
   console.log(`agents/update/${ req.params.id }`);
   const { firstName, lastName, phone, businessName, abn } = req.body;
 
-  Agent.update({
-    firstName,
-    lastName,
-    phone,
-    businessName,
-    abn
-  }, {
-      where: {
-        id: agentId
-      },
-      returning: true
-    }).spread((recordsAffected, result) => {
-      if (recordsAffected === 0) {
-        res.status(400).json({ error: `Update failed. Agent ${agentId} may not be found` });
-      } else {
-        res.status(200).json(result);
-      }
-    }).catch(err => {
-      res.status(500).json(err);
-    });
+  Agent.update({ firstName, lastName, phone, businessName, abn }, {
+    where: { id: agentId }, returning: true
+  }).spread((recordsAffected, result) => {
+    if (recordsAffected === 0) {
+      res.status(400).json({ error: `Update failed. Agent ${ agentId } may not be found` });
+    } else {
+      res.status(200).json(result);
+    }
+  }).catch(err => {
+    res.status(500).json(err);
+  });
 });
 
 module.exports = router;
