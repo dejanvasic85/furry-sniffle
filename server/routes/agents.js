@@ -3,7 +3,7 @@ const router = express.Router();
 const Sequelize = require('sequelize');
 
 const { db, Agent } = require('../db');
-const agentAuth = require('../security/agentAuth');
+const agentAuth = require('../middleware/agentAuth');
 
 router.post('/', (req, res) => {
   const newAgent = Object.assign({}, req.body, { agentId: req.agentId });

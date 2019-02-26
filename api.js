@@ -10,8 +10,8 @@ const agents = require('./server/routes/agents');
 const {db} = require('./server/db');
 const logger = require('./server/logger');
 
-const auth = require('./server/security/agentAuth');
-const jwtAuth = require('./server/security/jwtAuth');
+const auth = require('./server/middleware/agentAuth');
+const jwtAuth = require('./server/middleware/jwtAuth');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
