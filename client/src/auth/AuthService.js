@@ -14,6 +14,10 @@ export default class Auth {
     scope: 'openid email profile'
   });
 
+  getToken = () => {
+    return localStorage.getItem('accessToken');
+  }
+
   login = () => {
     this.auth0.authorize();
   }
@@ -23,6 +27,7 @@ export default class Auth {
 
     localStorage.setItem('isLoggedIn', true);
     localStorage.setItem('expiresAt', expiresAt);
+    localStorage.setItem('accessToken', authResult.accessToken.idToken);
 
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
@@ -63,6 +68,7 @@ export default class Auth {
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('expiresAt');
+    localStorage.removeItem('accessToken');
   }
   
   isAuthenticated = () => {
