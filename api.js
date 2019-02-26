@@ -32,9 +32,9 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/clients', auth, clients);
-app.use('/agents', agents);
-app.get('/health', (req, res) => { res.send('ok'); });
+app.use('/api/clients', auth, clients);
+app.use('/api/agents', agents);
+app.get('/api/health', (req, res) => { res.send('ok'); });
 
 console.log('DB Authenticating..');
 db.authenticate().then(() => {
