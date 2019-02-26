@@ -35,6 +35,9 @@ app.use((req, res, next) => {
 app.use('/api/clients', auth, clients);
 app.use('/api/agents', agents);
 app.get('/api/health', (req, res) => { res.send('ok'); });
+app.get('/*', (req, res) => {
+  res.status(404).json({error: "Sorry, we looked everywhere but cannot find what you're looking for."});
+});
 
 console.log('DB Authenticating..');
 db.authenticate().then(() => {
