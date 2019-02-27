@@ -11,7 +11,8 @@ export default class Auth {
     clientID: appConfig.clientId,
     redirectUri: appConfig.callbackUrl,
     responseType: 'token id_token',
-    scope: 'openid email profile'
+    scope: 'openid email profile',
+    audience: 'http://localhost:5000'
   });
 
   getToken = () => {
@@ -27,18 +28,21 @@ export default class Auth {
 
     localStorage.setItem('isLoggedIn', true);
     localStorage.setItem('expiresAt', expiresAt);
-    localStorage.setItem('accessToken', authResult.accessToken.idToken);
+    localStorage.setItem('idToken', authResult.idToken);
+    localStorage.setItem('accessToken', authResult.accessToken);
 
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.profile = authResult.idTokenPayload;
+
+    console.log('accessToken', this.accessToken);
+    console.log('idToken', this.idToken);
   }
 
   handleAuthentication = () => {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash((err, authResult) => {
         if (err) return reject(err);
-        console.log(authResult);
         if (!authResult || !authResult.idToken) {
           return reject(err);
         }
@@ -54,7 +58,6 @@ export default class Auth {
          this.setSession(authResult);
        } else if (err) {
          this.logout();
-         console.log(err);
          alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
        }
     });
@@ -68,6 +71,7 @@ export default class Auth {
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('expiresAt');
+    localStorage.removeItem('idToken');
     localStorage.removeItem('accessToken');
   }
   

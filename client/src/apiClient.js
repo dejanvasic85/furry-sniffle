@@ -1,9 +1,27 @@
 
 import { appConfig } from './config';
+import AuthService from './auth/AuthService';
 
 const agentId = 1;
 
 class Api {
+  constructor() {
+    this.authService = new AuthService();
+  }
+
+  get(path) {
+    const url = appConfig.apiBaseUrl + path;
+    console.log('GET', url);
+    return fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": agentId
+      },
+    }).then(this.processResponse);
+  }
+  
   post(path, data) {
     const url = appConfig.apiBaseUrl + path;
     console.log('POST', url, data);
@@ -18,19 +36,6 @@ class Api {
     }).then(this.processResponse);
   }
  
-  get(path) {
-    const url = appConfig.apiBaseUrl + path;
-    console.log('GET', url);
-    return fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": agentId
-      },
-    }).then(this.processResponse);
-  }
-
   processResponse(res) {
     if (res.ok) {
       return res.json();

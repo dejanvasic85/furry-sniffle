@@ -17,6 +17,7 @@ const errorHandler = require('./server/middleware/errorHandler');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
+  console.log('auth ', req.get('Authorization'));
   if (req.method === 'POST') {
     console.log('method: POST, body: ', req.body);
   }
@@ -24,7 +25,10 @@ app.use((req, res, next) => {
 });
 app.use('/api/clients', auth, clients);
 app.use('/api/agents', agents);
-app.get('/api/health', jwtAuth, (req, res) => { res.send('ok'); });
+app.get('/api/health', jwtAuth, (req, res) => {
+  console.log('HEALTH user', req.user);
+  res.send('ok'); 
+});
 app.use(errorHandler);
 app.get('/*', (req, res) => {
   res.status(404).json({error: "Sorry, we looked everywhere but cannot find what you're looking for."});
