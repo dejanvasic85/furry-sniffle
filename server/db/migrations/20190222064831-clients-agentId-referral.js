@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    const agentId = queryInterface.addColumn('Clients', 'agentId', {
+    return queryInterface.addColumn('Clients', 'agentId', {
       type: Sequelize.INTEGER,
       allowNull: false,
       references: {
@@ -10,23 +10,9 @@ module.exports = {
         key: 'id'
       }
     });
-
-    const referralCode =  queryInterface.addColumn('Clients', 'referralCode', {
-      type: Sequelize.STRING,
-    });
-    
-    const isActive = queryInterface.addColumn('Clients', 'isActive', {
-      type: Sequelize.BOOLEAN,
-    });
-
-    return Promise.all([referralCode, agentId, isActive]);
   },
 
   down: (queryInterface, Sequelize) => {
-    return Promise.all([
-      queryInterface.removeColumn('Clients', 'referralCode'),
-      queryInterface.removeColumn('Clients', 'agentId'),
-      queryInterface.removeColumn('Clients', 'isActive')
-    ]);
+    return queryInterface.removeColumn('Clients', 'agentId');
   }
 };

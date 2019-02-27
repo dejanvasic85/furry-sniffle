@@ -20,6 +20,11 @@ module.exports = {
       phone: {
         type: Sequelize.STRING
       },
+      referralCode: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      isActive: Sequelize.BOOLEAN,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
