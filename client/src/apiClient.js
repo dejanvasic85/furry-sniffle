@@ -55,6 +55,30 @@ class Api {
   getClient(id) {
     return this.get(`/clients/${id}`);
   }
+
+  getAgentProfile() {
+    const url = appConfig.apiBaseUrl + '/agents/auth';
+    console.log('GET', url);
+    return fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + this.authService.getToken()
+      },
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+
+      if (res.status === 404) {
+        return null;
+      }
+
+      throw new Error("API call was not successfully", res);
+    });
+  }
 }
 
 const apiClient = new Api();
