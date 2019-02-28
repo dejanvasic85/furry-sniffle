@@ -1,9 +1,0 @@
-{
-  "development": {
-    "username": "postgres",
-    "database": "agento",
-    "host": "127.0.0.1",
-    "port": "54320",
-    "dialect": "postgres"
-  }
-}
