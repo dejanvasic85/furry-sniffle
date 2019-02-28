@@ -57,7 +57,7 @@ class Api {
   }
 
   getAgentProfile() {
-    const url = appConfig.apiBaseUrl + '/agents/auth';
+    const url = appConfig.apiBaseUrl + '/agents/login';
     console.log('GET', url);
     return fetch(url, {
       method: 'GET',
