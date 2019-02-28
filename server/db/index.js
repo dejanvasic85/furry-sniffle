@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
-const db = new Sequelize('postgres://postgres@localhost:54320/agento');
+const { connectionString } = require('../config');
 
+// dv: First initialise the connection / pg then load the models
+const db = new Sequelize(connectionString);
 const Agent = require('./models/Agent')(db, Sequelize);
 const Client = require('./models/Client')(db, Sequelize);
 
