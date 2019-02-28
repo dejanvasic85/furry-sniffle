@@ -1,6 +1,9 @@
 const logger = require('./logger');
 
-const {  
+const {
+  AUTH0_URI,
+  AUTH0_AUDIENCE,
+  PORT,
   PGHOST,
   PGUSER,
   PGPASSWORD,
@@ -15,9 +18,13 @@ if (PGPASSWORD) {
 }
  
 const conf = {
-  portNumber: process.env.PORT || 5000,
-  connectionString: `postgres://${dbUserPassword}@${PGHOST}:${PGPORT}/${PGDATABASE}`
-}
+  portNumber: PORT || 5000,
+  connectionString: `postgres://${dbUserPassword}@${PGHOST}:${PGPORT}/${PGDATABASE}`,
+  auth0: {
+    baseUri: AUTH0_URI,
+    audience: AUTH0_AUDIENCE
+  }
+};
 
 logger.info(`Configuration: ${JSON.stringify(conf)}`);
 
