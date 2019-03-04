@@ -10,7 +10,7 @@ const { getUserInfo } = require('../services/auth0client');
 
 router.get('/', jwtAuth, (req, res) => {
   const userAuthId = req.user.sub; // user is the subject of the token
-  
+  logger.info(`getAgent sub: ${userAuthId}`)
   return Agent.findOne({ where : { userAuthId } })
     .then(agent => {
       res.json(agent);
@@ -22,7 +22,7 @@ router.post('/', jwtAuth, (req, res) => {
   const accessToken = req.get('Authorization');
 
   getUserInfo(accessToken).then(authResponse => {
-    console.log('auth0 response ', authResponse);
+    
     const newAgent = {
       userAuthId: userAuthId,
       email: authResponse.email

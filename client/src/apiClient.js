@@ -9,15 +9,15 @@ class Api {
     this.authService = new AuthService();
   }
 
-  get(path) {
+  get(path, headers) {
     const url = appConfig.apiBaseUrl + path;
     console.log('GET', url);
     return fetch(url, {
       method: 'GET',
       mode: 'cors',
-      headers: {
+      headers: headers || {
         "Content-Type": "application/json",
-        "Authorization": agentId
+        "Authorization": `Bearer ${this.authService.getToken()}`
       },
     }).then(this.processResponse);
   }
@@ -30,7 +30,7 @@ class Api {
       mode: 'cors',
       headers: {
         "Content-Type": "application/json",
-        "Authorization": agentId
+        "Authorization": `Bearer ${this.authService.getToken()}`
       },
       body: JSON.stringify(data)
     }).then(this.processResponse);
@@ -56,8 +56,11 @@ class Api {
     return this.get(`/clients/${id}`);
   }
 
-  getAgent() {
-    return this.get('/agents');
+  getAgent(accessToken) {
+    return this.get('/agents', {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${accessToken}`
+    });
   }
 
   createAgent() {
