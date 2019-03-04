@@ -12,7 +12,7 @@ class AuthCallback extends React.Component {
   componentDidMount() {
     const { auth } = this.props;
     auth.handleAuthentication().then(authResult => {
-      apiClient.getAgentProfile(authResult.accessToken).then(profile => {
+      apiClient.getAgent(authResult.accessToken).then(profile => {
         if (!profile) {
           apiClient.createAgent().then(() => {
             this.setState({ goCompleteRegistration: true });

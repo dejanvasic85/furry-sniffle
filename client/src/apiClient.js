@@ -21,7 +21,7 @@ class Api {
       },
     }).then(this.processResponse);
   }
-  
+
   post(path, data) {
     const url = appConfig.apiBaseUrl + path;
     console.log('POST', url, data);
@@ -35,7 +35,7 @@ class Api {
       body: JSON.stringify(data)
     }).then(this.processResponse);
   }
- 
+
   processResponse(res) {
     if (res.ok) {
       return res.json();
@@ -56,28 +56,12 @@ class Api {
     return this.get(`/clients/${id}`);
   }
 
-  getAgentProfile() {
-    const url = appConfig.apiBaseUrl + '/agents/login';
-    console.log('GET', url);
-    return fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.authService.getToken()
-      },
-    })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
+  getAgent() {
+    return this.get('/agents');
+  }
 
-      if (res.status === 404) {
-        return null;
-      }
-
-      throw new Error("API call was not successfully", res);
-    });
+  createAgent() {
+    return this.post('/agents', {});
   }
 }
 

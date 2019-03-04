@@ -17,7 +17,6 @@ const errorHandler = require('./server/middleware/errorHandler');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-  console.log('auth ', req.get('Authorization'));
   if (req.method === 'POST') {
     console.log('method: POST, body: ', req.body);
   }
