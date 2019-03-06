@@ -9,6 +9,7 @@
     "db:generate-migration": "./node_modules/.bin/sequelize migration:generate --name"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
