@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { apiClient } from '../apiClient';
+import { agentRequiresSetup } from '../services/agentService';
 
 class AuthCallback extends React.Component {
   state = {
@@ -18,7 +19,11 @@ class AuthCallback extends React.Component {
             this.setState({ goCompleteRegistration: true });
           });
         } else {
-          this.setState({ goHome: true });
+          if (agentRequiresSetup(profile) === true) {
+            this.setState({ goCompleteRegistration: true });
+          } else {
+            this.setState({ goHome: true });
+          }
         }
       });
     });
