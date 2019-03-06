@@ -1,8 +1,13 @@
 import React from 'react';
 
-import { Typography } from '@material-ui/core';
+import { withStyles, Typography } from '@material-ui/core';
 
-export class AgentDetailsPage extends React.Component {
+const styles = theme => ({
+  root: {
+  }
+});
+
+class AgentDetailsPage extends React.Component {
   render() {
     return <Typography>
       Complete Agent Registration
@@ -10,4 +15,4 @@ export class AgentDetailsPage extends React.Component {
   }
 }
 
-export default AgentDetailsPage;
+export default withStyles(styles)(AgentDetailsPage);

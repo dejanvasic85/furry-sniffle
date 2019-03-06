@@ -26,8 +26,9 @@ import Login from './auth/Login';
 import Menu from './components/Menu';
 import PrivateRoute from './auth/PrivateRoute';
 import AuthService from './auth/AuthService';
-import { ClientDetailsPage } from './pages/ClientDetailsPage';
-import { ClientEditPage } from './pages/ClientEditPage';
+import ClientDetailsPage from './pages/ClientDetailsPage';
+import ClientEditPage from './pages/ClientEditPage';
+import AgentDetailsPage from './pages/AgentDetailsPage';
 
 const authService = new AuthService();
 
@@ -164,6 +165,7 @@ class App extends React.Component {
               
               {/* Private Routes */}
               <PrivateRoute path="/" exact component={Home} auth={authService}/>
+              <PrivateRoute path="/agent/details" exact component={AgentDetailsPage} auth={authService} />
               <PrivateRoute path="/clients" exact component={ClientsPage} auth={authService}/>
               <PrivateRoute path="/clients/new" exact component={NewClientPage} auth={authService} />
               <PrivateRoute path="/campaigns" component={Campaigns} auth={authService}/>

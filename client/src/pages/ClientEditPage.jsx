@@ -7,7 +7,7 @@ const styles = theme => ({
   }
 });
 
-export class ClientEditPage extends React.Component {
+class ClientEditPage extends React.Component {
   state = {
     client: {}
   };

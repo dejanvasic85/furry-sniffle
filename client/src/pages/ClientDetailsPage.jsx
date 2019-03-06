@@ -16,7 +16,7 @@ const styles = theme => ({
   }
 });
 
-export class ClientDetailsPage extends React.Component {
+class ClientDetailsPage extends React.Component {
   state = {
     client: {}
   };
