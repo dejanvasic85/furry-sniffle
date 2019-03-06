@@ -8,7 +8,9 @@ const {
   PGUSER,
   PGPASSWORD,
   PGDATABASE,
-  PGPORT
+  PGPORT,
+  SENDGRID_BASEURL,
+  SENDGRID_APIKEY
 } = process.env;
 
 let dbUserPassword = PGUSER;
@@ -23,6 +25,10 @@ const conf = {
   auth0: {
     baseUri: AUTH0_URI,
     audience: AUTH0_AUDIENCE
+  },
+  sendGrid: {
+    baseUrl: SENDGRID_BASEURL,
+    apiKey: SENDGRID_APIKEY
   }
 };
 
