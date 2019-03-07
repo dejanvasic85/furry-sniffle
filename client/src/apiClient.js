@@ -2,8 +2,6 @@
 import { appConfig } from './config';
 import AuthService from './auth/AuthService';
 
-const agentId = 1;
-
 class Api {
   constructor() {
     this.authService = new AuthService();
@@ -52,7 +50,7 @@ class Api {
     return this.get('/clients');
   }
 
-  getClient(id) {
+  getClient(id) { 
     return this.get(`/clients/${id}`);
   }
 

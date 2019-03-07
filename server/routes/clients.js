@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { db, Client } = require('../db');
 const Sequelize = require('sequelize');
+const emailer = require('../emails');
 
 const Op = Sequelize.Op;
 
