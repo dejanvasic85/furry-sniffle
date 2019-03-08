@@ -35,9 +35,6 @@ class AgentDetailsPage extends React.Component {
     const { classes } = this.props;
 
     return <>
-      <Typography>
-        Agent Details
-      </Typography>
       <Paper className={classes.paper}>
         {
           agent && <AgentEditor agent={agent} onSaveAgent={this.handleAgentSave} />

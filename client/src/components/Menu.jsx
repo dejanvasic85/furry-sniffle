@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
+import UserIcon from '@material-ui/icons/Accessibility'
 import QueueIcon from '@material-ui/icons/Queue';
 import PowerOffIcon from '@material-ui/icons/PowerOffOutlined';
 import { Link } from 'react-router-dom';
@@ -37,11 +38,11 @@ function Menu(props) {
                     </ListItemIcon>
                     <ListItemText primary="Clients" />
                 </ListItem>
-                <ListItem component={Link} to="/campaigns" button>
+                <ListItem component={Link} to="/agent/details" button>
                     <ListItemIcon>
-                        <QueueIcon />
+                        <UserIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Campaigns" />
+                    <ListItemText primary="My Details" />
                 </ListItem>
             </List>
             <Divider />
