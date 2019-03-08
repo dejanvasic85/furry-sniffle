@@ -21,7 +21,7 @@ class Api {
       options.body = JSON.stringify(data);
     }
 
-    return fetch(`/api/${path}`, options).then(res => {
+    return fetch(`/api${path}`, options).then(res => {
       if (res.ok) {
         return res.json();
       }
