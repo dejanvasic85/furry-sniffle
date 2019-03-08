@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js';
-import {appConfig} from '../config';
+import { authConfig } from './authConfig';
 
 export default class Auth {
   accessToken;
@@ -7,12 +7,12 @@ export default class Auth {
   profile;
 
   auth0 = new auth0.WebAuth({
-    domain: appConfig.domain,
-    clientID: appConfig.clientId,
-    redirectUri: appConfig.callbackUrl,
+    domain: authConfig.domain,
+    clientID: authConfig.clientId,
+    redirectUri: authConfig.callbackUrl,
     responseType: 'token id_token',
     scope: 'openid email profile',
-    audience: 'http://localhost:5000'
+    audience: authConfig.audience
   });
 
   getToken = () => {
@@ -34,9 +34,6 @@ export default class Auth {
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.profile = authResult.idTokenPayload;
-
-    console.log('accessToken', this.accessToken);
-    console.log('idToken', this.idToken);
   }
 
   handleAuthentication = () => {
@@ -54,12 +51,12 @@ export default class Auth {
 
   renewSession = () => {
     this.auth0.checkSession({}, (err, authResult) => {
-       if (authResult && authResult.accessToken && authResult.idToken) {
-         this.setSession(authResult);
-       } else if (err) {
-         this.logout();
-         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-       }
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        this.setSession(authResult);
+      } else if (err) {
+        this.logout();
+        alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+      }
     });
   }
 
@@ -74,7 +71,7 @@ export default class Auth {
     localStorage.removeItem('idToken');
     localStorage.removeItem('accessToken');
   }
-  
+
   isAuthenticated = () => {
     // Check whether the current time is past the
     // access token's expiry time

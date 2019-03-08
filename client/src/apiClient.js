@@ -1,5 +1,4 @@
 
-import { appConfig } from './config';
 import AuthService from './auth/AuthService';
 
 class Api {
@@ -7,62 +6,57 @@ class Api {
     this.authService = new AuthService();
   }
 
-  get(path, headers) {
-    const url = appConfig.apiBaseUrl + path;
-    console.log('GET', url);
-    return fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      headers: headers || {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${this.authService.getToken()}`
-      },
-    }).then(this.processResponse);
-  }
+  doFetch(path, method, data, accessToken) {
+    const auth = accessToken || this.authService.getToken();
 
-  post(path, data) {
-    const url = appConfig.apiBaseUrl + path;
-    console.log('POST', url, data);
-    return fetch(url, {
-      method: 'POST',
-      mode: 'cors',
+    let options = {
+      method: method || 'GET',
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this.authService.getToken()}`
-      },
-      body: JSON.stringify(data)
-    }).then(this.processResponse);
-  }
-
-  processResponse(res) {
-    if (res.ok) {
-      return res.json();
+        "Authorization": `Bearer ${auth}`
+      }
     }
 
-    throw new Error("API call was not successfully", res);
-  }
+    if (data) {
+      options.body = JSON.stringify(data);
+    }
 
-  createClient(client) {
-    return this.post('/clients', client);
-  }
-
-  getClients() {
-    return this.get('/clients');
-  }
-
-  getClient(id) { 
-    return this.get(`/clients/${id}`);
-  }
-
-  getAgent(accessToken) {
-    return this.get('/agents', {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${accessToken}`
+    return fetch(`/api/${path}`, options).then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+  
+      throw new Error("API call was not successfully", res);
     });
   }
 
+  createClient(client) {
+    return this.doFetch('/clients', 'POST', client);
+  }
+
+  getClients() {
+    return this.doFetch('/clients');
+  }
+
+  getClient(id) { 
+    return this.doFetch(`/clients/${id}`);
+  }
+
+  getAgent(accessToken) {
+    if (accessToken) {
+      return this.doFetch('/agents', 'GET', null, accessToken);
+    }
+
+    // Get the current agent details from auth token
+    return this.doFetch('/agents');
+  }
+
   createAgent() {
-    return this.post('/agents', {});
+    return this.doFetch('/agents', 'POST', {});
+  }
+
+  updateAgent(agent) { 
+    return this.doFetch('/agents', 'PUT', agent);
   }
 }
 

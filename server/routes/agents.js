@@ -46,22 +46,12 @@ router.post('/', jwtAuth, (req, res) => {
   });
 });
 
-router.put('/:id', jwtAuth, (req, res) => {
-  const agentId = parseInt(req.params.id);
-  logger.info(`Agent ${req.agentId} attempting to update agent ${agentId}`);
-
-  if (req.agentId !== agentId) {
-    res.status(401).json({
-      error: 'Not authorized'
-    });
-    return;
-  }
-
-  logger.info(`agents/update/${req.params.id}`);
+router.put('/', jwtAuth, (req, res) => {
+  const userAuthId = req.user.sub;
+  logger.info(`Agent ${userAuthId} attempting to update details`);
   const { firstName, lastName, phone, businessName, abn } = req.body;
-
   Agent.update({ firstName, lastName, phone, businessName, abn }, {
-    where: { id: agentId }, returning: true
+    where: { userAuthId }, returning: true
   }).spread((recordsAffected, result) => {
     if (recordsAffected === 0) {
       res.status(400).json({ error: `Update failed. Agent ${agentId} may not be found` });
