@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { db, Client } = require('../db');
+const { db, Client, Agent } = require('../db');
 const Sequelize = require('sequelize');
 const emailer = require('../emails');
+const logger = require('../logger');
 
 const Op = Sequelize.Op;
 
 router.get('/', (req, res) => {
-  console.log('clients.getAll agentId:', req.agentId);
+  const agentId = req.agent.id;
+  logger.info(`Fetch client by agentId: ${agentId}`);
   Client.findAll({
     where: {
       agentId: req.agentId,
