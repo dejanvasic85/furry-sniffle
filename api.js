@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   if (req.method === 'POST') {
-    console.log('method: POST, body: ', req.body);
+    logger.info(`method: POST, path: ${req.path}, body: ${JSON.stringify(req.body)}`);
   }
   next();
 });

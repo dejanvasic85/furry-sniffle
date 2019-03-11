@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
   logger.info(`Fetch client by agentId: ${agentId}`);
   Client.findAll({
     where: {
-      agentId: req.agentId,
+      agentId: agentId,
       isActive: true
     }
   }).then(results => {
@@ -21,25 +21,31 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  console.log('client.getById', req.params.id, 'agentId: ', req.agentId);
-  Client.findOne({ where: { id: req.params.id } }).then(client => {
+  const agentId = req.agent.id;
+  const id = req.params.id;
+  logger.info(`Fetch by client id ${id}, agentId: ${agentId}`);
+  Client.findOne({ where: { id, agentId } }).then(client => {
     res.json(client);
   });
 });
 
 router.post('/', (req, res) => {
   if (!req.body) {
-    res.status(400).json({ error: 'missing client details in request bodyu' });
+    res.status(400).json({ error: 'missing client details in request body' });
     return;
   }
 
-  const newClient = Object.assign({}, req.body, {
-    agentId: req.agentId,
+  const agentId = req.agent.id;
+  let newClient = Object.assign({}, req.body, {
+    agentId,
     isActive: true
   });
 
-  console.log('Adding newClient', newClient);
-
+  const referralEmailPrefix = newClient.email.substring(0, newClient.email.indexOf('@'));
+  const randomNumber = Math.floor(Math.random() * Math.floor(999));
+  const referralCode = `${referralEmailPrefix}-${randomNumber}`;
+  newClient.referralCode = referralCode;
+  
   Client.findOrCreate({
     where: {
       email: newClient.email,
