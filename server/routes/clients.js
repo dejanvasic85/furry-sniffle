@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { db, Client, Agent } = require('../db');
 const Sequelize = require('sequelize');
-const emailer = require('../emails');
+const emails = require('../emails');
 const logger = require('../logger');
 
 const Op = Sequelize.Op;
@@ -46,6 +46,7 @@ router.post('/', (req, res) => {
   const referralCode = `${referralEmailPrefix}-${randomNumber}`;
   newClient.referralCode = referralCode;
   
+
   Client.findOrCreate({
     where: {
       email: newClient.email,
@@ -55,7 +56,12 @@ router.post('/', (req, res) => {
     defaults: newClient
   }).spread((client, created) => {
     if (created === true) {
-      res.status(201).json(client);
+      emails.newClient(req.agent, client).then(() => {
+        res.status(201).json(client);
+      }).catch(error => {
+        throw new Error(error);
+      });
+      
     } else {
       res.status(400).json({ error: `Unable to save client. Email ${ newClient.email } may already exist` });
     }

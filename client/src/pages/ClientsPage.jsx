@@ -69,7 +69,7 @@ class ClientsPage extends React.Component {
               </TableCell>
               <TableCell align="right">{c.email}</TableCell>
               <TableCell align="right">{c.phone}</TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell align="right">{c.referralCode}</TableCell>
               <TableCell align="right"></TableCell>
               <TableCell align="right">
                 <RouterLink to={`/clients/${ c.id }/edit`} >
