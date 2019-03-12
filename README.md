@@ -8,7 +8,7 @@ In the project directory, you can run:
 
 ### `yarn dev`
 
-This brings up both server and client applications using `concurrently`. 
+This brings up both server and client applications using `concurrently`.
 
 ### `yarn server`
 
@@ -21,11 +21,14 @@ This is simply running the front end React application alone.
 ### Additional Resources
 
 Followed some nice guidelines from the following:
+
 - https://coursework.vschool.io/setting-up-a-full-stack-react-application/
 - https://medium.freecodecamp.org/how-to-make-create-react-app-work-with-a-node-backend-api-7c5c48acb1b0
 
 ## Running postgres in docker locally
 
-```bash
-docker run -d --name my_postgres -v my_dbdata:/var/lib/postgresql/data -p 54320:5432 postgres:11
 ```
+yarn db:docker-run
+```
+
+will start postgres locally in docker container
