@@ -6,7 +6,8 @@
     "server": "npm run db:migrate && nodemon api.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
-    "db:generate-migration": "./node_modules/.bin/sequelize migration:generate --name"
+    "db:generate-migration": "./node_modules/.bin/sequelize migration:generate --name",
+    "db:docker-run": "docker run -d --name my_postgres -v my_dbdata:/var/lib/postgresql/data -p 54320:5432 postgres:11"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
@@ -22,6 +23,7 @@
     "sequelize-cli": "^5.4.0"
   },
   "devDependencies": {
-    "concurrently": "^4.0.1"
+    "concurrently": "^4.1.0",
+    "nodemon": "1.18.10"
   }
 }
