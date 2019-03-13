@@ -5,13 +5,12 @@ class Login extends React.Component {
     state = {
         redirectToPreviousRoute: false
     };
-
     render() {
         const { from } = this.props.location.state || { from: { pathname: "/" } };
         const { redirectToPreviousRoute } = this.state;
-    
+
         if (redirectToPreviousRoute) {
-          return <Redirect to={from} />;
+            return <Redirect to={from} />;
         }
 
         this.props.auth.login();

@@ -31,11 +31,11 @@ class AuthCallback extends React.Component {
 
   render() {
     if (this.state.goCompleteRegistration) {
-      return <Redirect to="/agent/details" />
+      return <Redirect to="/app/agent/details" />
     }
 
     if (this.state.goHome) {
-      return <Redirect to="/" />
+      return <Redirect to="/app" />
     }
 
     return <div>Logging in... please wait</div>;

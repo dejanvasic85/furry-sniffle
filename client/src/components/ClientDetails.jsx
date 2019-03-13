@@ -25,7 +25,7 @@ export default class ClientDetails extends React.Component {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button variant="contained" color="primary" component={RouterLink} to={`/clients/${client.id}/edit`}>
+          <Button variant="contained" color="primary" component={RouterLink} to={`/app/clients/${client.id}/edit`}>
             Edit
           </Button>
         </CardActions>

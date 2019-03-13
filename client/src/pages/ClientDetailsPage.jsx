@@ -1,13 +1,6 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { apiClient } from '../apiClient';
-
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 
 import ClientDetails from '../components/ClientDetails';
 
@@ -31,7 +24,6 @@ class ClientDetailsPage extends React.Component {
   }
 
   render() {
-    console.log('client', this.state.client);
     const { client } = this.state;
     return <ClientDetails client={client}/>;
   }

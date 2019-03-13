@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -21,16 +22,11 @@ import Home from './pages/Home';
 import ClientsPage from './pages/ClientsPage';
 import NewClientPage from './pages/NewClientPage';
 import Campaigns from './pages/Campaigns';
-import AuthCallback from './auth/AuthCallback';
-import Login from './auth/Login';
 import Menu from './components/Menu';
 import PrivateRoute from './auth/PrivateRoute';
-import AuthService from './auth/AuthService';
 import ClientDetailsPage from './pages/ClientDetailsPage';
 import ClientEditPage from './pages/ClientEditPage';
 import AgentDetailsPage from './pages/AgentDetailsPage';
-
-const authService = new AuthService();
 
 const drawerWidth = 240;
 
@@ -113,13 +109,14 @@ class App extends React.Component {
   };
 
   logout = () => {
-    authService.logout();
-    authService.login();
+    const { auth } = this.props;
+    auth.logout();
+    auth.login();
   }
 
   render() {
 
-    const { classes, theme } = this.props;
+    const { auth, classes, theme } = this.props;
 
     return <>
       <Router>
@@ -159,22 +156,14 @@ class App extends React.Component {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Switch>
-              {/* Auth Routes */}
-              <Route path="/login" render={(props) => <Login {...props} auth={authService} /> }/> 
-              <Route path="/callback" render={(props) => <AuthCallback {...props} auth={authService} /> }/>
-              
               {/* Private Routes */}
-              <PrivateRoute path="/" exact component={Home} auth={authService}/>
-              <PrivateRoute path="/agent/details" exact component={AgentDetailsPage} auth={authService} />
-              <PrivateRoute path="/clients" exact component={ClientsPage} auth={authService}/>
-              <PrivateRoute path="/clients/new" exact component={NewClientPage} auth={authService} />
-              <PrivateRoute path="/campaigns" component={Campaigns} auth={authService}/>
-              <PrivateRoute path="/clients/:id" exact={true} component={ClientDetailsPage} auth={authService} />
-              <PrivateRoute path="/clients/:id/edit" exact={true} component={ClientEditPage} auth={authService} />
-
-              {/* Fallback - Not found */}
-              <Route render={() => <div>Sorry, the page you are looking for cannot be found! </div>} />
-              
+              <PrivateRoute path="/app" exact component={Home} auth={auth}/>
+              <PrivateRoute path="/app/agent/details" exact component={AgentDetailsPage} auth={auth} />
+              <PrivateRoute path="/app/clients" exact component={ClientsPage} auth={auth}/>
+              <PrivateRoute path="/app/clients/new" exact component={NewClientPage} auth={auth} />
+              <PrivateRoute path="/app/campaigns" component={Campaigns} auth={auth}/>
+              <PrivateRoute path="/app/clients/:id" exact={true} component={ClientDetailsPage} auth={auth} />
+              <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} auth={auth} />
             </Switch>
           </main>
         </div>
@@ -182,5 +171,9 @@ class App extends React.Component {
     </>
   }
 }
+
+App.propTypes = {
+  auth: PropTypes.object.isRequired
+};
 
 export default withRoot(withRouter((withStyles(styles, { withTheme: true })(App))));
