@@ -2,7 +2,7 @@
   "name": "example-create-react-app-express",
   "version": "1.0.0",
   "scripts": {
-    "start": "node api.js",
+    "start": "DATABASE_URL=$(heroku config:get DATABASE_URL -a fox-rewarder) node api.js",
     "heroku-postbuild": "cd client && yarn && yarn run build",
     "client": "cd client && yarn start",
     "server": "npm run db:migrate && nodemon api.js",

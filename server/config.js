@@ -11,7 +11,8 @@ const {
   PGPORT,
   SENDGRID_BASEURL,
   SENDGRID_APIKEY,
-  WEB_BASE_URL
+  WEB_BASE_URL,
+  PGDATABASE_URL
 } = process.env;
 
 let dbUserPassword = PGUSER;
@@ -20,10 +21,17 @@ if (PGPASSWORD) {
   dbUserPassword += `:${PGPASSWORD}`;
 }
 
+const connectionString =
+  DATABASE_URL ||
+  `postgres://${dbUserPassword}@${PGHOST}:${PGPORT}/${PGDATABASE}`;
+if (DATABASE_URL) {
+  logger.info('Using DATABASE_URL - ignoring PGHOST,PGPORT,PGDATABASE');
+}
+
 const conf = {
   portNumber: PORT || 5000,
   webBaseUrl: WEB_BASE_URL || 'http://localhost:3000',
-  connectionString: `postgres://${dbUserPassword}@${PGHOST}:${PGPORT}/${PGDATABASE}`,
+  connectionString: connectionString,
   auth0: {
     baseUri: AUTH0_URI,
     audience: AUTH0_AUDIENCE
@@ -35,5 +43,6 @@ const conf = {
 };
 
 logger.info(`Configuration: ${JSON.stringify(conf)}`);
+logger.info(`DATABASE_URL: ${DATABASE_URL}`);
 
 module.exports = conf;
