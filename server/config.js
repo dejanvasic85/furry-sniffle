@@ -12,7 +12,7 @@ const {
   SENDGRID_BASEURL,
   SENDGRID_APIKEY,
   WEB_BASE_URL,
-  PGDATABASE_URL
+  DATABASE_URL
 } = process.env;
 
 let dbUserPassword = PGUSER;
