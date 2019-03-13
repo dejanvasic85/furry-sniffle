@@ -10,17 +10,15 @@ const agents = require('./server/routes/agents');
 const { db } = require('./server/db');
 const logger = require('./server/logger');
 
-const {
-  agentAuth,
-  jwtAuth,
-  errorHandler
-} = require('./server/middleware');
+const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   if (req.method === 'POST') {
-    logger.info(`method: POST, path: ${req.path}, body: ${JSON.stringify(req.body)}`);
+    logger.info(
+      `method: POST, path: ${req.path}, body: ${JSON.stringify(req.body)}`
+    );
   }
   next();
 });
@@ -31,8 +29,9 @@ app.get('/api/health', jwtAuth, (req, res) => {
   res.send('ok');
 });
 app.use(errorHandler);
-app.get('/*', (req, res) => {
-  res.status(404).json({ error: "Sorry, we looked everywhere but cannot find what you're looking for." });
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 console.log('DB Authenticating..');

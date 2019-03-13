@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node api.js",
     "db:get-connection": "heroku config:get DATABASE_URL -a fox-rewarder",
-    "heroku-postbuild": "cd client && yarn && yarn run build",
+    "heroku-postbuild": "yarn run db:generate-migration && cd client && yarn && yarn run build",
     "client": "cd client && yarn start",
     "server": "npm run db:migrate && nodemon api.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
