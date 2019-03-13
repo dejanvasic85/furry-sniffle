@@ -2,6 +2,8 @@
   "name": "example-create-react-app-express",
   "version": "1.0.0",
   "scripts": {
+    "start": "node api.js",
+    "heroku-postbuild": "cd client && yarn && yarn run build",
     "client": "cd client && yarn start",
     "server": "npm run db:migrate && nodemon api.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
