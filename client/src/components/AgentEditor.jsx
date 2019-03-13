@@ -20,7 +20,8 @@ class AgentEditor extends React.Component {
         lastName: this.props.agent.lastName || '',
         phone: this.props.agent.phone || '',
         businessName: this.props.agent.businessName || '',
-        abn: this.props.agent.abn || ''
+        abn: this.props.agent.abn || '',
+        touched: []
       }
     }
   }
