@@ -9,7 +9,6 @@ import Divider from '@material-ui/core/Divider';
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
 import UserIcon from '@material-ui/icons/Accessibility'
-import QueueIcon from '@material-ui/icons/Queue';
 import PowerOffIcon from '@material-ui/icons/PowerOffOutlined';
 import { Link } from 'react-router-dom';
 
@@ -26,19 +25,19 @@ function Menu(props) {
     return (
         <div className={classes.root}>
             <List component="nav">
-                <ListItem component={Link} to="/" button>
+                <ListItem component={Link} to="/app" button>
                     <ListItemIcon>
                         <HomeIcon />
                     </ListItemIcon>
                     <ListItemText primary="Home" />
                 </ListItem>
-                <ListItem component={Link} to="/clients" button>
+                <ListItem component={Link} to="/app/clients" button>
                     <ListItemIcon>
                         <PeopleIcon />
                     </ListItemIcon>
                     <ListItemText primary="Clients" />
                 </ListItem>
-                <ListItem component={Link} to="/agent/details" button>
+                <ListItem component={Link} to="/app/agent/details" button>
                     <ListItemIcon>
                         <UserIcon />
                     </ListItemIcon>

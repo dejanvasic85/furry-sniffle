@@ -40,7 +40,7 @@ class ClientsPage extends React.Component {
   }
 
   addClient = () => {
-    this.props.history.push('/clients/new');
+    this.props.history.push('/app/clients/new');
   }
 
   render() {
@@ -63,7 +63,7 @@ class ClientsPage extends React.Component {
           {clients.map(c => (
             <TableRow key={c.id}>
               <TableCell component="th" scope="row">
-                <RouterLink to={`/clients/${ c.id }`}>
+                <RouterLink to={`/app/clients/${ c.id }`}>
                   {c.firstName} {c.lastName}
                 </RouterLink>
               </TableCell>
@@ -72,7 +72,7 @@ class ClientsPage extends React.Component {
               <TableCell align="right">{c.referralCode}</TableCell>
               <TableCell align="right"></TableCell>
               <TableCell align="right">
-                <RouterLink to={`/clients/${ c.id }/edit`} >
+                <RouterLink to={`/app/clients/${ c.id }/edit`} >
                   <PencilIcon />
                 </RouterLink>
               </TableCell>

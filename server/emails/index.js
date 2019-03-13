@@ -10,8 +10,6 @@ module.exports = {
   newClient: (agent, client) => {
     const templateData = {
       agentName: agent.firstName,
-      // Todo - not sure whether we need to send this right now
-      agentRewardsUrl: `${webBaseUrl}/agent/${agent.id}`,
       clientName: client.firstName,
       clientReferralUrl: getClientReferralUrl(agent.id, client.referralCode)
     };
