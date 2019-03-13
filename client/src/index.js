@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import App from './App';
 import AuthCallback from './auth/AuthCallback';
 import Login from './auth/Login';
+import InvitationPage from './pages/InvitationPage';
 import AuthService from './auth/AuthService';
 
 const authService = new AuthService();
@@ -18,6 +19,7 @@ ReactDOM.render(
         <Route path="/login" render={(props) => <Login {...props} auth={authService} />} />
         <Route path="/callback" render={(props) => <AuthCallback {...props} auth={authService} />} />
         <Route path="/app" render={(props) => <App {...props} auth={authService} />} />
+        <Route path="/invite/:agentId/code/:referralCode" exact render={(props) => <InvitationPage {...props} />} />
 
         {/* Fallback - Not found */}
         <Route render={() => <div>Sorry, the page you are looking for cannot be found! </div>} />

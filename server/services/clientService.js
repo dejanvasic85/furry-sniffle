@@ -1,7 +1,7 @@
 const { webBaseUrl } = require('../config');
 
 const getClientReferralUrl = (agentId, clientReferralCode) => {
-  return `${webBaseUrl}/refer/${agentId}/code/${clientReferralCode}`;
+  return `${webBaseUrl}/invite/${agentId}/code/${clientReferralCode}`;
 };
 
 module.exports = {
