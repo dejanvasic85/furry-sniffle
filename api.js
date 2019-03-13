@@ -15,6 +15,10 @@ const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
+
 app.use((req, res, next) => {
   if (req.method === 'POST') {
     logger.info(
