@@ -4,6 +4,8 @@
   "scripts": {
     "start": "node api.js",
     "try": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL -a fox-rewarder) yarn run db:migrate",
+    "heroku:deploy": "git push heroku master",
+    "heroku:logs": "heroku logs --tail",    
     "db:get-connection": "heroku config:get DATABASE_URL -a fox-rewarder",
     "heroku-postbuild": "yarn run db:migrate && cd client && yarn && yarn run build",
     "client": "cd client && yarn start",
