@@ -27,12 +27,11 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use('/api/agents', agents);
-app.use('/api/clients', jwtAuth, agentAuth, clients);
-app.get('/api/health', jwtAuth, (req, res) => {
-  console.log('HEALTH user', req.user);
+app.get('/api/health', (req, res) => {
   res.send('ok');
 });
+app.use('/api/agents', agents);
+app.use('/api/clients', jwtAuth, agentAuth, clients);
 app.use(errorHandler);
 
 app.get('*', (req, res) => {
