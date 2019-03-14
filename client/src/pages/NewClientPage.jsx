@@ -75,7 +75,7 @@ class NewClientPage extends React.Component {
 
   render() {
     if (this.state.savedSuccessfully === true) {
-      return <Redirect to="/clients" />
+      return <Redirect to="/app/clients" />
     }
 
     const { classes } = this.props;

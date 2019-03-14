@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { apiClient } from '../apiClient';
@@ -11,16 +11,33 @@ const styles = theme => ({
 });
 
 class InvitationPage extends React.Component {
+  state = {
+    fetching: true,
+    isValid: null
+  }
+
   componentDidMount() {
-    // todo - validate the query parameters (referralCode and agent id)
+    const { agentId, referralCode } = this.props.match.params;
+
+    apiClient.validateInvite(agentId, referralCode).then(result => {
+      this.setState({ isValid: true });
+    }).catch(err => {
+      this.setState({ isValid: false });
+    });
   }
 
   render() {
-    return <div>
+    const { isValid } = this.state;
+
+    return <>
+      {
+        isValid === false &&  <Redirect to="/not-found" /> 
+      }
+
       <Typography>
         Coming soon...
       </Typography>
-    </div>;
+    </>;
   }
 }
 
