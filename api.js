@@ -9,7 +9,7 @@ const clients = require('./server/routes/clients');
 const agents = require('./server/routes/agents');
 const path = require('path');
 
-const { db, Client } = require('./server/db');
+const { db } = require('./server/db');
 const logger = require('./server/logger');
 
 const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
