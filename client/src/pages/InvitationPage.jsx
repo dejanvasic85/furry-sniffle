@@ -13,30 +13,38 @@ const styles = theme => ({
 class InvitationPage extends React.Component {
   state = {
     fetching: true,
-    isValid: null
+    isValid: null,
+    invite: null
   }
 
   componentDidMount() {
     const { agentId, referralCode } = this.props.match.params;
 
     apiClient.validateInvite(agentId, referralCode).then(result => {
-      this.setState({ isValid: true });
+      this.setState({ isValid: true, invite: result.invite });
     }).catch(err => {
       this.setState({ isValid: false });
     });
   }
 
   render() {
-    const { isValid } = this.state;
+    const { isValid, invite } = this.state;
+    console.log(invite);
 
     return <>
       {
-        isValid === false &&  <Redirect to="/not-found" /> 
+        isValid === false && <Redirect to="/not-found" />
       }
 
-      <Typography>
-        Coming soon...
-      </Typography>
+      {
+        invite && <div>
+          <Typography>
+            Hey there! Your trusted friend {invite.clientName} has referred you to 
+            checkout services offered by {invite.agentName}. Fill out the form below to get in touch.
+          </Typography>
+        </div>
+      }
+
     </>;
   }
 }

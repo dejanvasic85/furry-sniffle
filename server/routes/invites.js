@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { db, Client } = require('../db');
+const { db, Client, Agent } = require('../db');
 const logger = require('../logger');
 
 router.get('/validate/:agentId/code/:referralCode', (req, res) => {
@@ -13,9 +13,22 @@ router.get('/validate/:agentId/code/:referralCode', (req, res) => {
     where: { referralCode, agentId, isActive: true }
   }).then(client => {
     if (!client) {
-      res.status(404).json({ error: 'Not Found' });
+      res.status(404).json({ error: 'Client Not Found' });
     } else {
-      res.json({ status: 'ok' });
+      Agent.findOne({
+        where: { id: agentId }
+      }).then(agent => {
+        if (!agent) {
+          res.status(404).json({ error: 'Agent Not Found' });
+        } else {
+          res.json({
+            invite: {
+              clientName: client.firstName,
+              agentName: agent.firstName
+            }
+          });
+        }
+      });
     }
   });
 });
