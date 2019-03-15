@@ -18,7 +18,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 // Custom components
-import Home from './pages/Home';
+import DashboardPage from './pages/DashboardPage';
 import ClientsPage from './pages/ClientsPage';
 import NewClientPage from './pages/NewClientPage';
 import Campaigns from './pages/Campaigns';
@@ -157,7 +157,7 @@ class App extends React.Component {
             <div className={classes.toolbar} />
             <Switch>
               {/* Private Routes */}
-              <PrivateRoute path="/app" exact component={Home} auth={auth}/>
+              <PrivateRoute path="/app" exact component={DashboardPage} auth={auth}/>
               <PrivateRoute path="/app/agent/details" exact component={AgentDetailsPage} auth={auth} />
               <PrivateRoute path="/app/clients" exact component={ClientsPage} auth={auth}/>
               <PrivateRoute path="/app/clients/new" exact component={NewClientPage} auth={auth} />
