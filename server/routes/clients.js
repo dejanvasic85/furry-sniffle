@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { db, Client, Agent } = require('../db');
 const Sequelize = require('sequelize');
+
+const { db, Client, Agent } = require('../db');
 const emails = require('../emails');
 const logger = require('../logger');
 
@@ -36,39 +37,44 @@ router.post('/', (req, res) => {
   }
 
   const agentId = req.agent.id;
-  let newClient = Object.assign({}, req.body, {
+  let createClientRequest = Object.assign({}, req.body, {
     agentId,
     isActive: true
   });
 
-  const referralEmailPrefix = newClient.email.substring(0, newClient.email.indexOf('@'));
+  const referralEmailPrefix = createClientRequest.email.substring(0, createClientRequest.email.indexOf('@'));
   const randomNumber = Math.floor(Math.random() * Math.floor(999));
   const referralCode = `${referralEmailPrefix}-${randomNumber}`;
-  newClient.referralCode = referralCode;
-  
+  createClientRequest.referralCode = referralCode;
 
   Client.findOrCreate({
     where: {
-      email: newClient.email,
+      email: createClientRequest.email,
       isActive: true,
-      agentId: newClient.agentId
+      agentId: createClientRequest.agentId
     },
-    defaults: newClient
+    defaults: createClientRequest
   }).spread((client, created) => {
+    logger.info(`Client saved ${created}`);
     if (created === true) {
-      emails.newClient(req.agent, client).then(() => {
-        res.status(201).json(client);
-      }).catch(error => {
-        throw new Error(error);
-      });
-      
+
+      if (createClientRequest.sendEmail === true) {
+        logger.info(`Sending email to ${client.email}`);
+        emails.newClient(req.agent, client).then(() => {
+          res.status(201).json(client);
+        })
+      } else {
+        res.status(200).json({
+          client
+        });
+      }
+
     } else {
-      res.status(400).json({ error: `Unable to save client. Email ${ newClient.email } may already exist` });
+      res.status(400).json({ error: `Unable to save client. Email ${createClientRequest.email} may already exist` });
     }
   }).catch(err => {
     res.status(500).json(err)
   });
-
 });
 
 module.exports = router;

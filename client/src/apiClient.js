@@ -26,7 +26,7 @@ class Api {
         return res.json();
       }
   
-      throw new Error("API call was not successfully", res);
+      throw new Error("API call was not successful", res);
     });
   }
 
@@ -57,6 +57,10 @@ class Api {
 
   updateAgent(agent) { 
     return this.doFetch('/agents', 'PUT', agent);
+  }
+
+  validateInvite(agentId, referralCode) {
+    return this.doFetch(`/invites/validate/${agentId}/code/${referralCode}`);
   }
 }
 

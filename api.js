@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const config = require('./server/config');
 
+const invites = require('./server/routes/invites');
 const clients = require('./server/routes/clients');
 const agents = require('./server/routes/agents');
 const path = require('path');
@@ -27,9 +28,12 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 app.get('/api/health', (req, res) => {
   res.send('ok');
 });
+
+app.use('/api/invites', invites);
 app.use('/api/agents', agents);
 app.use('/api/clients', jwtAuth, agentAuth, clients);
 app.use(errorHandler);
