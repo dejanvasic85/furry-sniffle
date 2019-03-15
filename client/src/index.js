@@ -9,6 +9,7 @@ import AuthCallback from './auth/AuthCallback';
 import Login from './auth/Login';
 import InvitationPage from './pages/InvitationPage';
 import AuthService from './auth/AuthService';
+import LandingPage from './pages/LandingPage';
 
 const authService = new AuthService();
 
@@ -22,6 +23,7 @@ ReactDOM.render(
         <Route path="/invite/:agentId/code/:referralCode" exact render={(props) => <InvitationPage {...props} />} />
 
         {/* Fallback - Not found */}
+        <Route path="/" render={(props) => <LandingPage {...props} />} />
         <Route render={() => <div>Sorry, the page you are looking for cannot be found! </div>} />
       </Switch>
     </div>
