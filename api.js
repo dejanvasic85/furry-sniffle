@@ -17,9 +17,6 @@ const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
-
 app.use((req, res, next) => {
   if (req.method === 'POST') {
     logger.info(
@@ -38,6 +35,16 @@ app.use('/api/agents', agents);
 app.use('/api/clients', jwtAuth, agentAuth, clients);
 app.use(errorHandler);
 
+app.get('/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname + '/landing/index.html'));
+});
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/landing/index.html'));
+});
+
+// // Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'landing')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
