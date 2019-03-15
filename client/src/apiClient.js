@@ -55,6 +55,10 @@ class Api {
     return this.doFetch('/agents', 'POST', {});
   }
 
+  createProspect(prospect) {
+    return this.doFetch('/prospects', 'POST', prospect)
+  }
+
   updateAgent(agent) { 
     return this.doFetch('/agents', 'PUT', agent);
   }
