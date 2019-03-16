@@ -2,46 +2,57 @@ const express = require('express');
 const router = express.Router();
 
 const { Email } = require('../db');
-const logger = require('../logger');
 
-router.post('/email-webhook', async (req, res) => {
-  const events = req.body;
-  if (!Array.isArray(req.body)) {
-    logger.error(
-      'Received invalid email webhook payload. Expected array',
-      req.body
+const processEvent = async singleEvent => {
+  const { event, email, timestamp, custom_args } = singleEvent;
+  const id = custom_args.emailId;
+
+  if (event !== 'open' && event !== 'delivered') {
+    console.info(
+      `Skipping email event : [${id}] Event: ${event}, email: ${email}`
     );
     return;
   }
 
-  for (let i = 0; i < events.length; i++) {
-    const { event, email, timestamp, custom_args } = events[i];
-    const id = custom_args.emailId;
+  console.info(
+    `Processing email event : [${id}] Event: ${event}, email: ${email}`
+  );
 
-    logger.info(
-      `Received email event : [${id}] Event: ${event}, email: ${email}`
+  const now = new Date();
+  const fieldsToUpdate =
+    event === 'open' ? { openedAt: now } : { deliveredAt: now };
+
+  await Email.update(fieldsToUpdate, {
+    where: { id },
+    returning: true
+  });
+
+  console.info(
+    `Updated email. event : [${id}] to status: ${event}, email: ${email}`
+  );
+};
+
+router.post('/webhook', async (req, res) => {
+  console.info(`Received email webhook`, req.body);
+  const events = req.body;
+  if (!Array.isArray(events)) {
+    console.error(
+      'Received invalid email webhook payload. Expected array',
+      req.body
     );
-
-    if (event === 'open') {
-      const openedAt = new Date();
-      await Email.update(
-        { openedAt },
-        {
-          where: { id },
-          returning: true
-        }
-      );
-    } else if (event === 'delivered') {
-      const deliveredAt = new Date();
-      await Email.update(
-        { deliveredAt },
-        {
-          where: { id },
-          returning: true
-        }
-      );
-    }
+    res.status(400).json({ error: 'Expected array' });
+    return;
   }
+  throw new Error('aaa');
+
+  try {
+    for (let i = 0; i < events.length; i++) {
+      await processEvent(events[i]);
+    }
+  } catch (e) {
+    console.error('Failure', e);
+  }
+  res.status(200).json({});
 });
 
 module.exports = router;

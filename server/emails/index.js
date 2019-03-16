@@ -15,9 +15,8 @@ module.exports = {
       clientReferralUrl: getClientReferralUrl(agent.id, client.referralCode)
     };
 
-    logger.info(`templateData ${templateData}`);
-
     const emailId = uuidv4();
+    logger.info(`templateData ${templateData}, emailId:${emailId}`);
     const msg = {
       to: client.email,
       from: 'noreply@agentum.com',
