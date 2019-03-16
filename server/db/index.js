@@ -6,10 +6,12 @@ const db = new Sequelize(connectionString);
 const Agent = require('./models/Agent')(db, Sequelize);
 const Client = require('./models/Client')(db, Sequelize);
 const Prospect = require('./models/Prospect')(db, Sequelize);
+const Email = require('./models/Email')(db, Sequelize);
 
 module.exports = {
   db,
   Agent,
   Client,
   Prospect
+  Email
 };

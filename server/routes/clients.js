@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Sequelize = require('sequelize');
 
-const { db, Client, Agent } = require('../db');
+const { db, Client, Agent, Email } = require('../db');
 const emails = require('../emails');
 const logger = require('../logger');
 
@@ -42,7 +42,10 @@ router.post('/', (req, res) => {
     isActive: true
   });
 
-  const referralEmailPrefix = createClientRequest.email.substring(0, createClientRequest.email.indexOf('@'));
+  const referralEmailPrefix = createClientRequest.email.substring(
+    0,
+    createClientRequest.email.indexOf('@')
+  );
   const randomNumber = Math.floor(Math.random() * Math.floor(999));
   const referralCode = `${referralEmailPrefix}-${randomNumber}`;
   createClientRequest.referralCode = referralCode;
@@ -54,27 +57,32 @@ router.post('/', (req, res) => {
       agentId: createClientRequest.agentId
     },
     defaults: createClientRequest
-  }).spread((client, created) => {
-    logger.info(`Client saved ${created}`);
-    if (created === true) {
-
-      if (createClientRequest.sendEmail === true) {
-        logger.info(`Sending email to ${client.email}`);
-        emails.newClient(req.agent, client).then(() => {
-          res.status(201).json(client);
-        })
+  })
+    .spread((client, created) => {
+      logger.info(`Client saved ${created}`);
+      if (created === true) {
+        if (1) {
+          // HACK: createClientRequest.sendEmail === true) {
+          logger.info(`Sending email to ${client.email}`);
+          emails.newClient(req.agent, client).then(() => {
+            res.status(201).json(client);
+          });
+        } else {
+          res.status(200).json({
+            client
+          });
+        }
       } else {
-        res.status(200).json({
-          client
+        res.status(400).json({
+          error: `Unable to save client. Email ${
+            createClientRequest.email
+          } may already exist`
         });
       }
-
-    } else {
-      res.status(400).json({ error: `Unable to save client. Email ${createClientRequest.email} may already exist` });
-    }
-  }).catch(err => {
-    res.status(500).json(err)
-  });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
