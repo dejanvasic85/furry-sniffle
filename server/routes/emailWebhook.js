@@ -4,7 +4,7 @@ const router = express.Router();
 const { Email } = require('../db');
 const logger = require('../logger');
 
-router.post('/emailWebHook', async (req, res) => {
+router.post('/email-webhook', async (req, res) => {
   const events = req.body;
   if (!Array.isArray(req.body)) {
     logger.error(
