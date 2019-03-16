@@ -5,9 +5,11 @@ const { connectionString } = require('../config');
 const db = new Sequelize(connectionString);
 const Agent = require('./models/Agent')(db, Sequelize);
 const Client = require('./models/Client')(db, Sequelize);
+const Prospect = require('./models/Prospect')(db, Sequelize);
 
 module.exports = {
   db,
   Agent,
-  Client
+  Client,
+  Prospect
 };

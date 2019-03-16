@@ -88,27 +88,29 @@ class InvitationPage extends React.Component {
       fetching: true
     });
 
-    const { agentId, referralCode } = this.props.match.params;
+    const { agentId, clientId } = this.state.invite;
     const prospect = Object.assign({}, this.state.formData, {
       agentId,
-      referralCode
+      clientId
     });
-    
+
     apiClient.createProspect(prospect).then(result => {
       this.setState({
-        fetching: false
+        fetching: false,
+        completed: true
       });
     });
   }
 
   render() {
-    const { isValid, invite, formData, fetching } = this.state;
+    const { isValid, invite, formData, completed, fetching } = this.state;
     const { classes } = this.props;
     const validation = this.validate(this.state.formData);
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
     return <Paper className={classes.container}>
       {isValid === false && <Redirect to="/not-found" />}
+
 
       {
         invite && <div>
@@ -160,6 +162,7 @@ class InvitationPage extends React.Component {
                   Submit
             </Button>
               </div>
+              {completed === true && <Paper>Thank you for completing the form. {invite.agentName} will be in touch  with you shortly!</Paper>}
             </Grid>
           </Grid>
 

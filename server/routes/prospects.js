@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { db } = require('../db');
+const { db, Prospect } = require('../db');
 const logger = require('../logger');
 
 router.post('/', (req, res) => {
@@ -11,8 +11,13 @@ router.post('/', (req, res) => {
   }
 
   const prospect = req.body;
-  logger.info(`Saving prospect ${prospect}`);
-  res.status(201).json(prospect);
+  prospect.status = 'New';
+
+  Prospect.create(prospect).then(p => {
+    res.status(201).json(p);
+  }).catch(err => {
+    res.status(500).json({ err });
+  });
 });
 
 module.exports = router;
