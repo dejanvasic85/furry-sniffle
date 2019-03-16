@@ -43,7 +43,6 @@ router.post('/webhook', async (req, res) => {
     res.status(400).json({ error: 'Expected array' });
     return;
   }
-  throw new Error('aaa');
 
   try {
     for (let i = 0; i < events.length; i++) {
