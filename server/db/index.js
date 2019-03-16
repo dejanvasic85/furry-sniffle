@@ -12,6 +12,6 @@ module.exports = {
   db,
   Agent,
   Client,
-  Prospect
+  Prospect,
   Email
 };
