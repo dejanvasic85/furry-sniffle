@@ -4,18 +4,24 @@ const router = express.Router();
 const { Email } = require('../db');
 
 const processEvent = async singleEvent => {
-  const { event, email, timestamp, custom_args } = singleEvent;
-  const id = custom_args.emailId;
+  const { event, email, emailId, timestamp, custom_args } = singleEvent;
+
+  if (!emailId) {
+    console.info(
+      `Skipping email event : no emailId...Unable to link to sent email. Event: ${event}, email: ${email}`
+    );
+    return;
+  }
 
   if (event !== 'open' && event !== 'delivered') {
     console.info(
-      `Skipping email event : [${id}] Event: ${event}, email: ${email}`
+      `Skipping email event : [${emailId}] Event: ${event}, email: ${email}`
     );
     return;
   }
 
   console.info(
-    `Processing email event : [${id}] Event: ${event}, email: ${email}`
+    `Processing email event : [${emailId}] Event: ${event}, email: ${email}`
   );
 
   const now = new Date();
@@ -23,12 +29,12 @@ const processEvent = async singleEvent => {
     event === 'open' ? { openedAt: now } : { deliveredAt: now };
 
   await Email.update(fieldsToUpdate, {
-    where: { id },
+    where: { id: emailId },
     returning: true
   });
 
   console.info(
-    `Updated email. event : [${id}] to status: ${event}, email: ${email}`
+    `Updated email. event : [${emailId}] to status: ${event}, email: ${email}`
   );
 };
 

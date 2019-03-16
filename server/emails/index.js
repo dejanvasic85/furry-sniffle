@@ -25,7 +25,8 @@ module.exports = {
       subject: 'Hello World',
       templateId: 'd-3cd3de0b1a7345d384e9662fbd7ebbe1',
       dynamic_template_data: templateData,
-      custom_args: { emailId: emailId }
+
+      customArgs: { emailId: emailId }
     };
     return sgMail
       .send(msg)
