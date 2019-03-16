@@ -8,6 +8,8 @@ const invites = require('./server/routes/invites');
 const clients = require('./server/routes/clients');
 const emailWebhook = require('./server/routes/emailWebhook');
 const agents = require('./server/routes/agents');
+const prospects = require('./server/routes/prospects');
+
 const path = require('path');
 
 const { db } = require('./server/db');
@@ -31,6 +33,7 @@ app.get('/api/health', (req, res) => {
   res.send('ok');
 });
 
+app.use('/api/prospects', prospects);
 app.use('/api/invites', invites);
 app.use('/api/agents', agents);
 app.use('/api/email', emailWebhook);

@@ -26,7 +26,7 @@ class AgentDetailsPage extends React.Component {
 
   handleAgentSave = (updatedAgentDetails) => {
     apiClient.updateAgent(updatedAgentDetails).then(agent => {
-      console.log('agent details updated', agent);
+      
     });
   }
 

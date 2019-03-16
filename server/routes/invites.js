@@ -23,7 +23,9 @@ router.get('/validate/:agentId/code/:referralCode', (req, res) => {
         } else {
           res.json({
             invite: {
+              clientId: client.id,
               clientName: client.firstName,
+              agentId: agent.id,
               agentName: agent.firstName
             }
           });
