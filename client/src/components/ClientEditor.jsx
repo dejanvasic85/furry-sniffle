@@ -127,7 +127,7 @@ class ClientEditor extends React.Component {
         </Grid>
         <Grid item xs={12} md={6}>
 
-          <Typography>Send Email</Typography>
+          <Typography>Send Welcome Email</Typography>
           <Switch checked={this.state.formData.sendEmail}
             onChange={this.handleSendEmailChecked} />
         </Grid>
