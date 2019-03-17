@@ -23,6 +23,11 @@ export default class ClientDetails extends React.Component {
           <Typography component="p">
             {client.phone}
           </Typography>
+          <Typography component="p">
+            <a href={`${client.referralUrl}`} target="_blank">
+              {client.referralUrl}
+            </a>
+          </Typography>
         </CardContent>
         <CardActions>
           <Button variant="contained" color="primary" component={RouterLink} to={`/app/clients/${client.id}/edit`}>

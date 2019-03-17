@@ -4,6 +4,7 @@ const router = express.Router();
 const { Client } = require('../db');
 const emails = require('../emails');
 const logger = require('../logger');
+const { getClientReferralUrl } = require('../services/clientService');
 
 router.get('/', (req, res) => {
   const agentId = req.agent.id;
@@ -23,7 +24,11 @@ router.get('/:id', (req, res) => {
   const id = req.params.id;
   logger.info(`Fetch by client id ${id}, agentId: ${agentId}`);
   Client.findOne({ where: { id, agentId } }).then(client => {
-    res.json(client);
+    const response = {
+      ...client.dataValues,
+      referralUrl: getClientReferralUrl(client.agentId, client.referralCode)
+    }
+    res.json(response);
   });
 });
 
