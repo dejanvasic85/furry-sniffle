@@ -7,16 +7,28 @@ const logger = require('../logger');
 const { Email } = require('../db');
 sgMail.setApiKey(sendGrid.apiKey);
 
+const sendAndTrackEmail = async (msg, clientId, agentId) => {
+  const emailId = uuidv4();
+  const msgWithId = { ...msg, customArgs: { emailId: emailId } };
+
+  logger.info(`Sending email ${msgWithId}`);
+
+  await sgMail.send(msg);
+  await Email.create({
+    id: emailId,
+    clientId: clientId,
+    agentId: agentId
+  });
+};
+
 module.exports = {
-  newClient: (agent, client) => {
+  send: async (agent, client) => {
     const templateData = {
       agentName: agent.firstName,
       clientName: client.firstName,
       clientReferralUrl: getClientReferralUrl(agent.id, client.referralCode)
     };
 
-    const emailId = uuidv4();
-    logger.info(`templateData ${templateData}, emailId:${emailId}`);
     const msg = {
       to: client.email,
       from: 'noreply@agentum.com',
@@ -24,22 +36,9 @@ module.exports = {
       html: '<p>Hello HTML world!</p>',
       subject: 'Hello World',
       templateId: 'd-3cd3de0b1a7345d384e9662fbd7ebbe1',
-      dynamic_template_data: templateData,
-
-      customArgs: { emailId: emailId }
+      dynamic_template_data: templateData
     };
-    return sgMail
-      .send(msg)
-      .then(res => {
-        return Email.create({
-          id: emailId,
-          clientId: client.id,
-          agentId: agent.id
-        });
-      })
-      .catch(err => {
-        logger.info(`Sendgrid ERROR`, err);
-        throw err;
-      });
+
+    await sendAndTrackEmail(msg, client.id, agent.id);
   }
 };
