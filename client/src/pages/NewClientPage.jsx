@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import {Paper, withStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 
 import { apiClient } from '../apiClient';
 import ClientEditor from '../components/ClientEditor';

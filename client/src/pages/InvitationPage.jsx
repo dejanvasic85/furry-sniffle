@@ -20,6 +20,7 @@ const styles = theme => ({
 
 class InvitationPage extends React.Component {
   state = {
+    completed: false,
     fetching: true,
     isValid: null,
     invite: null,
@@ -35,7 +36,7 @@ class InvitationPage extends React.Component {
   componentDidMount() {
     const { agentId, referralCode } = this.props.match.params;
 
-    apiClient.invite({agentId, referralCode}).then(result => {
+    apiClient.invite({ agentId, referralCode }).then(result => {
       this.setState({
         isValid: true,
         invite: result.invite,
@@ -108,9 +109,16 @@ class InvitationPage extends React.Component {
     const validation = this.validate(this.state.formData);
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
+    if (completed) {
+      return <div>
+        <Typography variant="h4">
+          Thank you! {invite.agentName} has been notified and he'll be in tough with you shortly.
+        </Typography>
+      </div>
+    }
+
     return <Paper className={classes.container}>
       {isValid === false && <Redirect to="/not-found" />}
-
 
       {
         invite && <div>
@@ -159,10 +167,9 @@ class InvitationPage extends React.Component {
                   color="primary"
                   onClick={this.handleSubmit}
                   disabled={isSaveDisabled}>
-                  Submit
-            </Button>
+                  Submit</Button>
               </div>
-              {completed === true && <Paper>Thank you for completing the form. {invite.agentName} will be in touch  with you shortly!</Paper>}
+
             </Grid>
           </Grid>
 
