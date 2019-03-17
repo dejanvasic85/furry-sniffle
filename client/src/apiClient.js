@@ -1,4 +1,3 @@
-
 import AuthService from './auth/AuthService';
 
 class Api {
@@ -12,10 +11,10 @@ class Api {
     let options = {
       method: method || 'GET',
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${auth}`
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth}`
       }
-    }
+    };
 
     if (data) {
       options.body = JSON.stringify(data);
@@ -25,8 +24,8 @@ class Api {
       if (res.ok) {
         return res.json();
       }
-  
-      throw new Error("API call was not successful", res);
+
+      throw new Error('API call was not successful', res);
     });
   }
 
@@ -38,8 +37,12 @@ class Api {
     return this.doFetch('/clients');
   }
 
-  getClient(id) { 
+  getClient(id) {
     return this.doFetch(`/clients/${id}`);
+  }
+
+  sendEmail(id) {
+    return this.doFetch(`/clients/${id}/sendEmail`, 'POST', {});
   }
 
   updateClient(id, client) {
@@ -60,10 +63,10 @@ class Api {
   }
 
   createProspect(prospect) {
-    return this.doFetch('/prospects', 'POST', prospect)
+    return this.doFetch('/prospects', 'POST', prospect);
   }
 
-  updateAgent(agent) { 
+  updateAgent(agent) {
     return this.doFetch('/agents', 'PUT', agent);
   }
 
@@ -74,6 +77,4 @@ class Api {
 
 const apiClient = new Api();
 
-export {
-  apiClient
-};
+export { apiClient };

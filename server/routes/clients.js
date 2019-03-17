@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Client } = require('../db');
+const { Client, Email } = require('../db');
 const emails = require('../emails');
 const logger = require('../logger');
 const { getClientReferralUrl } = require('../services/clientService');
@@ -19,17 +19,42 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const agentId = req.agent.id;
   const id = req.params.id;
+
   logger.info(`Fetch by client id ${id}, agentId: ${agentId}`);
-  Client.findOne({ where: { id, agentId } }).then(client => {
-    const response = {
-      ...client.dataValues,
-      referralUrl: getClientReferralUrl(client.agentId, client.referralCode)
-    }
-    res.json(response);
-  });
+  const client = await Client.findOne({ where: { id, agentId } });
+  if (!client) {
+    res.json({ error: 'unknown client id' }).status(404);
+    return;
+  }
+
+  const sentEmails = await Email.findAll({ where: { clientId: id } });
+
+  const response = {
+    ...client.dataValues,
+    referralUrl: getClientReferralUrl(client.agentId, client.referralCode),
+    emails: sentEmails
+  };
+
+  res.json(response);
+});
+
+router.post('/:id/sendEmail', async (req, res) => {
+  const agentId = req.agent.id;
+  const id = req.params.id;
+
+  logger.info(`Send email to client: ${id}, agentId: ${agentId}`);
+  const client = await Client.findOne({ where: { id, agentId } });
+  if (!client) {
+    res.json({ error: 'unknown client id' }).status(404);
+    return;
+  }
+
+  await emails.send(req.agent, client);
+  const sentEmails = await Email.findAll({ where: { clientId: id } });
+  res.json(sentEmails);
 });
 
 router.put('/:id', (req, res) => {
@@ -39,18 +64,17 @@ router.put('/:id', (req, res) => {
   }
 
   const id = req.params.id;
-  const {
-    firstName,
-    lastName,
-    phone,
-    email
-  } = req.body;
+  const { firstName, lastName, phone, email } = req.body;
 
   logger.info(`Updating client ${id}`);
 
-  Client.update({ firstName, lastName, phone, email }, {
-    where: { id }, returning: true
-  }).spread((recordsAffected, result) => {
+  Client.update(
+    { firstName, lastName, phone, email },
+    {
+      where: { id },
+      returning: true
+    }
+  ).spread((recordsAffected, result) => {
     if (recordsAffected === 0) {
       res.json({ error: `Update failed. ${id} may not be found` }).status(400);
     } else {
@@ -92,18 +116,20 @@ router.post('/', (req, res) => {
       if (created === true) {
         if (createClientRequest.sendEmail === true) {
           logger.info(`Sending email to ${client.email}`);
-          emails.newClient(req.agent, client).then(() => {
+          emails.send(req.agent, client).then(() => {
             res.json(client).status(201);
           });
         } else {
           res.json({ client }).status(201);
         }
       } else {
-        res.json({
-          error: `Unable to save client. Email ${
-            createClientRequest.email
+        res
+          .json({
+            error: `Unable to save client. Email ${
+              createClientRequest.email
             } may already exist`
-        }).status(400);
+          })
+          .status(400);
       }
     })
     .catch(err => {
