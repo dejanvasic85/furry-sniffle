@@ -61,8 +61,7 @@ router.post('/', (req, res) => {
     .spread((client, created) => {
       logger.info(`Client saved ${created}`);
       if (created === true) {
-        if (1) {
-          // HACK: createClientRequest.sendEmail === true) {
+        if (createClientRequest.sendEmail === true) {
           logger.info(`Sending email to ${client.email}`);
           emails.newClient(req.agent, client).then(() => {
             res.status(201).json(client);
