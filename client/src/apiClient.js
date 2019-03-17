@@ -42,6 +42,10 @@ class Api {
     return this.doFetch(`/clients/${id}`);
   }
 
+  updateClient(id, client) {
+    return this.doFetch(`/clients/${id}`, 'PUT', client);
+  }
+
   getAgent(accessToken) {
     if (accessToken) {
       return this.doFetch('/agents', 'GET', null, accessToken);
@@ -63,8 +67,8 @@ class Api {
     return this.doFetch('/agents', 'PUT', agent);
   }
 
-  validateInvite(agentId, referralCode) {
-    return this.doFetch(`/invites/validate/${agentId}/code/${referralCode}`);
+  invite(data) {
+    return this.doFetch(`/prospects/invite`, 'POST', data);
   }
 }
 

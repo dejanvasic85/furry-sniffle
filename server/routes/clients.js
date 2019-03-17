@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Sequelize = require('sequelize');
 
-const { db, Client, Agent, Email } = require('../db');
+const { Client } = require('../db');
 const emails = require('../emails');
 const logger = require('../logger');
-
-const Op = Sequelize.Op;
+const { getClientReferralUrl } = require('../services/clientService');
 
 router.get('/', (req, res) => {
   const agentId = req.agent.id;
@@ -26,13 +24,44 @@ router.get('/:id', (req, res) => {
   const id = req.params.id;
   logger.info(`Fetch by client id ${id}, agentId: ${agentId}`);
   Client.findOne({ where: { id, agentId } }).then(client => {
-    res.json(client);
+    const response = {
+      ...client.dataValues,
+      referralUrl: getClientReferralUrl(client.agentId, client.referralCode)
+    }
+    res.json(response);
+  });
+});
+
+router.put('/:id', (req, res) => {
+  if (!req.body) {
+    res.json({ error: 'missing body' }).status(400);
+    return;
+  }
+
+  const id = req.params.id;
+  const {
+    firstName,
+    lastName,
+    phone,
+    email
+  } = req.body;
+
+  logger.info(`Updating client ${id}`);
+
+  Client.update({ firstName, lastName, phone, email }, {
+    where: { id }, returning: true
+  }).spread((recordsAffected, result) => {
+    if (recordsAffected === 0) {
+      res.json({ error: `Update failed. ${id} may not be found` }).status(400);
+    } else {
+      res.json(result).status(204);
+    }
   });
 });
 
 router.post('/', (req, res) => {
   if (!req.body) {
-    res.status(400).json({ error: 'missing client details in request body' });
+    res.json({ error: 'missing client details in request body' }.status(400));
     return;
   }
 
@@ -61,27 +90,24 @@ router.post('/', (req, res) => {
     .spread((client, created) => {
       logger.info(`Client saved ${created}`);
       if (created === true) {
-        if (1) {
-          // HACK: createClientRequest.sendEmail === true) {
+        if (createClientRequest.sendEmail === true) {
           logger.info(`Sending email to ${client.email}`);
           emails.newClient(req.agent, client).then(() => {
-            res.status(201).json(client);
+            res.json(client).status(201);
           });
         } else {
-          res.status(200).json({
-            client
-          });
+          res.json({ client }).status(201);
         }
       } else {
-        res.status(400).json({
+        res.json({
           error: `Unable to save client. Email ${
             createClientRequest.email
-          } may already exist`
-        });
+            } may already exist`
+        }).status(400);
       }
     })
     .catch(err => {
-      res.status(500).json(err);
+      res.json(err).status(500);
     });
 });
 

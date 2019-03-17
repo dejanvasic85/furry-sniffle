@@ -1,6 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+
 import { apiClient } from '../apiClient';
+import ClientEditor from '../components/ClientEditor';
+import Alert from '../components/Alert';
 
 const styles = theme => ({
   root: {
@@ -9,7 +13,8 @@ const styles = theme => ({
 
 class ClientEditPage extends React.Component {
   state = {
-    client: {}
+    client: null,
+    displaySuccess: false
   };
 
   componentDidMount() {
@@ -21,12 +26,34 @@ class ClientEditPage extends React.Component {
     });
   }
 
+  handleClientSave = (client) => {
+    const { id } = this.props.match.params;
+    apiClient.updateClient(id, client).then(() => {
+      this.setState({
+        displaySuccess: true
+      });
+    });
+  }
+
+  handleAlertClose = () => {
+    this.setState({
+      displaySuccess: false
+    });
+  }
+
   render() {
-    console.log('edit mode');
+    const { client, displaySuccess } = this.state;
+
     return <>
-      Editing coming soon
+      {
+        client && <ClientEditor client={client} onSaveClient={this.handleClientSave} />
+      }
+
+      {
+        displaySuccess && <Alert message={"Client details saved"} variant="success" onClose={this.handleAlertClose}></Alert>
+      }
     </>;
   }
 }
 
-export default withStyles(styles)(ClientEditPage);
+export default withRouter(withStyles(styles)(ClientEditPage));
