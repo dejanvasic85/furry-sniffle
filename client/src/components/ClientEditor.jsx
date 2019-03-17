@@ -16,21 +16,25 @@ const styles = theme => ({
 });
 
 class ClientEditor extends React.Component {
-  state = {
-    formData: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      sendEmail: true,
-      touched: {
-        firstName: false,
-        lastName: false,
-        email: false,
-        phone: false
+  constructor(props) {
+    super(props);
+    const client = this.props.client || {};
+
+    this.state = {
+      formData: {
+        firstName: client.firstName || '',
+        lastName: client.lastName || '',
+        email: client.email || '',
+        phone: client.phone || '',
+        sendEmail: false,
+        touched: {
+          firstName: false,
+          lastName: false,
+          email: false,
+          phone: false
+        }
       }
-    },
-    savedSuccessfully: false
+    }
   }
 
   handleSave = () => {
@@ -81,7 +85,7 @@ class ClientEditor extends React.Component {
   }
 
   handleSendEmailChecked = (event) => {
-    this.setState( {
+    this.setState({
       formData: {
         ...this.state.formData,
         sendEmail: event.target.checked
@@ -90,7 +94,8 @@ class ClientEditor extends React.Component {
   }
 
   render() {
-    const validation = this.validate(this.state.formData);
+    const { formData } = this.state;
+    const validation = this.validate(formData);
     const { classes } = this.props;
     const showValidation = field => validation[field] && this.state.formData.touched[field] === true;
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
@@ -98,35 +103,34 @@ class ClientEditor extends React.Component {
     return <Paper className={classes.paper}>
       <Grid container spacing={24}>
         <Grid item xs={12} md={6}>
-          <TextField id="firstName" name="firstName" label="First Name*" fullWidth
+          <TextField value={formData.firstName} id="firstName" name="firstName" label="First Name*" fullWidth
             onChange={this.handleChange}
             onBlur={() => this.handleBlur('firstName')}
             error={showValidation('firstName')}
             helperText={showValidation('firstName') && "First name is required"} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField id="lastName" name="lastName" label="Last Name*" fullWidth
+          <TextField value={formData.lastName} id="lastName" name="lastName" label="Last Name*" fullWidth
             onChange={this.handleChange}
             onBlur={() => this.handleBlur('lastName')}
             error={showValidation('lastName')}
             helperText={showValidation('lastName') && "Last name is required"} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField id="email" name="email" label="Email*" type="email" fullWidth
+          <TextField value={formData.email} id="email" name="email" label="Email*" type="email" fullWidth
             onChange={this.handleChange}
             onBlur={() => this.handleBlur('email')}
             error={showValidation('email')}
             helperText={showValidation('email') && "Please provide a valid email"} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField id="phone" name="phone" label="Phone*" fullWidth
+          <TextField value={formData.phone} id="phone" name="phone" label="Phone*" fullWidth
             onChange={this.handleChange}
             onBlur={() => this.handleBlur('phone')}
             error={showValidation('phone')}
             helperText={showValidation('phone') && "Please provide a valid phone number"} />
         </Grid>
         <Grid item xs={12} md={6}>
-
           <Typography>Send Welcome Email</Typography>
           <Switch checked={this.state.formData.sendEmail}
             onChange={this.handleSendEmailChecked} />

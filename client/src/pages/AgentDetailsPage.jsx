@@ -53,9 +53,9 @@ class AgentDetailsPage extends React.Component {
         }
 
         {
-          displaySuccess && <div className={classes.notification}><Alert 
-            message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>} 
-            variant="success" 
+          displaySuccess && <div className={classes.notification}><Alert
+            message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
+            variant="success"
             onClose={this.handleAlertClose}></Alert></div>
         }
 

@@ -13,7 +13,7 @@ const styles = theme => ({
 class AgentEditor extends React.Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       formData: {
         firstName: this.props.agent.firstName || '',
