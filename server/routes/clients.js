@@ -52,7 +52,7 @@ router.post('/:id/sendEmail', async (req, res) => {
     return;
   }
 
-  await emails.send(req.agent, client);
+  await emails.sendNewClientEmail(req.agent, client);
   const sentEmails = await Email.findAll({ where: { clientId: id } });
   res.json(sentEmails);
 });
