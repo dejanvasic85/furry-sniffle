@@ -3,6 +3,7 @@ const logger = require('./logger');
 const {
   AUTH0_URI,
   AUTH0_AUDIENCE,
+  NODE_ENV,
   PORT,
   PGHOST,
   PGUSER,
@@ -29,6 +30,7 @@ if (DATABASE_URL) {
 }
 
 const conf = {
+  isDevelopment: NODE_ENV !== 'production',
   portNumber: PORT || 5000,
   webBaseUrl: WEB_BASE_URL || 'http://localhost:3000',
   connectionString: connectionString,

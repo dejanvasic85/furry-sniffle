@@ -1,6 +1,12 @@
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
-const { auth0 } = require('../config');
+const { auth0, isDevelopment } = require('../config');
+const logger = require('../logger');
+
+const HEADERS = Object.freeze({
+  AUTHORIZATION: 'Authorization',
+  AGENT_ID: 'AgentId'
+});
 
 const jwtCheck = jwt({
   secret: jwks.expressJwtSecret({
@@ -14,4 +20,19 @@ const jwtCheck = jwt({
   algorithms: ['RS256']
 });
 
-module.exports = jwtCheck;
+module.exports = (req, res, next) => {
+  if (req.get(HEADERS.AUTHORIZATION)) {
+    logger.info('jwtAuth: verifying token');
+    jwtCheck(req, res, next);
+    return;
+  }
+
+  // In development you can now just simply pass the agent id in the header (skip jwt)
+  if (isDevelopment && req.get(HEADERS.AGENT_ID)) {
+    next();
+    return;
+  }
+
+  logger.info('jwtAuth: Missing JWT authentication');
+  res.status(401).json({ error: 'Not Authorized' });
+};
