@@ -18,20 +18,7 @@ const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
-  if (req.method === 'POST') {
-    logger.info(
-      `method: POST, path: ${req.path}, body: ${JSON.stringify(req.body)}`
-    );
-  }
-  next();
-});
-
-app.get('/api/health', (req, res) => {
-  res.send('ok');
-});
-
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/prospects', prospects);
 app.use('/api/agents', agents);
 app.use('/api/email', emailWebhook);
