@@ -2,31 +2,32 @@ const express = require('express');
 const router = express.Router();
 
 const { Client, Email } = require('../db');
+const { withAsync } = require('../middleware');
+const { getClientReferralUrl, generateReferralCode } = require('../services/clientService');
 const emails = require('../emails');
 const logger = require('../logger');
-const { getClientReferralUrl } = require('../services/clientService');
 
-router.get('/', (req, res) => {
+router.get('/', withAsync(async (req, res) => {
   const agentId = req.agent.id;
   logger.info(`Fetch client by agentId: ${agentId}`);
-  Client.findAll({
+  const clients = await Client.findAll({
     where: {
-      agentId: agentId,
+      agentId,
       isActive: true
     }
-  }).then(results => {
-    res.json(results);
   });
-});
 
-router.get('/:id', async (req, res) => {
+  res.json(clients);
+}));
+
+router.get('/:id', withAsync(async (req, res) => {
   const agentId = req.agent.id;
   const id = req.params.id;
 
   logger.info(`Fetch by client id ${id}, agentId: ${agentId}`);
   const client = await Client.findOne({ where: { id, agentId } });
   if (!client) {
-    res.json({ error: 'unknown client id' }).status(404);
+    res.status(404).json({ error: 'unknown client id' });
     return;
   }
 
@@ -39,27 +40,27 @@ router.get('/:id', async (req, res) => {
   };
 
   res.json(response);
-});
+}));
 
-router.post('/:id/sendEmail', async (req, res) => {
+router.post('/:id/sendEmail', withAsync(async (req, res) => {
   const agentId = req.agent.id;
   const id = req.params.id;
 
   logger.info(`Send email to client: ${id}, agentId: ${agentId}`);
   const client = await Client.findOne({ where: { id, agentId } });
   if (!client) {
-    res.json({ error: 'unknown client id' }).status(404);
+    res.status(404).json({ error: 'unknown client id' });
     return;
   }
 
   await emails.sendNewClientEmail(req.agent, client);
   const sentEmails = await Email.findAll({ where: { clientId: id } });
   res.json(sentEmails);
-});
+}));
 
-router.put('/:id', (req, res) => {
+router.put('/:id', withAsync(async (req, res) => {
   if (!req.body) {
-    res.json({ error: 'missing body' }).status(400);
+    res.status(400).json({ error: 'missing body' });
     return;
   }
 
@@ -68,73 +69,56 @@ router.put('/:id', (req, res) => {
 
   logger.info(`Updating client ${id}`);
 
-  Client.update(
+  const updateResult = await Client.update(
     { firstName, lastName, phone, email },
     {
       where: { id },
       returning: true
     }
-  ).spread((recordsAffected, result) => {
-    if (recordsAffected === 0) {
-      res.json({ error: `Update failed. ${id} may not be found` }).status(400);
-    } else {
-      res.json(result).status(204);
-    }
-  });
-});
+  );
 
-router.post('/', (req, res) => {
+  const recordsUpdated = 1;
+  updateResult[0] === recordsUpdated
+    ? res.status(204).json({ recordsUpdated })
+    : res.status(400).json({ error: 'Unable to update the client' });
+
+}));
+
+router.post('/', withAsync(async (req, res) => {
   if (!req.body) {
-    res.json({ error: 'missing client details in request body' }.status(400));
+    res.status(400).json({ error: 'missing client details in request body' });
     return;
   }
 
   const agentId = req.agent.id;
-  let createClientRequest = Object.assign({}, req.body, {
+  const createClientRequest = Object.assign({}, req.body, {
     agentId,
-    isActive: true
+    isActive: true,
+    referralCode: generateReferralCode(req.body)
   });
 
-  const referralEmailPrefix = createClientRequest.email.substring(
-    0,
-    createClientRequest.email.indexOf('@')
-  );
-  const randomNumber = Math.floor(Math.random() * Math.floor(999));
-  const referralCode = `${referralEmailPrefix}-${randomNumber}`;
-  createClientRequest.referralCode = referralCode;
-
-  Client.findOrCreate({
+  const createResult = await Client.findOrCreate({
     where: {
       email: createClientRequest.email,
       isActive: true,
-      agentId: createClientRequest.agentId
+      agentId
     },
     defaults: createClientRequest
-  })
-    .spread((client, created) => {
-      logger.info(`Client saved ${created}`);
-      if (created === true) {
-        if (createClientRequest.sendEmail === true) {
-          logger.info(`Sending email to ${client.email}`);
-          emails.send(req.agent, client).then(() => {
-            res.json(client).status(201);
-          });
-        } else {
-          res.json({ client }).status(201);
-        }
-      } else {
-        res
-          .json({
-            error: `Unable to save client. Email ${
-              createClientRequest.email
-            } may already exist`
-          })
-          .status(400);
-      }
-    })
-    .catch(err => {
-      res.json(err).status(500);
-    });
-});
+  });
+
+  const created = createResult[1];
+  if (!created) {
+    res.status(400).json({ error: `Client with email ${createClientRequest.email} already exists` });
+    return;
+  }
+
+  const client = createResult[0];
+  if (createClientRequest.sendNewClientEmail === true) {
+    logger.info(`Sending email to ${client.email}`);
+    await emails.sendNewClientEmail(req.agent, client);
+  }
+
+  res.status(201).json({ client });
+}));
 
 module.exports = router;
