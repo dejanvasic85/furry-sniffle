@@ -10,6 +10,18 @@ const PROSPECT_STATE = Object.freeze({
   NEW: 'New'
 });
 
+router.get('/', jwtAuth, agentAuth, withAsync(async(req, res) => {
+  const agentId = req.agent.id;
+  logger.info(`Fetching all prospects for agentId ${agentId}`);
+  const prospects = await Prospect.findAll({
+    where: {
+      agentId
+    }
+  });
+
+  res.json(prospects);
+}));
+
 router.post('/', withAsync(async (req, res) => {
   if (!req.body) {
     res.json({ error: 'Missing body' }).status(400);
