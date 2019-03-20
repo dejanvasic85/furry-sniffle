@@ -35,6 +35,27 @@ router.get('/:id', jwtAuth, agentAuth, withAsync(async (req, res) => {
   res.json(prospect);
 }));
 
+router.put('/:id', jwtAuth, agentAuth, withAsync(async (req, res) => {
+  const agentId = req.agent.id;
+  const id = req.params.id;
+  const { status } = req.body;
+
+  let prospect = await Prospect.findOne({
+    where: { id, agentId }
+  })
+
+  if (!prospect) {
+    res.status(404).json({ error: 'Not Found' });
+    return;
+  }
+
+  prospect = await prospect.update({
+    status
+  });
+
+  res.status(204).json(prospect);
+}));
+
 router.post('/', withAsync(async (req, res) => {
   if (!req.body) {
     res.json({ error: 'Missing body' }).status(400);
