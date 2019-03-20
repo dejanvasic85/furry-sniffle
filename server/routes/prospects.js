@@ -2,33 +2,39 @@ const express = require('express');
 const router = express.Router();
 
 const { Prospect, Client, Agent } = require('../db');
+const { jwtAuth, agentAuth, withAsync } = require('../middleware');
 const emailer = require('../emails');
 const logger = require('../logger');
 
-router.post('/', (req, res) => {
+const PROSPECT_STATE = Object.freeze({
+  NEW: 'New'
+});
+
+router.post('/', withAsync(async (req, res) => {
   if (!req.body) {
-    res.status(400).json({ error: 'Missing body' });
+    res.json({ error: 'Missing body' }).status(400);
     return;
   }
 
-  const prospect = req.body;
-  prospect.status = 'New';
+  const newProspect = req.body;
+  newProspect.status = 'New'; // dv: todo - move to constants
 
-  Prospect.create(prospect).then(p => {
-    res.status(201).json(p);
-  }).catch(err => {
-    res.status(500).json({ err });
-  });
-});
+  const agent = await Agent.findOne({ where: { id: newProspect.agentId } });
+  const client = await Client.findOne({ where: { id: newProspect.clientId } });
+  const prospect = await Prospect.create(newProspect);
+  // Should we even await this?
+  await emailer.sendNewProspectEmail(newProspect, client, agent);
+  res.status(201).json({ prospect });
+}));
 
 router.post('/invite', (req, res) => {
   if (!req.body) {
     res.status(400).json({ error: 'Missing body' });
     return;
   }
-  
+
   const { agentId, referralCode } = req.body;
-  
+
   Client.findOne({
     where: { referralCode, agentId, isActive: true }
   }).then(client => {
@@ -54,7 +60,7 @@ router.post('/invite', (req, res) => {
       });
     }
   });
-  
+
 });
 
 module.exports = router;
