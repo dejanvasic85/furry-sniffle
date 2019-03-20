@@ -10,16 +10,29 @@ const PROSPECT_STATE = Object.freeze({
   NEW: 'New'
 });
 
-router.get('/', jwtAuth, agentAuth, withAsync(async(req, res) => {
+router.get('/', jwtAuth, agentAuth, withAsync(async (req, res) => {
   const agentId = req.agent.id;
   logger.info(`Fetching all prospects for agentId ${agentId}`);
   const prospects = await Prospect.findAll({
-    where: {
-      agentId
-    }
+    where: { agentId }
   });
 
   res.json(prospects);
+}));
+
+router.get('/:id', jwtAuth, agentAuth, withAsync(async (req, res) => {
+  const agentId = req.agent.id;
+  const id = req.params.id;
+  logger.info(`Fetching prospect id: ${id} for agentId: ${agentId}`);
+  const prospect = await Prospect.findOne({
+    where: { id, agentId }
+  });
+  if (!prospect) {
+    res.status(404).json({ error: 'Not Found' });
+    return;
+  }
+
+  res.json(prospect);
 }));
 
 router.post('/', withAsync(async (req, res) => {
@@ -39,7 +52,7 @@ router.post('/', withAsync(async (req, res) => {
   res.status(201).json({ prospect });
 }));
 
-router.post('/invite', withAsync(async(req, res) => {
+router.post('/invite', withAsync(async (req, res) => {
   if (!req.body) {
     res.status(400).json({ error: 'Missing body' });
     return;
@@ -51,7 +64,7 @@ router.post('/invite', withAsync(async(req, res) => {
     where: { referralCode, agentId, isActive: true }
   });
   if (!client) {
-    res.status(404).json({ error: 'Client not found'});
+    res.status(404).json({ error: 'Client not found' });
     return;
   }
 
@@ -60,7 +73,7 @@ router.post('/invite', withAsync(async(req, res) => {
   });
 
   if (!agent) {
-    res.status(404).json({ error: 'Agent not found'});
+    res.status(404).json({ error: 'Agent not found' });
     return;
   }
 
