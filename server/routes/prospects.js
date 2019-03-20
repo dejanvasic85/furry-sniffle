@@ -27,7 +27,7 @@ router.post('/', withAsync(async (req, res) => {
   res.status(201).json({ prospect });
 }));
 
-router.post('/invite', (req, res) => {
+router.post('/invite', withAsync(async(req, res) => {
   if (!req.body) {
     res.status(400).json({ error: 'Missing body' });
     return;
@@ -35,32 +35,32 @@ router.post('/invite', (req, res) => {
 
   const { agentId, referralCode } = req.body;
 
-  Client.findOne({
+  const client = await Client.findOne({
     where: { referralCode, agentId, isActive: true }
-  }).then(client => {
-    if (!client) {
-      res.json({ error: 'Client Not Found' }).status(404);
-    } else {
-      Agent.findOne({
-        where: { id: agentId }
-      }).then(agent => {
-        if (!agent) {
-          res.json({ error: 'Agent Not Found' }).status(404);
-        } else {
-          // dv: Todo - record event for client referral opening this invite
-          res.json({
-            invite: {
-              clientId: client.id,
-              clientName: client.firstName,
-              agentId: agent.id,
-              agentName: agent.firstName
-            }
-          });
-        }
-      });
+  });
+  if (!client) {
+    res.status(404).json({ error: 'Client not found'});
+    return;
+  }
+
+  const agent = await Agent.findOne({
+    where: { id: agentId }
+  });
+
+  if (!agent) {
+    res.status(404).json({ error: 'Agent not found'});
+    return;
+  }
+
+  res.json({
+    invite: {
+      clientId: client.id,
+      clientName: client.firstName,
+      agentId: agent.id,
+      agentName: agent.firstName
     }
   });
 
-});
+}));
 
 module.exports = router;
