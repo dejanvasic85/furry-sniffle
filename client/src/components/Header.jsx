@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,6 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Drawer from '@material-ui/core/Drawer';
+
+import Menu from './Menu';
 
 const styles = theme => ({
   root: {
@@ -19,24 +23,36 @@ const styles = theme => ({
     marginLeft: -12,
     marginRight: 20,
   },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
   headerIcons: {
+    color: '#fff',
+    textDecoration: 'none',
     display: 'flex',
     alignItems: 'center'
-  }, 
+  },
   balance: {
     color: '#fff'
+  },
+  drawer: {
+    minWidth: '200px'
   }
 });
 
 class Header extends React.Component {
+  state = {
+    isDrawerOpened: false
+  }
+
   handleAccountClick = () => {
     console.log('clicking');
+  }
+
+  handleDrawerToggle = () => {
+    const isOpened = this.state.isDrawerOpened;
+    this.setState({ isDrawerOpened: !isOpened });
+  }
+
+  handleDrawerClose = () => {
+    this.setState({ isDrawerOpened: false });
   }
 
   render() {
@@ -46,14 +62,17 @@ class Header extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+            <IconButton onClick={this.handleDrawerToggle}
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Open drawer">
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+            <Typography variant="h6" color="inherit" noWrap>
               Fox Rewarder
             </Typography>
             <div className={classes.grow} />
-            <div className={classes.headerIcons}>
+            <Link className={classes.headerIcons} to="/app/agent/details">
               <Typography className={classes.balance}>
                 Balance $0
               </Typography>
@@ -63,9 +82,19 @@ class Header extends React.Component {
                 onClick={this.handleAccountClick}>
                 <AccountCircle />
               </IconButton>
-            </div>
+            </Link>
+
           </Toolbar>
         </AppBar>
+        <Drawer open={this.state.isDrawerOpened} onClose={this.handleDrawerClose}>
+          <div
+            className={classes.drawer}
+            tabIndex={0}
+            role="button"
+            onClick={this.handleDrawerToggle}>
+              <Menu />
+          </div>
+        </Drawer>
       </div>
     );
   }

@@ -17,6 +17,9 @@ import AgentDetailsPage from './pages/AgentDetailsPage';
 const styles = theme => ({
   root: {
     width: '100%'
+  },
+  content: {
+    padding: '20px'
   }
 });
 
@@ -28,7 +31,6 @@ class App extends React.Component {
       <div className={classes.root}>
         <Header />
         <main className={classes.content}>
-          <div className={classes.toolbar} />
           <Switch>
             {/* Private Routes */}
             <PrivateRoute path="/app" exact component={DashboardPage} auth={auth} />
