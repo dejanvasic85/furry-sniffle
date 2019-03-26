@@ -24,12 +24,16 @@ const styles = theme => ({
 });
 
 class App extends React.Component {
+  handleLogout = () => {
+    this.props.auth.logout();
+  }
+
   render() {
     const { auth, classes } = this.props;
 
     return <Router>
       <div className={classes.root}>
-        <Header />
+        <Header onLogout={this.handleLogout} />
         <main className={classes.content}>
           <Switch>
             {/* Private Routes */}

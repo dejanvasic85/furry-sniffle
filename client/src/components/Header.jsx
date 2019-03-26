@@ -55,6 +55,10 @@ class Header extends React.Component {
     this.setState({ isDrawerOpened: false });
   }
 
+  handleLogoutClick = () => {
+    this.props.onLogout();
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -92,7 +96,7 @@ class Header extends React.Component {
             tabIndex={0}
             role="button"
             onClick={this.handleDrawerToggle}>
-              <Menu />
+              <Menu onLogout={this.handleLogoutClick} />
           </div>
         </Drawer>
       </div>
@@ -102,6 +106,7 @@ class Header extends React.Component {
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
+  onLogout: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(Header);

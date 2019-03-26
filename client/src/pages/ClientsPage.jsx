@@ -1,19 +1,16 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-// Material 
 import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import { withRouter } from 'react-router-dom';
-import { Fab, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import PencilIcon from '@material-ui/icons/Create';
-import Link from '@material-ui/icons/Link';
+import {
+  Fab,
+  List
+} from '@material-ui/core';
 
+import AddIcon from '@material-ui/icons/Add';
+
+import ClientListItem from '../components/ClientListItem';
 import { apiClient } from '../apiClient';
 
 const styles = theme => ({
@@ -28,6 +25,9 @@ const styles = theme => ({
   extendedIcon: {
     marginRight: theme.spacing.unit,
   },
+  clients: {
+    backgroundColor: theme.palette.background.paper
+  }
 });
 
 class ClientsPage extends React.Component {
@@ -43,44 +43,23 @@ class ClientsPage extends React.Component {
     this.props.history.push('/app/clients/new');
   }
 
+  handleClientClick = (client) => {
+    this.props.history.push(`/app/clients/${client.id}`)
+  }
+
   render() {
     const { classes } = this.props;
     const { clients } = this.state;
 
     return <>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Email</TableCell>
-            <TableCell align="right">Phone</TableCell>
-            <TableCell align="right">Referral Code</TableCell>
-            <TableCell align="right">Referral Count</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {clients.map(c => (
-            <TableRow key={c.id}>
-              <TableCell component="th" scope="row">
-                <RouterLink to={`/app/clients/${ c.id }`}>
-                  {c.firstName} {c.lastName}
-                </RouterLink>
-              </TableCell>
-              <TableCell align="right">{c.email}</TableCell>
-              <TableCell align="right">{c.phone}</TableCell>
-              <TableCell align="right">{c.referralCode}</TableCell>
-              <TableCell align="right"></TableCell>
-              <TableCell align="right">
-                <RouterLink to={`/app/clients/${ c.id }/edit`} >
-                  <PencilIcon />
-                </RouterLink>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
+      <List className={classes.clients}>
+        {
+          clients.map(client => (<ClientListItem 
+            key={client.id} 
+            client={client} 
+            onClick={() => this.handleClientClick(client)} />))
+        }
+      </List>
       <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
         <AddIcon />
       </Fab>

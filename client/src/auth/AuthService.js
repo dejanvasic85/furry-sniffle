@@ -70,6 +70,9 @@ export default class Auth {
     localStorage.removeItem('expiresAt');
     localStorage.removeItem('idToken');
     localStorage.removeItem('accessToken');
+
+    // Log back in ... should redirect to login
+    this.login();
   }
 
   isAuthenticated = () => {
