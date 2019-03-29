@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
@@ -11,6 +10,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 
 import ClientListItem from '../components/ClientListItem';
+import SearchInput from '../components/SearchInput';
 import { apiClient } from '../apiClient';
 
 const styles = theme => ({
@@ -47,11 +47,16 @@ class ClientsPage extends React.Component {
     this.props.history.push(`/app/clients/${client.id}`)
   }
 
+  handleSearchTextchange = event => {
+    console.log('criteria', event.target.value);
+  }
+
   render() {
     const { classes } = this.props;
     const { clients } = this.state;
 
     return <>
+      <SearchInput onSearchTextChange={this.handleSearchTextchange} />
       <List className={classes.clients}>
         {
           clients.map(client => (<ClientListItem 
