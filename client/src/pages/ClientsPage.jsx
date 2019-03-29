@@ -32,7 +32,9 @@ const styles = theme => ({
 
 class ClientsPage extends React.Component {
   state = {
-    clients: []
+    clients: [],
+    filteredClients: [],
+    filter: ''
   };
 
   componentDidMount() {
@@ -48,20 +50,35 @@ class ClientsPage extends React.Component {
   }
 
   handleSearchTextchange = event => {
-    console.log('criteria', event.target.value);
+    const filter = event.target.value.toLowerCase();
+    const filteredClients = this.state.clients
+      .filter(({ firstName, lastName, email }) => {
+        return firstName.toLowerCase().indexOf(filter) > -1 ||
+          lastName.toLowerCase().indexOf(filter) > -1 || 
+          email.toLowerCase().indexOf(filter) > -1;
+      });
+
+    this.setState({
+      filter: event.target.value,
+      filteredClients
+    });
   }
 
   render() {
     const { classes } = this.props;
-    const { clients } = this.state;
+    const { clients, filteredClients, filter } = this.state;
+
+    const clientsToDisplay = filter
+      ? filteredClients
+      : clients;
 
     return <>
-      <SearchInput onSearchTextChange={this.handleSearchTextchange} />
+      <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
       <List className={classes.clients}>
         {
-          clients.map(client => (<ClientListItem 
-            key={client.id} 
-            client={client} 
+          clientsToDisplay.map(client => (<ClientListItem
+            key={client.id}
+            client={client}
             onClick={() => this.handleClientClick(client)} />))
         }
       </List>
