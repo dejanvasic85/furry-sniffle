@@ -3,23 +3,24 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import {
+  Avatar,
   ListItem,
   ListItemText,
   Typography
 } from '@material-ui/core';
 
+import deepPurple from '@material-ui/core/colors/deepPurple';
+
 const styles = theme => ({
   root: {
     cursor: 'pointer',
   },
+  avatar: {
+    backgroundColor: deepPurple[500],
+    color: '#fff'
+  },
   inline: {
     display: 'inline',
-  },
-  userIcon: {
-    border: '1px solid #eee',
-    borderRadius: '50%',
-    textAlign: 'center',
-    padding: '10px'
   }
 });
 
@@ -27,12 +28,10 @@ export class ClientListItem extends React.Component {
   render() {
     const { classes, client } = this.props;
     return <ListItem alignItems="center" className={classes.root} onClick={this.props.onClick}>
-      <div className={classes.userIcon}>
-        <Typography component="h5" variant="h5">
-          {client.firstName.substring(0, 1).toUpperCase()}
-          {client.lastName.substring(0, 1).toUpperCase()}
-        </Typography>
-      </div>
+      <Avatar className={classes.avatar}>
+        {client.firstName.substring(0, 1).toUpperCase()}
+        {client.lastName.substring(0, 1).toUpperCase()}
+      </Avatar>
       <ListItemText
         primary={`${client.firstName} ${client.lastName}`}
         secondary={
