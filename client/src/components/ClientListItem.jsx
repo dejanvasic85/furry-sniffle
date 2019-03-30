@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Avatar,
   ListItem,
   ListItemText,
   Typography
 } from '@material-ui/core';
+
+import PersonAvatar from '../components/PersonAvatar';
 
 const styles = theme => ({
   root: {
@@ -26,10 +27,7 @@ export class ClientListItem extends React.Component {
   render() {
     const { classes, client } = this.props;
     return <ListItem alignItems="center" className={classes.root} onClick={this.props.onClick}>
-      <Avatar className={classes.avatar}>
-        {client.firstName.substring(0, 1).toUpperCase()}
-        {client.lastName.substring(0, 1).toUpperCase()}
-      </Avatar>
+      <PersonAvatar details={client} />
       <ListItemText
         primary={`${client.firstName} ${client.lastName}`}
         secondary={

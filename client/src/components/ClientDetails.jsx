@@ -2,17 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Typography
+} from '@material-ui/core';
+
+import PersonAvatar from './PersonAvatar';
 
 export default class ClientDetails extends React.Component {
   render() {
     const { client } = this.props;
     return <>
       <Card>
+        <CardHeader 
+          avatar={<PersonAvatar details={client} />}/>
         <CardContent>
           <Typography variant="h5" component="h2">
             {client.firstName} {client.lastName}
