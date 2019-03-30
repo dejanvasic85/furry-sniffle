@@ -6,9 +6,6 @@ import { InputAdornment, TextField } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
 
 const styles = theme => ({
-  textRoot: {
-    margin: theme.spacing.unit
-  },
   searchIcon: {
     marginRight: '10px'
   }
@@ -19,7 +16,6 @@ const SearchInput = (props) => {
 
   return <TextField
     id="outlined-adornment-weight"
-    className={classes.textRoot}
     variant="outlined"
     label="Search"
     onChange={onSearchTextChange}

@@ -4,7 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import {
   Fab,
-  List
+  List,
+  Paper
 } from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -27,6 +28,9 @@ const styles = theme => ({
   },
   clients: {
     backgroundColor: theme.palette.background.paper
+  },
+  search: {
+    padding: '20px'
   }
 });
 
@@ -54,7 +58,7 @@ class ClientsPage extends React.Component {
     const filteredClients = this.state.clients
       .filter(({ firstName, lastName, email }) => {
         return firstName.toLowerCase().indexOf(filter) > -1 ||
-          lastName.toLowerCase().indexOf(filter) > -1 || 
+          lastName.toLowerCase().indexOf(filter) > -1 ||
           email.toLowerCase().indexOf(filter) > -1;
       });
 
@@ -72,8 +76,11 @@ class ClientsPage extends React.Component {
       ? filteredClients
       : clients;
 
-    return <>
-      <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
+    return <Paper>
+      <div className={classes.search}>
+        <SearchInput value={filter}
+          onSearchTextChange={this.handleSearchTextchange} />
+      </div>
       <List className={classes.clients}>
         {
           clientsToDisplay.map(client => (<ClientListItem
@@ -85,7 +92,7 @@ class ClientsPage extends React.Component {
       <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
         <AddIcon />
       </Fab>
-    </>;
+    </Paper>;
   }
 }
 

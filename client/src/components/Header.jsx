@@ -64,7 +64,7 @@ class Header extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <IconButton onClick={this.handleDrawerToggle}
               className={classes.menuButton}

@@ -9,14 +9,12 @@ import {
   Typography
 } from '@material-ui/core';
 
-import deepPurple from '@material-ui/core/colors/deepPurple';
-
 const styles = theme => ({
   root: {
     cursor: 'pointer',
   },
   avatar: {
-    backgroundColor: deepPurple[500],
+    backgroundColor: theme.palette.secondary.main,
     color: '#fff'
   },
   inline: {
