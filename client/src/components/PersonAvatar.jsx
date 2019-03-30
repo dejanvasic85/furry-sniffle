@@ -11,18 +11,18 @@ const styles = theme => ({
   }
 });
 
-export const PersonAvatar =({classes, details}) => {
-  if (!details || !details.firstName) {
-    return null;
-  }
+export const getOrDefault = prop => {
+  return prop ? prop.substring(0, 1).toUpperCase() : '';
+}
 
+export const PersonAvatar = ({ classes, details }) => {
   return <Avatar className={classes.root}>
-    {details.firstName.substring(0, 1).toUpperCase()}
-    {details.lastName.substring(0, 1).toUpperCase()}
+    {getOrDefault(details.firstName)}
+    {getOrDefault(details.lastName)}
   </Avatar>;
 };
 
-PersonAvatar.propTypes = { 
+PersonAvatar.propTypes = {
   details: PropTypes.object.isRequired
 };
 
