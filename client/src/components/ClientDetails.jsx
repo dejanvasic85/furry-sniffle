@@ -34,7 +34,7 @@ export default class ClientDetails extends React.Component {
           avatar={<PersonAvatar details={client} />}
           title={`${client.firstName} ${client.lastName}`}
           subheader={<>Member since: <DateDisplay date={client.createdAt} /></>}
-          action={<IconButton aria-label="Edit">
+          action={<IconButton aria-label="Edit" component={RouterLink} to={`/app/clients/${client.id}/edit`}>
             <EditIcon />
           </IconButton>}
         />
