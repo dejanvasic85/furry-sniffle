@@ -47,7 +47,7 @@ class ClientEmails extends React.Component {
       <Card>
         <CardContent>
           <Typography variant="h5" component="h2">
-            Correspondence
+            Interactions
           </Typography>
           <Table className={classes.table}>
             <TableHead>

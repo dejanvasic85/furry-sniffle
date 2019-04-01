@@ -60,7 +60,7 @@ export default class ClientDetails extends React.Component {
         <Divider />
         <CardActions>
 
-          <Button variant="outlined"
+          <Button variant="outlined" disabled
             color="secondary"
             component={RouterLink} to={`/app/clients/${client.id}/edit`}>
             <GiftCardIcon />&nbsp;Gift
