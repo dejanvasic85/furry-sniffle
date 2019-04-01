@@ -6,7 +6,10 @@ import ClientDetails from '../components/ClientDetails';
 import ClientEmails from '../components/ClientEmails';
 
 const styles = theme => ({
-  root: {}
+  root: {},
+  correspondence: {
+    marginTop: '20px'
+  }
 });
 
 class ClientDetailsPage extends React.Component {
@@ -36,11 +39,15 @@ class ClientDetailsPage extends React.Component {
 
   render() {
     const { client, emails } = this.state;
+    const { classes } = this.props;
+
     return (
-      <div>
+      <>
         <ClientDetails client={client} />
-        <ClientEmails emails={emails || []} sendEmail={this.sendEmail} />
-      </div>
+        <div className={classes.correspondence}>
+          <ClientEmails emails={emails || []} sendEmail={this.sendEmail} />
+        </div>
+      </>
     );
   }
 }

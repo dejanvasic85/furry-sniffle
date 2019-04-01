@@ -1,21 +1,16 @@
 import React from 'react';
 import format from 'date-fns/format';
 
-// Material
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Fab } from '@material-ui/core';
-import EmailRounded from '@material-ui/icons/EmailRounded';
 import DoneIcon from '@material-ui/icons/Done';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   root: {
@@ -46,13 +41,13 @@ const formatDate = (date, includeIcon) => {
 };
 class ClientEmails extends React.Component {
   render() {
-    const { emails, classes, sendEmail } = this.props;
+    const { emails, classes } = this.props;
 
     return (
       <Card>
         <CardContent>
           <Typography variant="h5" component="h2">
-            Emails sent
+            Interactions
           </Typography>
           <Table className={classes.table}>
             <TableHead>
@@ -79,23 +74,7 @@ class ClientEmails extends React.Component {
             </TableBody>
           </Table>
         </CardContent>
-        <CardActions>
-          <Button variant="contained" color="primary" onClick={sendEmail}>
-            <EmailRounded />
-            Send Email
-          </Button>
-        </CardActions>
       </Card>
-
-      // <Fab
-      //   color="primary"
-      //   aria-label="Sent"
-      //   className={classes.fab}
-      //   onClick={sendEmail}
-      // >
-      //   <EmailRounded />
-      // </Fab>
-      //</>
     );
   }
 }
