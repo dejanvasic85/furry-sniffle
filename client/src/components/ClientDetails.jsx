@@ -8,9 +8,21 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Typography
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
 } from '@material-ui/core';
 
+import EmailIcon from '@material-ui/icons/Email';
+import PhoneIcon from '@material-ui/icons/Phone';
+import LinkIcon from '@material-ui/icons/Link';
+import EditIcon from '@material-ui/icons/Edit';
+import GiftCardIcon from '@material-ui/icons/CardGiftcard';
+
+import DateDisplay from './DateDisplay';
 import PersonAvatar from './PersonAvatar';
 
 export default class ClientDetails extends React.Component {
@@ -18,27 +30,45 @@ export default class ClientDetails extends React.Component {
     const { client } = this.props;
     return <>
       <Card>
-        <CardHeader 
-          avatar={<PersonAvatar details={client} />}/>
+        <CardHeader
+          avatar={<PersonAvatar details={client} />}
+          title={`${client.firstName} ${client.lastName}`}
+          subheader={<>Member since: <DateDisplay date={client.createdAt} /></>}
+          action={<IconButton aria-label="Edit">
+            <EditIcon />
+          </IconButton>}
+        />
+
+        <Divider />
         <CardContent>
-          <Typography variant="h5" component="h2">
-            {client.firstName} {client.lastName}
-          </Typography>
-          <Typography component="p">
-            {client.email}
-          </Typography>
-          <Typography component="p">
-            {client.phone}
-          </Typography>
-          <Typography component="p">
-            <a href={`${client.referralUrl}`} target="_blank">
-              {client.referralUrl}
-            </a>
-          </Typography>
+          <List dense={true}>
+            <ListItem>
+              <ListItemIcon><EmailIcon /></ListItemIcon>
+              <ListItemText>{client.email}</ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon><PhoneIcon /></ListItemIcon>
+              <ListItemText>{client.phone}</ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon><LinkIcon /></ListItemIcon>
+              <ListItemText>{client.referralUrl}</ListItemText>
+            </ListItem>
+          </List>
+
         </CardContent>
+        <Divider />
         <CardActions>
-          <Button variant="contained" color="primary" component={RouterLink} to={`/app/clients/${client.id}/edit`}>
-            Edit
+
+          <Button variant="outlined"
+            color="secondary"
+            component={RouterLink} to={`/app/clients/${client.id}/edit`}>
+            <GiftCardIcon />&nbsp;Gift
+          </Button>
+          <Button variant="outlined"
+            color="secondary"
+            component={RouterLink} to={`/app/clients/${client.id}/edit`}>
+            <EmailIcon />&nbsp;Email
           </Button>
         </CardActions>
       </Card>
