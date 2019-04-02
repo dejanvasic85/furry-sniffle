@@ -11,6 +11,9 @@ import DoneIcon from '@material-ui/icons/Done';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+
+import EmailInteraction from './EmailInteraction';
 
 const styles = theme => ({
   root: {
@@ -26,30 +29,16 @@ const styles = theme => ({
   }
 });
 
-const formatDate = (date, includeIcon) => {
-  if (date) {
-    const formattedDate = format(date, 'D MMM YYYY h:mm A');
-    return (
-      <span>
-        {includeIcon && <DoneIcon />}
-        <span>{formattedDate}</span>
-      </span>
-    );
-  } else {
-    return <span>...</span>;
-  }
-};
 class ClientEmails extends React.Component {
   render() {
     const { emails, classes } = this.props;
 
     return (
       <Card>
+        <CardHeader title="Interactions" />
         <CardContent>
-          <Typography variant="h5" component="h2">
-            Interactions
-          </Typography>
-          <Table className={classes.table}>
+          
+          {/* <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 <TableCell align="right">Sent</TableCell>
@@ -72,7 +61,7 @@ class ClientEmails extends React.Component {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </CardContent>
       </Card>
     );
