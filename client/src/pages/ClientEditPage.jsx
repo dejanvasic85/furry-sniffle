@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { apiClient } from '../apiClient';
 import ClientEditor from '../components/ClientEditor';
+import Loader from '../components/Loader';
 import Alert from '../components/Alert';
 
 const styles = theme => ({
@@ -14,24 +15,24 @@ const styles = theme => ({
 class ClientEditPage extends React.Component {
   state = {
     client: null,
-    displaySuccess: false
+    displaySuccess: false,
+    isFetching: true
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const clientId = this.props.match.params.id;
-    apiClient.getClient(clientId).then(client => {
-      this.setState({
-        client
-      });
+    const client = await apiClient.getClient(clientId);
+    this.setState({
+      client,
+      isFetching: false
     });
   }
 
-  handleClientSave = (client) => {
+  handleClientSave = async (client) => {
     const { id } = this.props.match.params;
-    apiClient.updateClient(id, client).then(() => {
-      this.setState({
-        displaySuccess: true
-      });
+    await apiClient.updateClient(id, client);
+    this.setState({
+      displaySuccess: true
     });
   }
 
@@ -42,13 +43,15 @@ class ClientEditPage extends React.Component {
   }
 
   render() {
-    const { client, displaySuccess } = this.state;
+    const { client, displaySuccess, isFetching } = this.state;
 
     return <>
       {
-        client && <ClientEditor client={client} onSaveClient={this.handleClientSave} />
+        isFetching && <Loader />
       }
-
+      {
+        !isFetching && <ClientEditor client={client} onSaveClient={this.handleClientSave} />
+      }
       {
         displaySuccess && <Alert message={"Client details saved"} variant="success" onClose={this.handleAlertClose}></Alert>
       }

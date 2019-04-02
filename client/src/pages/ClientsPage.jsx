@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import ClientListItem from '../components/ClientListItem';
 import SearchInput from '../components/SearchInput';
+import Loader from '../components/Loader';
 import { apiClient } from '../apiClient';
 
 const styles = theme => ({
@@ -38,11 +39,13 @@ class ClientsPage extends React.Component {
   state = {
     clients: [],
     filteredClients: [],
-    filter: ''
+    filter: '',
+    isFetching: true
   };
 
-  componentDidMount() {
-    apiClient.getClients().then(clients => this.setState({ clients }));
+  async componentDidMount() {
+    const clients = await apiClient.getClients();
+    this.setState({ clients, isFetching: false });
   }
 
   addClient = () => {
@@ -70,7 +73,7 @@ class ClientsPage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { clients, filteredClients, filter } = this.state;
+    const { clients, filteredClients, filter, isFetching } = this.state;
 
     const clientsToDisplay = filter
       ? filteredClients
@@ -81,17 +84,24 @@ class ClientsPage extends React.Component {
         <SearchInput value={filter}
           onSearchTextChange={this.handleSearchTextchange} />
       </div>
-      <List className={classes.clients}>
-        {
-          clientsToDisplay.map(client => (<ClientListItem
-            key={client.id}
-            client={client}
-            onClick={() => this.handleClientClick(client)} />))
-        }
-      </List>
-      <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
-        <AddIcon />
-      </Fab>
+      {
+        isFetching && <Loader />
+      }
+      {
+        !isFetching && <>
+          <List className={classes.clients}>
+            {
+              clientsToDisplay.map(client => (<ClientListItem
+                key={client.id}
+                client={client}
+                onClick={() => this.handleClientClick(client)} />))
+            }
+          </List>
+          <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
+            <AddIcon />
+          </Fab>
+        </>
+      }
     </Paper>;
   }
 }
