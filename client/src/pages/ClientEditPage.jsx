@@ -1,22 +1,15 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
 
 import { apiClient } from '../apiClient';
 import ClientEditor from '../components/ClientEditor';
 import Loader from '../components/Loader';
-import Alert from '../components/Alert';
-
-const styles = theme => ({
-  root: {
-  }
-});
 
 class ClientEditPage extends React.Component {
   state = {
     client: null,
-    displaySuccess: false,
-    isFetching: true
+    isFetching: true,
+    isClientSaving: false
   };
 
   async componentDidMount() {
@@ -30,33 +23,24 @@ class ClientEditPage extends React.Component {
 
   handleClientSave = async (client) => {
     const { id } = this.props.match.params;
+    this.setState({ isClientSaving: true })
     await apiClient.updateClient(id, client);
-    this.setState({
-      displaySuccess: true
-    });
-  }
-
-  handleAlertClose = () => {
-    this.setState({
-      displaySuccess: false
-    });
+    this.props.history.push(`/app/clients/${id}`);
   }
 
   render() {
-    const { client, displaySuccess, isFetching } = this.state;
+    const { client, isFetching, isClientSaving } = this.state;
 
     return <>
       {
         isFetching && <Loader />
       }
       {
-        !isFetching && <ClientEditor client={client} onSaveClient={this.handleClientSave} />
+        !isFetching && <ClientEditor client={client} inProgress={isClientSaving} onSaveClient={this.handleClientSave} />
       }
-      {
-        displaySuccess && <Alert message={"Client details saved"} variant="success" onClose={this.handleAlertClose}></Alert>
-      }
+      
     </>;
   }
 }
 
-export default withRouter(withStyles(styles)(ClientEditPage));
+export default withRouter(ClientEditPage);

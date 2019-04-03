@@ -79,7 +79,7 @@ router.put('/:id', withAsync(async (req, res) => {
 
   const recordsUpdated = 1;
   updateResult[0] === recordsUpdated
-    ? res.status(204).json({ recordsUpdated })
+    ? res.status(200).json({ recordsUpdated })
     : res.status(400).json({ error: 'Unable to update the client' });
 
 }));
