@@ -18,7 +18,7 @@ ReactDOM.render(
       <Switch>
         <Route path="/callback" render={(props) => <AuthCallback {...props} auth={authService} />} />
         <Route path="/app" render={(props) => <App {...props} auth={authService} />} />
-        <Route path="/invite/:agentId/code/:referralCode" exact render={(props) => <InvitationPage {...props} />} />
+        <Route path="/invite/:referralCode" exact render={(props) => <InvitationPage {...props} />} />
 
         {/* Fallback - Not found */}
         <Route path="/" render={(props) => <LandingPage {...props} />} />

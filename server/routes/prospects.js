@@ -101,10 +101,9 @@ router.post(
       return;
     }
 
-    const { agentId, referralCode } = req.body;
-
+    const { referralCode } = req.body;
     const client = await Client.findOne({
-      where: { referralCode, agentId, isActive: true }
+      where: { referralCode, isActive: true }
     });
     if (!client) {
       res.status(404).json({ error: 'Client not found' });
@@ -112,7 +111,7 @@ router.post(
     }
 
     const agent = await Agent.findOne({
-      where: { id: agentId }
+      where: { id: client.agentId }
     });
 
     if (!agent) {

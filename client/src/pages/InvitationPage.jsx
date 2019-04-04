@@ -105,10 +105,10 @@ class InvitationPage extends React.Component {
   };
 
   componentDidMount() {
-    const { agentId, referralCode } = this.props.match.params;
+    const { referralCode } = this.props.match.params;
 
     apiClient
-      .invite({ agentId, referralCode })
+      .invite({ referralCode })
       .then(result => {
         this.setState({
           isValid: true,

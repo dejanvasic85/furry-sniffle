@@ -74,7 +74,11 @@ class ClientDetails extends React.Component {
             </ListItem>
             <ListItem>
               <ListItemIcon><LinkIcon /></ListItemIcon>
-              <ListItemText>{client.referralUrl}</ListItemText>
+              <ListItemText>
+                <a href={client.referralUrl} target="_blank" rel="noopener noreferrer">
+                  {client.referralUrl}
+                </a>
+              </ListItemText>
             </ListItem>
           </List>
 
