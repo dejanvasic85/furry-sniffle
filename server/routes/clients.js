@@ -31,7 +31,10 @@ router.get('/:id', withAsync(async (req, res) => {
     return;
   }
 
-  const sentEmails = await Email.findAll({ where: { clientId: id } });
+  const sentEmails = await Email.findAll({ 
+    where: { clientId: id }, 
+    order: [ ['createdAt', 'DESC'] ] 
+  });
 
   const response = {
     ...client.dataValues,

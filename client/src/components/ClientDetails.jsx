@@ -13,7 +13,8 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  withStyles
 } from '@material-ui/core';
 
 import EmailIcon from '@material-ui/icons/Email';
@@ -24,10 +25,31 @@ import GiftCardIcon from '@material-ui/icons/CardGiftcard';
 
 import DateDisplay from './DateDisplay';
 import PersonAvatar from './PersonAvatar';
+import ProgressButton from '../components/ProgressButton';
+import { apiClient } from '../apiClient';
 
-export default class ClientDetails extends React.Component {
+const styles = theme => ({
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  }
+});
+
+class ClientDetails extends React.Component {
+  state = {
+    isEmailSending: false
+  }
+
+  handleSendEmailClick = () => {
+    this.setState({ isEmailSending: true });
+    apiClient.sendEmail(this.props.client.id).then(() => {
+      this.setState({ isEmailSending: false });
+    });
+  }
+
   render() {
-    const { client } = this.props;
+    const { classes, client } = this.props;
+    const { isEmailSending } = this.state;
     return <>
       <Card>
         <CardHeader
@@ -58,18 +80,17 @@ export default class ClientDetails extends React.Component {
 
         </CardContent>
         <Divider />
-        <CardActions>
-
+        <CardActions className={classes.actions}>
           <Button variant="outlined" disabled
-            color="secondary"
-            component={RouterLink} to={`/app/clients/${client.id}/edit`}>
+            color="secondary">
             <GiftCardIcon />&nbsp;Gift
           </Button>
-          <Button variant="outlined"
+          <ProgressButton variant="outlined"
             color="secondary"
-            component={RouterLink} to={`/app/clients/${client.id}/edit`}>
-            <EmailIcon />&nbsp;Email
-          </Button>
+            isFetching={isEmailSending}
+            onClick={this.handleSendEmailClick}>
+            <EmailIcon />&nbsp;Welcome Email
+          </ProgressButton>
         </CardActions>
       </Card>
     </>
@@ -79,3 +100,5 @@ export default class ClientDetails extends React.Component {
 ClientDetails.propTypes = {
   client: PropTypes.object.isRequired
 }
+
+export default withStyles(styles)(ClientDetails);

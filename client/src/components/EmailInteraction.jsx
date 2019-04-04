@@ -1,48 +1,73 @@
 import React from 'react';
-import { Paper, Typography, withStyles } from '@material-ui/core';
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  withStyles
+} from '@material-ui/core';
+
+import {
+  blue, teal, deepPurple
+} from '@material-ui/core/colors';
+
 import EmailIcon from '@material-ui/icons/Email';
 
 import DateDisplay from './DateDisplay';
 
 const classes = theme => ({
-  root: {
-    display: 'flex'
+  item: {
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   opened: {
-    border: '1px solid green'
+    color: teal[600]
   },
   delivered: {
-    border: '1px solid blue'
+    color: blue[500]
   },
   sent: {
-    border: '1px solid gray'
+    color: deepPurple[500]
   }
 });
 
-const getDateToDisplay = ({ createdAt, deliveredAt, openedAt }) => {
+const toInteraction = ({ createdAt, deliveredAt, openedAt }) => {
   if (openedAt) {
-    return openedAt;
+    return {
+      date: openedAt,
+      style: 'opened',
+      label: 'Opened'
+    };
   }
 
   if (deliveredAt) {
-    return deliveredAt;
+    return {
+      date: deliveredAt,
+      style: 'delivered',
+      label: 'Delivered'
+    };
   }
 
-  return createdAt;
+  return {
+    date: createdAt,
+    style: 'sent',
+    label: 'Sent'
+  };
 };
 
 export const EmailInteraction = props => {
   const { classes, email } = props;
-  const dateToDisplay = getDateToDisplay(email);
+  const { date, style, label } = toInteraction(email);
 
-  return <Paper className={classes.root}>
-    <div className={classes.icon}>
-      <EmailIcon />
-    </div>
-    <div>
-      <Typography><DateDisplay date={dateToDisplay} /></Typography>
-    </div>
-  </Paper>;
+  return <ListItem>
+    <ListItemIcon><EmailIcon /></ListItemIcon>
+    <ListItemText>
+      <div className={classes.item}>
+        <Typography>Welcome Email</Typography>
+        <Typography className={classes[style]}>{label} <DateDisplay date={date} /></Typography>
+      </div>
+    </ListItemText>
+  </ListItem>
 };
 
 export default withStyles(classes)(EmailInteraction);
