@@ -31,9 +31,9 @@ router.get('/:id', withAsync(async (req, res) => {
     return;
   }
 
-  const sentEmails = await Email.findAll({ 
-    where: { clientId: id }, 
-    order: [ ['createdAt', 'DESC'] ] 
+  const sentEmails = await Email.findAll({
+    where: { clientId: id },
+    order: [['createdAt', 'DESC']]
   });
 
   const response = {
@@ -97,7 +97,7 @@ router.post('/', withAsync(async (req, res) => {
   const createClientRequest = Object.assign({}, req.body, {
     agentId,
     isActive: true,
-    referralCode: generateReferralCode(req.body)
+    referralCode: 'temp'
   });
 
   const createResult = await Client.findOrCreate({
@@ -115,7 +115,15 @@ router.post('/', withAsync(async (req, res) => {
     return;
   }
 
-  const client = createResult[0];
+  const clientWithoutReferralCode = createResult[0].dataValues;
+
+  // Now that we have an id, we can create a new client with referral code
+  const client = generateReferralCode(clientWithoutReferralCode);
+  await Client.update(
+    { referralCode: clientWithoutReferralCode.referralCode },
+    { where: { id: clientWithoutReferralCode.id } }
+  );
+
   if (createClientRequest.sendNewClientEmail === true) {
     logger.info(`Sending email to ${client.email}`);
     await emails.sendNewClientEmail(req.agent, client);

@@ -8,13 +8,10 @@ const getProspectDetailUrl = (prospectId) => {
   return `${webBaseUrl}/app/prospects/${prospectId}`;
 };
 
-const generateReferralCode = ({ email }) => {
-  const referralEmailPrefix = email.substring(
-    0,
-    email.indexOf('@')
-  );
-  const randomNumber = Math.floor(Math.random() * Math.floor(999));
-  return `${referralEmailPrefix}-${randomNumber}`;
+const generateReferralCode = client => {
+  return Object.assign({}, client, {
+    referralCode: `${client.firstName.toLowerCase()}-${client.id}`
+  });
 }
 
 module.exports = {
