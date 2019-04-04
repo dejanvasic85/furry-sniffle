@@ -35,7 +35,7 @@ export class ClientListItem extends React.Component {
             <Typography component="span" className={classes.inline} color="textPrimary">
               {client.email}
             </Typography>
-            {` Referral Code: ${client.referralCode} `}
+            &nbsp; {client.phone}
           </React.Fragment>
         }
       />

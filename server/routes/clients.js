@@ -31,7 +31,10 @@ router.get('/:id', withAsync(async (req, res) => {
     return;
   }
 
-  const sentEmails = await Email.findAll({ where: { clientId: id } });
+  const sentEmails = await Email.findAll({ 
+    where: { clientId: id }, 
+    order: [ ['createdAt', 'DESC'] ] 
+  });
 
   const response = {
     ...client.dataValues,
@@ -79,7 +82,7 @@ router.put('/:id', withAsync(async (req, res) => {
 
   const recordsUpdated = 1;
   updateResult[0] === recordsUpdated
-    ? res.status(204).json({ recordsUpdated })
+    ? res.status(200).json({ recordsUpdated })
     : res.status(400).json({ error: 'Unable to update the client' });
 
 }));

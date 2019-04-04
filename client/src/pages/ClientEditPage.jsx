@@ -1,59 +1,46 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
 
 import { apiClient } from '../apiClient';
 import ClientEditor from '../components/ClientEditor';
-import Alert from '../components/Alert';
-
-const styles = theme => ({
-  root: {
-  }
-});
+import Loader from '../components/Loader';
 
 class ClientEditPage extends React.Component {
   state = {
     client: null,
-    displaySuccess: false
+    isFetching: true,
+    isClientSaving: false
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const clientId = this.props.match.params.id;
-    apiClient.getClient(clientId).then(client => {
-      this.setState({
-        client
-      });
-    });
-  }
-
-  handleClientSave = (client) => {
-    const { id } = this.props.match.params;
-    apiClient.updateClient(id, client).then(() => {
-      this.setState({
-        displaySuccess: true
-      });
-    });
-  }
-
-  handleAlertClose = () => {
+    const client = await apiClient.getClient(clientId);
     this.setState({
-      displaySuccess: false
+      client,
+      isFetching: false
     });
+  }
+
+  handleClientSave = async (client) => {
+    const { id } = this.props.match.params;
+    this.setState({ isClientSaving: true })
+    await apiClient.updateClient(id, client);
+    this.props.history.push(`/app/clients/${id}`);
   }
 
   render() {
-    const { client, displaySuccess } = this.state;
+    const { client, isFetching, isClientSaving } = this.state;
 
     return <>
       {
-        client && <ClientEditor client={client} onSaveClient={this.handleClientSave} />
+        isFetching && <Loader />
       }
-
       {
-        displaySuccess && <Alert message={"Client details saved"} variant="success" onClose={this.handleAlertClose}></Alert>
+        !isFetching && <ClientEditor client={client} inProgress={isClientSaving} onSaveClient={this.handleClientSave} />
       }
+      
     </>;
   }
 }
 
-export default withRouter(withStyles(styles)(ClientEditPage));
+export default withRouter(ClientEditPage);

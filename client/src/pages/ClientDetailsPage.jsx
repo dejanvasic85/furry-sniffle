@@ -1,34 +1,40 @@
-import React, { Fragment } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { withStyles } from '@material-ui/core';
 import { apiClient } from '../apiClient';
 
 import ClientDetails from '../components/ClientDetails';
 import ClientEmails from '../components/ClientEmails';
+import Loader from '../components/Loader';
 
 const styles = theme => ({
   root: {},
-  correspondence: {
+  interactions: {
     marginTop: '20px'
+  },
+  progress: {
+    margin: 'auto',
+    width: '40px'
   }
 });
 
 class ClientDetailsPage extends React.Component {
   state = {
+    isFetching: true,
     client: {},
     emails: []
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const clientId = this.props.match.params.id;
-    apiClient.getClient(clientId).then(client => {
-      this.setState({
-        client,
-        emails: client.emails
-      });
+    const client = await apiClient.getClient(clientId);
+    this.setState({
+      client,
+      emails: client.emails,
+      isFetching: false
     });
   }
 
-  sendEmail = () => {
+  handleSendEmail = () => {
     const clientId = this.props.match.params.id;
     apiClient.sendEmail(clientId).then(emails => {
       this.setState({
@@ -38,17 +44,19 @@ class ClientDetailsPage extends React.Component {
   };
 
   render() {
-    const { client, emails } = this.state;
+    const { client, emails, isFetching } = this.state;
     const { classes } = this.props;
 
-    return (
-      <>
-        <ClientDetails client={client} />
-        <div className={classes.correspondence}>
+    return <>
+      {isFetching && <Loader />}
+      {!isFetching && <>
+        <ClientDetails client={client} onSendEmail={this.handleSendEmail} />
+        <div className={classes.interactions}>
           <ClientEmails emails={emails || []} sendEmail={this.sendEmail} />
         </div>
       </>
-    );
+      }
+    </>;
   }
 }
 

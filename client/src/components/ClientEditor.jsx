@@ -96,7 +96,7 @@ class ClientEditor extends React.Component {
   render() {
     const { formData } = this.state;
     const validation = this.validate(formData);
-    const { classes } = this.props;
+    const { classes, inProgress } = this.props;
     const showValidation = field => validation[field] && this.state.formData.touched[field] === true;
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
@@ -142,7 +142,7 @@ class ClientEditor extends React.Component {
               variant="contained"
               color="primary"
               onClick={this.handleSave}
-              disabled={isSaveDisabled}
+              disabled={isSaveDisabled || inProgress}
             >
               Save
             </Button>
@@ -155,7 +155,8 @@ class ClientEditor extends React.Component {
 
 ClientEditor.propTypes = {
   client: PropTypes.object,
-  onSaveClient: PropTypes.func.isRequired
+  onSaveClient: PropTypes.func.isRequired,
+  inProgress: PropTypes.bool.isRequired
 }
 
 export default withStyles(styles)(ClientEditor);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { Typography } from '@material-ui/core';
 
 import { apiClient } from '../apiClient';
 import { agentRequiresSetup } from '../services/agentService';
@@ -48,7 +49,7 @@ class AuthCallback extends React.Component {
       return <Redirect to="/app" />;
     }
 
-    return <div>Logging in... please wait</div>;
+    return <div><Typography>Logging in... please wait</Typography></div>;
   }
 }
 
