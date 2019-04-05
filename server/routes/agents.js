@@ -56,7 +56,7 @@ router.put('/', jwtAuth, (req, res) => {
     if (recordsAffected === 0) {
       res.status(400).json({ error: `Update failed. Agent ${agentId} may not be found` });
     } else {
-      res.status(204).json(result);
+      res.status(200).json(result);
     }
   }).catch(err => {
     res.status(500).json(err);
