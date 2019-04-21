@@ -56,9 +56,8 @@ router.post('/:id/sendEmail', withAsync(async (req, res) => {
     return;
   }
 
-  await emails.sendNewClientEmail(req.agent, client);
-  const sentEmails = await Email.findAll({ where: { clientId: id } });
-  res.json(sentEmails);
+  const sentEmail = await emails.sendNewClientEmail(req.agent, client);
+  res.json(sentEmail);
 }));
 
 router.put('/:id', withAsync(async (req, res) => {

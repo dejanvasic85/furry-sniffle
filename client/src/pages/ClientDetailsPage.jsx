@@ -34,12 +34,9 @@ class ClientDetailsPage extends React.Component {
     });
   }
 
-  handleSendEmail = () => {
-    const clientId = this.props.match.params.id;
-    apiClient.sendEmail(clientId).then(emails => {
-      this.setState({
-        emails: emails
-      });
+  handleEmailSent = email => {
+    this.setState( {
+      emails: [...this.state.emails, email]
     });
   };
 
@@ -50,9 +47,9 @@ class ClientDetailsPage extends React.Component {
     return <>
       {isFetching && <Loader />}
       {!isFetching && <>
-        <ClientDetails client={client} onSendEmail={this.handleSendEmail} />
+        <ClientDetails client={client} onEmailSent={this.handleEmailSent} />
         <div className={classes.interactions}>
-          <ClientEmails emails={emails || []} sendEmail={this.sendEmail} />
+          <ClientEmails emails={emails || []} />
         </div>
       </>
       }

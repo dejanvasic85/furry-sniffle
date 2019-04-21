@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import {
   Fab,
   List,
-  Paper
+  Paper,
+  Typography,
+  withStyles
 } from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -30,7 +31,7 @@ const styles = theme => ({
   clients: {
     backgroundColor: theme.palette.background.paper
   },
-  search: {
+  padded: {
     padding: '20px'
   }
 });
@@ -80,15 +81,15 @@ class ClientsPage extends React.Component {
       : clients;
 
     return <Paper>
-      <div className={classes.search}>
-        <SearchInput value={filter}
-          onSearchTextChange={this.handleSearchTextchange} />
-      </div>
       {
         isFetching && <Loader />
       }
       {
-        !isFetching && <>
+        !isFetching && clientsToDisplay.length > 0 && <>
+          <div className={classes.padded}>
+            <SearchInput value={filter}
+              onSearchTextChange={this.handleSearchTextchange} />
+          </div>
           <List className={classes.clients}>
             {
               clientsToDisplay.map(client => (<ClientListItem
@@ -97,11 +98,26 @@ class ClientsPage extends React.Component {
                 onClick={() => this.handleClientClick(client)} />))
             }
           </List>
-          <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
-            <AddIcon />
-          </Fab>
+
         </>
       }
+      {
+        !isFetching && clientsToDisplay.length === 0 && <>
+          <div className={classes.padded}>
+            <Typography variant="h6">
+              No clients at the moment
+          </Typography>
+            <Typography variant="body1">
+              Click on the plus icon in the bottom right to add one. Or you can always  
+              &nbsp;<a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">email</a>
+              &nbsp;us an exported file and we can add them for you.
+          </Typography>
+          </div>
+        </>
+      }
+      <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
+        <AddIcon />
+      </Fab>
     </Paper>;
   }
 }

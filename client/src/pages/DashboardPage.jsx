@@ -1,11 +1,16 @@
 import React from 'react';
 
-import {Typography} from '@material-ui/core';
+import withApiClient from '../decorators/withApiClient';
+import { Grid, Typography } from '@material-ui/core';
 
 class Home extends React.Component {
   render() {
-    return <Typography>Dashboard page coming soon...</Typography>;
+    return <>
+      <Grid container justify="center" alignItems="center" spacing="12">
+        <Grid item> <Typography>Coming soon</Typography></Grid>
+      </Grid>
+    </>;
   }
 }
 
-export default Home;
+export default withApiClient(Home);
