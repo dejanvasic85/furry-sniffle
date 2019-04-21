@@ -32,7 +32,7 @@ const sendAndTrackEmail = async (msg, clientId, agentId) => {
   logger.info(`Sending email ${msgWithId}`);
 
   await sgMail.send(msg);
-  await Email.create({
+  return await Email.create({
     id: emailId,
     clientId: clientId,
     agentId: agentId
@@ -50,7 +50,7 @@ const sendNewClientEmail = async (agent, client) => {
     }
   });
 
-  await sendAndTrackEmail(msg, client.id, agent.id);
+  return await sendAndTrackEmail(msg, client.id, agent.id);
 };
 
 const sendNewProspectEmail = async (prospect, client, agent) => {

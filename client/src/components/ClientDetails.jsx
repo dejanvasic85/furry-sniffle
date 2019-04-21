@@ -40,11 +40,11 @@ class ClientDetails extends React.Component {
     isEmailSending: false
   }
 
-  handleSendEmailClick = () => {
+  handleSendEmailClick = async () => {
     this.setState({ isEmailSending: true });
-    apiClient.sendEmail(this.props.client.id).then(() => {
-      this.setState({ isEmailSending: false });
-    });
+    const email = await apiClient.sendEmail(this.props.client.id);
+    this.setState({ isEmailSending: false });
+    this.props.onEmailSent(email);
   }
 
   render() {
@@ -76,7 +76,7 @@ class ClientDetails extends React.Component {
               <ListItemIcon><LinkIcon /></ListItemIcon>
               <ListItemText>
                 <a href={client.referralUrl} target="_blank" rel="noopener noreferrer">
-                  {client.referralUrl}
+                  {client.referralCode}
                 </a>
               </ListItemText>
             </ListItem>
@@ -93,7 +93,7 @@ class ClientDetails extends React.Component {
             color="secondary"
             isFetching={isEmailSending}
             onClick={this.handleSendEmailClick}>
-            <EmailIcon />&nbsp;Welcome Email
+            <EmailIcon />&nbsp;Send Email
           </ProgressButton>
         </CardActions>
       </Card>
@@ -102,7 +102,8 @@ class ClientDetails extends React.Component {
 }
 
 ClientDetails.propTypes = {
-  client: PropTypes.object.isRequired
+  client: PropTypes.object.isRequired,
+  onEmailSent: PropTypes.func
 }
 
 export default withStyles(styles)(ClientDetails);
