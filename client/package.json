@@ -21,7 +21,7 @@
   "proxy": "http://localhost:5000",
   "scripts": {
     "start": "react-scripts start",
-    "build": "REACT_APP_AUTH_CALLBACK_URL=https://fox-rewarder.herokuapp.com/callback react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
