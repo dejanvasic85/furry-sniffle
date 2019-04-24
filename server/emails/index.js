@@ -1,7 +1,10 @@
 const sgMail = require('@sendgrid/mail');
 const uuidv4 = require('uuid/v4');
 const { webBaseUrl, sendGrid } = require('../config');
-const { getClientReferralUrl, getProspectDetailUrl } = require('../services/clientService');
+const {
+  getClientReferralUrl,
+  getProspectDetailUrl
+} = require('../services/clientService');
 const logger = require('../logger');
 
 const { Email } = require('../db');
@@ -26,12 +29,15 @@ const createEmailMsg = ({ templateId, templateData, to }) => ({
 });
 
 const sendAndTrackEmail = async (msg, clientId, agentId) => {
-  const emailId = uuidv4();
-  const msgWithId = { ...msg, customArgs: { emailId: emailId } };
+  const emailId = uuidv4().toString();
+  const msgWithId = {
+    ...msg,
+    customArgs: { emailId: emailId }
+  };
 
-  logger.info(`Sending email ${msgWithId}`);
+  logger.info(`Sending email ${JSON.stringify(msgWithId)}`);
 
-  await sgMail.send(msg);
+  await sgMail.send(msgWithId);
   return await Email.create({
     id: emailId,
     clientId: clientId,
@@ -64,7 +70,7 @@ const sendNewProspectEmail = async (prospect, client, agent) => {
     }
   });
   await sgMail.send(emailToAgent);
-  
+
   const emailToClient = createEmailMsg({
     to: client.email,
     templateId: TEMPLATE_IDS.NEW_PROSPECT_TO_CLIENT,
