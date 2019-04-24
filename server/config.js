@@ -13,7 +13,9 @@ const {
   SENDGRID_BASEURL,
   SENDGRID_APIKEY,
   WEB_BASE_URL,
-  DATABASE_URL
+  DATABASE_URL,
+  GIFTPAY_BASEURL,
+  GIFTPAY_APIKEY
 } = process.env;
 
 let dbUserPassword = PGUSER;
@@ -41,6 +43,10 @@ const conf = {
   sendGrid: {
     baseUrl: SENDGRID_BASEURL || 'https://api.sendgrid.com/v3',
     apiKey: SENDGRID_APIKEY
+  },
+  giftPay: {
+    apiKey: GIFTPAY_APIKEY,
+    baseUrl: GIFTPAY_BASEURL || 'https://sandbox.express.giftpay.com'
   }
 };
 
