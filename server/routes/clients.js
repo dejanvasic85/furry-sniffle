@@ -38,7 +38,7 @@ router.get('/:id', withAsync(async (req, res) => {
 
   const response = {
     ...client.dataValues,
-    referralUrl: getClientReferralUrl(client.agentId, client.referralCode),
+    referralUrl: getClientReferralUrl(client.referralCode),
     emails: sentEmails
   };
 

@@ -9,16 +9,18 @@ import AuthCallback from './auth/AuthCallback';
 import InvitationPage from './pages/InvitationPage';
 import AuthService from './auth/AuthService';
 import LandingPage from './pages/LandingPage';
+import MessageProspect from './pages/MessageProspect';
 
 const authService = new AuthService();
 
 ReactDOM.render(
   <Router>
-    <div>
+    <div> 
       <Switch>
         <Route path="/callback" render={(props) => <AuthCallback {...props} auth={authService} />} />
         <Route path="/app" render={(props) => <App {...props} auth={authService} />} />
         <Route path="/invite/:referralCode" exact render={(props) => <InvitationPage {...props} />} />
+        <Route path="/message" exact render={(props) => <MessageProspect {...props} />} />
 
         {/* Fallback - Not found */}
         <Route path="/" render={(props) => <LandingPage {...props} />} />
