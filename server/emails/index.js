@@ -46,7 +46,7 @@ const sendNewClientEmail = async (agent, client) => {
     templateData: {
       agentName: agent.firstName,
       clientName: client.firstName,
-      clientReferralUrl: getClientReferralUrl(agent.id, client.referralCode)
+      clientReferralUrl: getClientReferralUrl(client.referralCode)
     }
   });
 
