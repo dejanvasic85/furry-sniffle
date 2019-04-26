@@ -45,6 +45,23 @@ class Api {
     return this.doFetch(`/clients/${id}/sendEmail`, 'POST', {});
   }
 
+  sendGift(id, giftDetails) {
+    const request = {
+      message: giftDetails.message,
+      giftValue: Number.parseInt(giftDetails.giftValue),
+      from: giftDetails.from
+    };
+    return this.doFetch(`/clients/${id}/gift`, 'POST', request);
+  }
+
+  getClientGifts(id) {
+    return this.doFetch(`/clients/${id}/gift`);
+  }
+
+  getGifts() {
+    return this.doFetch(`/gifts`);
+  }
+
   updateClient(id, client) {
     return this.doFetch(`/clients/${id}`, 'PUT', client);
   }

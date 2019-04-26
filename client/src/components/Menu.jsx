@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { 
+import {
   Divider,
-  List, 
-  ListItem, 
+  List,
+  ListItem,
   ListItemIcon,
   ListItemText,
   Typography
@@ -13,8 +13,9 @@ import {
 
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
-import UserIcon from '@material-ui/icons/Accessibility'
+import UserIcon from '@material-ui/icons/Accessibility';
 import PowerOffIcon from '@material-ui/icons/PowerOffOutlined';
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -22,7 +23,7 @@ const styles = theme => ({
   root: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.paper
   },
   appName: {
     fontSize: '1.2em'
@@ -35,9 +36,7 @@ function Menu(props) {
     <div className={classes.root}>
       <List component="nav">
         <ListItem>
-          <Typography className={classes.appName}>
-            Fox Rewarder
-          </Typography>
+          <Typography className={classes.appName}>Fox Rewarder</Typography>
         </ListItem>
         <Divider />
         <ListItem component={Link} to="/app" button>
@@ -51,6 +50,12 @@ function Menu(props) {
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="Clients" />
+        </ListItem>
+        <ListItem component={Link} to="/app/gifts" button>
+          <ListItemIcon>
+            <CardGiftcardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Gifts" />
         </ListItem>
         <ListItem component={Link} to="/app/agent/details" button>
           <ListItemIcon>

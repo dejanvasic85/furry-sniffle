@@ -9,6 +9,7 @@ const clients = require('./server/routes/clients');
 const emailWebhook = require('./server/routes/emailWebhook');
 const agents = require('./server/routes/agents');
 const prospects = require('./server/routes/prospects');
+const gifts = require('./server/routes/gifts');
 const { db } = require('./server/db');
 const logger = require('./server/logger');
 
@@ -17,10 +18,11 @@ const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
-app.use('/api/prospects', prospects);
-app.use('/api/agents', agents);
+app.use('/api/prospects', prospects); // todo: why prospects are not protected?
+app.use('/api/agents', agents); // todo: why agents are not protected?
 app.use('/api/email', emailWebhook);
 app.use('/api/clients', jwtAuth, agentAuth, clients);
+app.use('/api/gifts', jwtAuth, agentAuth, gifts);
 app.get('/index.html', (req, res) => {
   res.sendFile(path.join(__dirname + '/landing/index.html'));
 });
