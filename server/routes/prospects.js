@@ -5,7 +5,7 @@ const { Prospect, Client, Agent } = require('../db');
 const { jwtAuth, agentAuth, withAsync } = require('../middleware');
 const emailer = require('../emails');
 const logger = require('../logger');
-const { getClientReferralUrl} = require('../services/clientService');
+const { getClientReferralUrl } = require('../services/clientService');
 
 const PROSPECT_STATE = Object.freeze({
   NEW: 'New'
