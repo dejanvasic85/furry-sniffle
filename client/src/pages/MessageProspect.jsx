@@ -11,11 +11,6 @@ const BadEntry = <div><Typography>It appears you are missing some information...
 
 function MessageProspect(props) {
   const { channel, referralCode } = qs.parse(props.location.search);
-
-  if (!channel || !referralCode) {
-    return <BadEntry />
-  }
-
   const [invite, setInvite] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
 
@@ -27,9 +22,12 @@ function MessageProspect(props) {
     }
 
     fetchReferral();
+  });
 
-  }, []);
-
+  if (!channel || !referralCode) {
+    return <BadEntry />
+  }
+  
   if (isFetching) {
     return <div>
       <Loader />
