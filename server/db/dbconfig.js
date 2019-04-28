@@ -2,13 +2,11 @@
 // instead that uses the config.js
 require('dotenv').config();
 
+console.log('env VAR', process.env.DATABASE_URL);
+
 module.exports = {
   development: {
-    username: process.env.PGUSER,
-    password: process.env.PGPASSWORD,
-    database: process.env.PGDATABASE,
-    host: process.env.PGHOST,
-    port: process.env.PGPORT,
+    use_env_variable: 'DATABASE_URL',
     dialect: 'postgres'
   },
   production: {
