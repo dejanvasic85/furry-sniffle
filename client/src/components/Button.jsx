@@ -19,9 +19,9 @@ const styles = theme => ({
 
 const Button = props => {
   const { classes, isFetching, children, ...restProps } = props;
-  
+
   return <div className={classes.wrapper}>
-    <MaterialButton disabled={isFetching} {...restProps}>
+    <MaterialButton {...restProps} disabled={isFetching}>
       {children}
     </MaterialButton>
     {isFetching && <CircularProgress size={24} className={classes.progress} />}
