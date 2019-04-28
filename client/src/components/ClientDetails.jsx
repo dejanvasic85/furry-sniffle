@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
 import {
-  Button,
+  Button as MaterialButton,
   Card,
   CardActions,
   CardContent,
@@ -25,7 +25,7 @@ import GiftCardIcon from '@material-ui/icons/CardGiftcard';
 
 import DateDisplay from './DateDisplay';
 import PersonAvatar from './PersonAvatar';
-import ProgressButton from '../components/ProgressButton';
+import Button from '../components/Button';
 import { apiClient } from '../apiClient';
 
 const styles = theme => ({
@@ -119,7 +119,7 @@ class ClientDetails extends React.Component {
               &nbsp;Send Gift
             </Button>
 
-            <ProgressButton
+            <Button
               variant="outlined"
               color="secondary"
               isFetching={isEmailSending}
@@ -127,7 +127,7 @@ class ClientDetails extends React.Component {
             >
               <EmailIcon />
               &nbsp;Send Email
-            </ProgressButton>
+            </Button>
           </CardActions>
         </Card>
       </>

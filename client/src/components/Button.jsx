@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, CircularProgress, withStyles } from '@material-ui/core';
+import { Button as MaterialButton, CircularProgress, withStyles } from '@material-ui/core';
 import green from '@material-ui/core/colors/green';
 
 const styles = theme => ({
@@ -17,22 +17,27 @@ const styles = theme => ({
   }
 });
 
-const ProgressButton = props => {
+const Button = props => {
   const { classes, isFetching, children, ...restProps } = props;
+  
   return <div className={classes.wrapper}>
-    <Button disabled={isFetching} {...restProps}>
+    <MaterialButton disabled={isFetching} {...restProps}>
       {children}
-    </Button>
+    </MaterialButton>
     {isFetching && <CircularProgress size={24} className={classes.progress} />}
   </div>
 };
 
-ProgressButton.propTypes = {
-  isFetching: PropTypes.bool.isRequired,
+Button.propTypes = {
+  isFetching: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired
 }
 
-export default withStyles(styles)(ProgressButton);
+Button.defaultProps = {
+  isFetching: false
+};
+
+export default withStyles(styles)(Button);

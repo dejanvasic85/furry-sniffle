@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, withStyles, Grid, TextField } from '@material-ui/core';
+import { withStyles, Grid, TextField } from '@material-ui/core';
+
+import Button from '../components/Button';
 
 const styles = theme => ({
   buttons: {
@@ -13,8 +15,9 @@ const styles = theme => ({
 class AgentEditor extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
+      isFetching: false,
       formData: {
         firstName: this.props.agent.firstName || '',
         lastName: this.props.agent.lastName || '',
@@ -26,17 +29,17 @@ class AgentEditor extends React.Component {
     }
   }
 
-  handleSave = () => {
-    if (this.props.onSaveAgent) {
-      const agent = {
-        firstName: this.state.formData.firstName,
-        lastName: this.state.formData.lastName,
-        businessName: this.state.formData.businessName,
-        abn: this.state.formData.abn,
-        phone: this.state.formData.phone
-      };
-      this.props.onSaveAgent(agent);
-    }
+  handleSave = async () => {
+    this.setState({ isFetching: true });
+    const agent = {
+      firstName: this.state.formData.firstName,
+      lastName: this.state.formData.lastName,
+      businessName: this.state.formData.businessName,
+      abn: this.state.formData.abn,
+      phone: this.state.formData.phone
+    };
+    await this.props.onSaveAgent(agent);
+    this.setState({ isFetching: false });
   }
 
   handleChange = event => {
@@ -73,11 +76,11 @@ class AgentEditor extends React.Component {
 
   render() {
     const { classes, agent } = this.props;
-    const { formData } = this.state;
+    const { isFetching, formData } = this.state;
 
     const validation = this.validate(this.state.formData);
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
-    
+
     return <Grid container spacing={24}>
       <Grid item xs={12} md={6}>
         <TextField disabled id="email" name="email" value={agent.email} label="Email" fullWidth />
@@ -108,12 +111,12 @@ class AgentEditor extends React.Component {
 
       <Grid item xs={12} md={6}>
         <TextField id="businessName" name="businessName" value={formData.businessName} label="Business Name" fullWidth
-          onChange={this.handleChange} /> 
+          onChange={this.handleChange} />
       </Grid>
 
       <Grid item xs={12} md={6}>
         <TextField id="abn" name="abn" value={formData.abn} label="ABN" fullWidth
-          onChange={this.handleChange} /> 
+          onChange={this.handleChange} />
       </Grid>
 
       <Grid item xs={12}>
@@ -123,6 +126,7 @@ class AgentEditor extends React.Component {
             color="primary"
             onClick={this.handleSave}
             disabled={isSaveDisabled}
+            isFetching={isFetching}
           >
             Save
             </Button>
