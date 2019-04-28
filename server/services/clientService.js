@@ -4,6 +4,11 @@ const getClientReferralUrl = (clientReferralCode) => {
   return `${webBaseUrl}/invite/${clientReferralCode}`;
 };
 
+const getMessageLink = (clientReferralCode, channelType) => {
+  return `${webBaseUrl}/message?referralCode=${clientReferralCode}&`
+};
+
+
 const getProspectDetailUrl = (prospectId) => {
   return `${webBaseUrl}/app/prospects/${prospectId}`;
 };

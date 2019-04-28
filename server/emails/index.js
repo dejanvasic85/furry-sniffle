@@ -1,9 +1,11 @@
 const sgMail = require('@sendgrid/mail');
 const uuidv4 = require('uuid/v4');
+const { MESSAGE_CHANNEL } = require('../constants');
 const { webBaseUrl, sendGrid } = require('../config');
 const {
   getClientReferralUrl,
-  getProspectDetailUrl
+  getProspectDetailUrl,
+  getMessageLink
 } = require('../services/clientService');
 const logger = require('../logger');
 
@@ -70,7 +72,11 @@ const sendNewClientEmail = async (agent, client) => {
     templateData: {
       agentName: agent.firstName,
       clientName: client.firstName,
-      clientReferralUrl: getClientReferralUrl(client.referralCode)
+      clientReferralUrl: getClientReferralUrl(client.referralCode),
+      inviteLinkWhatsApp: getMessageLink(client.referralCode, MESSAGE_CHANNEL.WHATSAPP),
+      inviteLinkMessenger: getMessageLink(client.referralCode, MESSAGE_CHANNEL.MESSENGER),
+      inviteLinkSms: getMessageLink(client.referralCode, MESSAGE_CHANNEL.SMS),
+      inviteLinkEmail: getMessageLink(client.referralCode, MESSAGE_CHANNEL.EMAIL)
     }
   });
 
