@@ -22,6 +22,9 @@ const styles = theme => ({
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
   },
   headerIcons: {
     color: '#fff',
@@ -96,7 +99,7 @@ class Header extends React.Component {
             tabIndex={0}
             role="button"
             onClick={this.handleDrawerToggle}>
-              <Menu onLogout={this.handleLogoutClick} />
+              <Menu onLogout={this.handleLogoutClick} showTitle={true} />
           </div>
         </Drawer>
       </div>
