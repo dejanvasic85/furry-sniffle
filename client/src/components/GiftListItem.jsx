@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import format from 'date-fns/format';
 import DateDisplay from './DateDisplay';
 import { withStyles } from '@material-ui/core/styles';
 import {

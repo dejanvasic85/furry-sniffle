@@ -1,10 +1,10 @@
 import React from 'react';
 import { compose } from 'recompose';
-import { Paper, withStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
-    maxWidth: '800px',
+    maxWidth: '960px',
     padding: theme.spacing.unit * 2,
     margin: 'auto'
   }

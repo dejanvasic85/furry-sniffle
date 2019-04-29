@@ -6,14 +6,17 @@ import withApiClient from '../decorators/withApiClient';
 import PageLayout from '../components/PageLayout';
 
 const styles = theme => ({
-  root: {}
+  root: {
+    padding: theme.spacing.unit * 2,
+  }
 });
 
 class DashboardPage extends React.Component {
   render() {
+    const { classes } = this.props;
     return <PageLayout>
-      <Paper>
-        <Typography>Dashboard coming soon</Typography>
+      <Paper className={classes.root}>
+        <Typography variant="h5">Dashboard coming soon</Typography>
       </Paper>
     </PageLayout>;
   }

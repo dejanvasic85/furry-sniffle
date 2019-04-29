@@ -26,7 +26,6 @@ const styles = theme => ({
     display: 'flex'
   },
   content: {
-    padding: '20px',
     flex: '1 auto'
   },
   desktopMenu: {
