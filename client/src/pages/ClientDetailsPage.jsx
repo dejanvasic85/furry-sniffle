@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 
 import withApiClient from '../decorators/withApiClient';
-import PageLayout from '../components/PageLayout';
 import ClientDetails from '../components/ClientDetails';
 import ClientEmails from '../components/ClientEmails';
 import ClientGifts from '../components/ClientGifts';
@@ -54,7 +53,7 @@ class ClientDetailsPage extends React.Component {
     const { classes } = this.props;
 
     return (
-      <PageLayout>
+      <>
         {isFetching && <Loader />}
         {!isFetching && (
           <>
@@ -72,7 +71,7 @@ class ClientDetailsPage extends React.Component {
             </div>
           </>
         )}
-      </PageLayout>
+      </>
     );
   }
 }

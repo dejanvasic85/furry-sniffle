@@ -1,13 +1,13 @@
 import React from 'react';
+import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
 import { List, Paper, Typography, withStyles } from '@material-ui/core';
 
-import PageLayout from '../components/PageLayout';
+import withApiClient from '../decorators/withApiClient';
 import GiftListItem from '../components/GiftListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
-import { apiClient } from '../apiClient';
 
 const styles = theme => ({
   root: {
@@ -38,7 +38,7 @@ class GiftsPage extends React.Component {
   };
 
   async componentDidMount() {
-    const gifts = await apiClient.getGifts();
+    const gifts = await this.props.api.getGifts();
     this.setState({ gifts, isFetching: false });
   }
 
@@ -72,47 +72,49 @@ class GiftsPage extends React.Component {
     const giftsToDisplay = filter ? filteredGifts : gifts;
 
     return (
-      <PageLayout>
-        <Paper>
-          {isFetching && <Loader />}
-          {!isFetching && giftsToDisplay.length > 0 && (
-            <>
-              <div className={classes.padded}>
-                <SearchInput
-                  value={filter}
-                  onSearchTextChange={this.handleSearchTextchange}
+      <Paper>
+        {isFetching && <Loader />}
+        {!isFetching && giftsToDisplay.length > 0 && (
+          <>
+            <div className={classes.padded}>
+              <SearchInput
+                value={filter}
+                onSearchTextChange={this.handleSearchTextchange}
+              />
+            </div>
+            <List className={classes.gifts}>
+              {giftsToDisplay.map((gift, hackishIndex) => (
+                <GiftListItem
+                  key={hackishIndex}
+                  giftDetails={gift}
+                  onClick={() => this.handleClientClick(gift.clientId)}
                 />
-              </div>
-              <List className={classes.gifts}>
-                {giftsToDisplay.map((gift, hackishIndex) => (
-                  <GiftListItem
-                    key={hackishIndex}
-                    giftDetails={gift}
-                    onClick={() => this.handleClientClick(gift.clientId)}
-                  />
-                ))}
-              </List>
-            </>
-          )}
-          {!isFetching && giftsToDisplay.length === 0 && (
-            <>
-              <div className={classes.padded}>
-                <Typography variant="h6">No gifts cards were sent. </Typography>
-                <Typography variant="body1">
-                  You can send gifts to your clients from the clients details page
-                  . Or you can always &nbsp;
+              ))}
+            </List>
+          </>
+        )}
+        {!isFetching && giftsToDisplay.length === 0 && (
+          <>
+            <div className={classes.padded}>
+              <Typography variant="h6">No gifts cards were sent. </Typography>
+              <Typography variant="body1">
+                You can send gifts to your clients from the clients details page
+                . Or you can always &nbsp;
                 <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">
-                    email
+                  email
                 </a>
-                  &nbsp;us for a help
+                &nbsp;us for a help
               </Typography>
-              </div>
-            </>
-          )}
-        </Paper>
-      </PageLayout>
+            </div>
+          </>
+        )}
+      </Paper>
     );
   }
 }
 
-export default withRouter(withStyles(styles)(GiftsPage));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  withApiClient
+)(GiftsPage);

@@ -5,7 +5,6 @@ import { withStyles, Paper } from '@material-ui/core';
 import { apiClient } from '../apiClient';
 import AgentEditor from '../components/AgentEditor';
 import Alert from '../components/Alert';
-import PageLayout from '../components/PageLayout';
 
 const styles = theme => ({
   root: {
@@ -46,19 +45,17 @@ class AgentDetailsPage extends React.Component {
     const { agent, displaySuccess, isFetching } = this.state;
     const { classes } = this.props;
 
-    return <PageLayout>
-      <Paper className={classes.root}>
-        {
-          agent && <AgentEditor agent={agent} onSaveAgent={this.handleAgentSave} isFetching={isFetching} />
-        }
-        {
-          displaySuccess && <div className={classes.notification}><Alert
-            message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
-            variant="success"
-            onClose={this.handleAlertClose}></Alert></div>
-        }
-      </Paper>
-    </PageLayout>
+    return <Paper className={classes.root}>
+      {
+        agent && <AgentEditor agent={agent} onSaveAgent={this.handleAgentSave} isFetching={isFetching} />
+      }
+      {
+        displaySuccess && <div className={classes.notification}><Alert
+          message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
+          variant="success"
+          onClose={this.handleAlertClose}></Alert></div>
+      }
+    </Paper>;
   }
 }
 

@@ -13,7 +13,6 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 
 import withApiClient from '../decorators/withApiClient';
-import PageLayout from '../components/PageLayout';
 import ClientListItem from '../components/ClientListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
@@ -40,7 +39,7 @@ const styles = theme => ({
   }
 });
 
-class ClientsPage extends React.Component {
+export class ClientsPage extends React.Component {
   state = {
     clients: [],
     filteredClients: [],
@@ -84,7 +83,7 @@ class ClientsPage extends React.Component {
       ? filteredClients
       : clients;
 
-    return <PageLayout className={classes.root}>
+    return <div className={classes.root}>
       <Paper>
         {
           isFetching && <Loader />
@@ -124,7 +123,7 @@ class ClientsPage extends React.Component {
       <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
         <AddIcon />
       </Fab>
-    </PageLayout>;
+    </div>;
   }
 }
 

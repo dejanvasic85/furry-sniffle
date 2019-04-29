@@ -1,12 +1,13 @@
 import React from 'react';
+import { compose } from 'recompose';
 import { Redirect } from 'react-router-dom';
-import { withStyles } from '@material-ui/core';
+import { Paper, withStyles } from '@material-ui/core';
 
-import { apiClient } from '../apiClient';
+import withApiClient from '../decorators/withApiClient';
 import ClientEditor from '../components/ClientEditor';
 
 const styles = theme => ({
-  paper: {
+  root: {
     padding: theme.spacing.unit * 2,
   },
   buttons: {
@@ -17,27 +18,31 @@ const styles = theme => ({
 
 class NewClientPage extends React.Component {
   state = {
-    saved: false
+    saved: false,
+    isFetching: false
   }
 
   handleSave = (clientDetails) => {
-    apiClient.createClient(clientDetails).then(() => {
-      this.setState({ saved: true });
+    this.setState({ isFetching: true });
+    this.props.api.createClient(clientDetails).then(() => {
+      this.setState({ saved: true, isFetching: false });
     });
   }
 
   render() {
-    const { saved } = this.state;
+    const { saved, isFetching } = this.state;
+    const { classes } = this.props;
 
-    return <>
+    return <Paper className={classes.root}>
       {
         saved && <Redirect to="/app/clients" />
       }
-
-      <ClientEditor onSaveClient={this.handleSave}/>
-
-    </>;  
+      <ClientEditor onSaveClient={this.handleSave} inProgress={isFetching} />
+    </Paper>;
   }
 }
 
-export default withStyles(styles)(NewClientPage);
+export default compose(
+  withStyles(styles),
+  withApiClient,
+)(NewClientPage);

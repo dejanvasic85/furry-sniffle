@@ -1,10 +1,9 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core';
+import { Paper, withStyles } from '@material-ui/core';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 
 import withApiClient from '../decorators/withApiClient';
-import PageLayout from '../components/PageLayout';
 import ClientEditor from '../components/ClientEditor';
 import Loader from '../components/Loader';
 
@@ -39,8 +38,9 @@ export class ClientEditPage extends React.Component {
 
   render() {
     const { client, isFetching, isClientSaving } = this.state;
+    const { classes } = this.props;
 
-    return <PageLayout>
+    return <Paper className={classes.root}>
       {
         isFetching && <Loader />
       }
@@ -48,7 +48,7 @@ export class ClientEditPage extends React.Component {
         !isFetching && <ClientEditor client={client} inProgress={isClientSaving} onSaveClient={this.handleClientSave} />
       }
       
-    </PageLayout>;
+    </Paper>;
   }
 }
 

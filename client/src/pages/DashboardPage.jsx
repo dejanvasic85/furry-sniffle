@@ -3,7 +3,6 @@ import { compose } from 'recompose';
 import { Paper, Typography, withStyles } from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
-import PageLayout from '../components/PageLayout';
 
 const styles = theme => ({
   root: {
@@ -11,14 +10,12 @@ const styles = theme => ({
   }
 });
 
-class DashboardPage extends React.Component {
+export class DashboardPage extends React.Component {
   render() {
     const { classes } = this.props;
-    return <PageLayout>
-      <Paper className={classes.root}>
-        <Typography variant="h5">Dashboard coming soon</Typography>
-      </Paper>
-    </PageLayout>;
+    return <Paper className={classes.root}>
+      <Typography variant="h5">Dashboard coming soon</Typography>
+    </Paper>;
   }
 }
 

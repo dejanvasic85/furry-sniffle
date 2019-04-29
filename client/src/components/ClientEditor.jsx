@@ -1,14 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid, TextField, Paper, Button, Switch, Typography, withStyles } from '@material-ui/core';
+import { Grid, TextField, Button, Switch, Typography, withStyles } from '@material-ui/core';
 
 import emailValidator from '../services/emailValidator';
 
 const styles = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 2,
-  },
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end'
@@ -100,7 +97,7 @@ class ClientEditor extends React.Component {
     const showValidation = field => validation[field] && this.state.formData.touched[field] === true;
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
-    return <Paper className={classes.paper}>
+    return <>
       <Grid container spacing={24}>
         <Grid item xs={12}>
           <TextField value={formData.firstName} id="firstName" name="firstName" label="First Name*" fullWidth
@@ -149,7 +146,7 @@ class ClientEditor extends React.Component {
           </div>
         </Grid>
       </Grid>
-    </Paper>
+    </>
   }
 }
 
