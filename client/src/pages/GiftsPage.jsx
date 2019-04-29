@@ -1,10 +1,9 @@
 import React from 'react';
 
 import { withRouter } from 'react-router-dom';
-import { Fab, List, Paper, Typography, withStyles } from '@material-ui/core';
+import { List, Paper, Typography, withStyles } from '@material-ui/core';
 
-import AddIcon from '@material-ui/icons/Add';
-
+import PageLayout from '../components/PageLayout';
 import GiftListItem from '../components/GiftListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
@@ -73,43 +72,45 @@ class GiftsPage extends React.Component {
     const giftsToDisplay = filter ? filteredGifts : gifts;
 
     return (
-      <Paper>
-        {isFetching && <Loader />}
-        {!isFetching && giftsToDisplay.length > 0 && (
-          <>
-            <div className={classes.padded}>
-              <SearchInput
-                value={filter}
-                onSearchTextChange={this.handleSearchTextchange}
-              />
-            </div>
-            <List className={classes.gifts}>
-              {giftsToDisplay.map((gift, hackishIndex) => (
-                <GiftListItem
-                  key={hackishIndex}
-                  giftDetails={gift}
-                  onClick={() => this.handleClientClick(gift.clientId)}
+      <PageLayout>
+        <Paper>
+          {isFetching && <Loader />}
+          {!isFetching && giftsToDisplay.length > 0 && (
+            <>
+              <div className={classes.padded}>
+                <SearchInput
+                  value={filter}
+                  onSearchTextChange={this.handleSearchTextchange}
                 />
-              ))}
-            </List>
-          </>
-        )}
-        {!isFetching && giftsToDisplay.length === 0 && (
-          <>
-            <div className={classes.padded}>
-              <Typography variant="h6">No gifts cards were sent. </Typography>
-              <Typography variant="body1">
-                You can send gifts to your clients from the clients details page
-                . Or you can always &nbsp;
+              </div>
+              <List className={classes.gifts}>
+                {giftsToDisplay.map((gift, hackishIndex) => (
+                  <GiftListItem
+                    key={hackishIndex}
+                    giftDetails={gift}
+                    onClick={() => this.handleClientClick(gift.clientId)}
+                  />
+                ))}
+              </List>
+            </>
+          )}
+          {!isFetching && giftsToDisplay.length === 0 && (
+            <>
+              <div className={classes.padded}>
+                <Typography variant="h6">No gifts cards were sent. </Typography>
+                <Typography variant="body1">
+                  You can send gifts to your clients from the clients details page
+                  . Or you can always &nbsp;
                 <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">
-                  email
+                    email
                 </a>
-                &nbsp;us an for a help
+                  &nbsp;us for a help
               </Typography>
-            </div>
-          </>
-        )}
-      </Paper>
+              </div>
+            </>
+          )}
+        </Paper>
+      </PageLayout>
     );
   }
 }

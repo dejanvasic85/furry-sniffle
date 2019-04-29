@@ -1,8 +1,10 @@
 import React from 'react';
+import { compose } from 'recompose';
 import { withStyles } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
-import { apiClient } from '../apiClient';
 
+import withApiClient from '../decorators/withApiClient';
+import PageLayout from '../components/PageLayout';
 import ClientDetails from '../components/ClientDetails';
 import ClientEmails from '../components/ClientEmails';
 import ClientGifts from '../components/ClientGifts';
@@ -28,7 +30,7 @@ class ClientDetailsPage extends React.Component {
 
   async componentDidMount() {
     const clientId = this.props.match.params.id;
-    const client = await apiClient.getClient(clientId);
+    const client = await this.props.api.getClient(clientId);
     this.setState({
       client,
       emails: client.emails,
@@ -52,7 +54,7 @@ class ClientDetailsPage extends React.Component {
     const { classes } = this.props;
 
     return (
-      <>
+      <PageLayout>
         {isFetching && <Loader />}
         {!isFetching && (
           <>
@@ -70,9 +72,13 @@ class ClientDetailsPage extends React.Component {
             </div>
           </>
         )}
-      </>
+      </PageLayout>
     );
   }
 }
 
-export default withRouter(withStyles(styles)(ClientDetailsPage));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  withApiClient,
+)(ClientDetailsPage);

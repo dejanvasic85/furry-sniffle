@@ -1,4 +1,5 @@
 import React from 'react';
+import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
 import {
@@ -11,9 +12,12 @@ import {
 
 import AddIcon from '@material-ui/icons/Add';
 
+import withApiClient from '../decorators/withApiClient';
+import PageLayout from '../components/PageLayout';
 import ClientListItem from '../components/ClientListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
+
 import { apiClient } from '../apiClient';
 
 const styles = theme => ({
@@ -80,46 +84,52 @@ class ClientsPage extends React.Component {
       ? filteredClients
       : clients;
 
-    return <Paper>
-      {
-        isFetching && <Loader />
-      }
-      {
-        !isFetching && clientsToDisplay.length > 0 && <>
-          <div className={classes.padded}>
-            <SearchInput value={filter}
-              onSearchTextChange={this.handleSearchTextchange} />
-          </div>
-          <List className={classes.clients}>
-            {
-              clientsToDisplay.map(client => (<ClientListItem
-                key={client.id}
-                client={client}
-                onClick={() => this.handleClientClick(client)} />))
-            }
-          </List>
+    return <PageLayout className={classes.root}>
+      <Paper>
+        {
+          isFetching && <Loader />
+        }
+        {
+          !isFetching && clientsToDisplay.length > 0 && <>
+            <div className={classes.padded}>
+              <SearchInput value={filter}
+                onSearchTextChange={this.handleSearchTextchange} />
+            </div>
+            <List className={classes.clients}>
+              {
+                clientsToDisplay.map(client => (<ClientListItem
+                  key={client.id}
+                  client={client}
+                  onClick={() => this.handleClientClick(client)} />))
+              }
+            </List>
 
-        </>
-      }
-      {
-        !isFetching && clientsToDisplay.length === 0 && <>
-          <div className={classes.padded}>
-            <Typography variant="h6">
-              No clients at the moment
+          </>
+        }
+        {
+          !isFetching && clientsToDisplay.length === 0 && <>
+            <div className={classes.padded}>
+              <Typography variant="h6">
+                No clients at the moment
           </Typography>
-            <Typography variant="body1">
-              Click on the plus icon in the bottom right to add one. Or you can always  
+              <Typography variant="body1">
+                Click on the plus icon in the bottom right to add one. Or you can always
               &nbsp;<a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">email</a>
-              &nbsp;us an exported file and we can add them for you.
+                &nbsp;us an exported file and we can add them for you.
           </Typography>
-          </div>
-        </>
-      }
+            </div>
+          </>
+        }
+      </Paper>
       <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
         <AddIcon />
       </Fab>
-    </Paper>;
+    </PageLayout>;
   }
 }
 
-export default withRouter(withStyles(styles)(ClientsPage));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  withApiClient
+)(ClientsPage);
