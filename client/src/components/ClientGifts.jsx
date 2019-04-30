@@ -21,7 +21,7 @@ class ClientGifts extends React.Component {
           {
             <List>
               {gifts.map(gift => (
-                <GiftListItem giftDetails={gift} key={gift.id} />
+                <GiftListItem giftDetails={gift} key={gift.id} onClick={() => {console.log('Shrug- what should happen?')}} />
               ))}
             </List>
           }
