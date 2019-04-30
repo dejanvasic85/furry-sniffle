@@ -12,7 +12,10 @@ const logger = require('../logger');
 const { Email } = require('../db');
 sgMail.setApiKey(sendGrid.apiKey);
 
-const FROM_EMAIL = 'no-reply@foxrewarder.com';
+const FROM_EMAIL = 'no-reply@foxrewarder.com.au';
+const FROM_NAME = 'Fox Rewarder';
+const getFullName = ({firstName, lastName}) => `${firstName} ${lastName}`;
+
 const TEMPLATE_IDS = Object.freeze({
   NEW_GIFT: 'd-5fe940ad2ade4e86b3539bb95136ace5',
   NEW_CLIENT: 'd-3cd3de0b1a7345d384e9662fbd7ebbe1',
@@ -21,9 +24,9 @@ const TEMPLATE_IDS = Object.freeze({
   NEW_PROSPECT_TO_PROSPECT: 'd-00046fce544b48fb87f30666435197e2'
 });
 
-const createEmailMsg = ({ templateId, templateData, to }) => ({
+const createEmailMsg = ({ templateId, templateData, from, to }) => ({
   to: to,
-  from: FROM_EMAIL,
+  from: from,
   text: 'Hello plain world!',
   html: '<p>Hello HTML world!</p>',
   subject: 'Hello World',
@@ -50,6 +53,10 @@ const sendAndTrackEmail = async (msg, clientId, agentId) => {
 
 const sendNewGiftEmail = async (agent, client, message, giftValue, giftUrl) => {
   const msg = createEmailMsg({
+    from: {
+      email: FROM_EMAIL,
+      name: getFullName(agent)
+    },
     to: client.email,
     subject: `$${giftValue} gift card for you as a thank you`,
     templateId: TEMPLATE_IDS.NEW_GIFT,
@@ -67,7 +74,10 @@ const sendNewGiftEmail = async (agent, client, message, giftValue, giftUrl) => {
 
 const sendNewClientEmail = async (agent, client) => {
   const msg = createEmailMsg({
-    from: agent.email,
+    from: {
+      email: FROM_EMAIL,
+      name: getFullName(agent)
+    },
     to: client.email,
     templateId: TEMPLATE_IDS.NEW_CLIENT,
     templateData: {
@@ -86,6 +96,10 @@ const sendNewClientEmail = async (agent, client) => {
 
 const sendNewProspectEmail = async (prospect, client, agent) => {
   const emailToAgent = createEmailMsg({
+    from: {
+      email: FROM_EMAIL,
+      name: FROM_NAME
+    },
     to: agent.email,
     templateId: TEMPLATE_IDS.NEW_PROSPECT_TO_AGENT,
     templateData: {
@@ -97,6 +111,10 @@ const sendNewProspectEmail = async (prospect, client, agent) => {
   await sgMail.send(emailToAgent);
 
   const emailToClient = createEmailMsg({
+    from: {
+      email: FROM_EMAIL,
+      name: FROM_NAME
+    },
     to: client.email,
     templateId: TEMPLATE_IDS.NEW_PROSPECT_TO_CLIENT,
     templateData: {
@@ -107,6 +125,10 @@ const sendNewProspectEmail = async (prospect, client, agent) => {
   await sgMail.send(emailToClient);
 
   const emailToProspect = createEmailMsg({
+    from: {
+      email: FROM_EMAIL,
+      name: FROM_NAME
+    },
     to: prospect.email,
     templateId: TEMPLATE_IDS.NEW_PROSPECT_TO_PROSPECT,
     templateData: {
