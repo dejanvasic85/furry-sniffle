@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
@@ -31,14 +31,18 @@ const styles = theme => ({
 });
 
 function Menu(props) {
-  const { classes, onLogout } = props;
+  const { classes, showTitle, onLogout } = props;
   return (
     <div className={classes.root}>
       <List component="nav">
-        <ListItem>
-          <Typography className={classes.appName}>Fox Rewarder</Typography>
-        </ListItem>
-        <Divider />
+        {
+          showTitle && <Fragment>
+            <ListItem>
+              <Typography className={classes.appName}>Fox Rewarder</Typography>
+            </ListItem>
+            <Divider />
+          </Fragment>
+        }
         <ListItem component={Link} to="/app" button>
           <ListItemIcon>
             <HomeIcon />
@@ -79,7 +83,8 @@ function Menu(props) {
 
 Menu.propTypes = {
   classes: PropTypes.object.isRequired,
-  onLogout: PropTypes.func.isRequired
+  onLogout: PropTypes.func.isRequired,
+  showTitle: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(Menu);

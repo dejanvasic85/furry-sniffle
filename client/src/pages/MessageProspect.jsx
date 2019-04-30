@@ -60,6 +60,6 @@ function MessageProspect(props) {
 export default (
   compose(
     withRouter,
-    withApiClient()
+    withApiClient
   )(MessageProspect)
 );

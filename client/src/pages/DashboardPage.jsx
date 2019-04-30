@@ -1,16 +1,25 @@
 import React from 'react';
+import { compose } from 'recompose';
+import { Paper, Typography, withStyles } from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
-import { Grid, Typography } from '@material-ui/core';
 
-class Home extends React.Component {
+const styles = theme => ({
+  root: {
+    padding: theme.spacing.unit * 2,
+  }
+});
+
+export class DashboardPage extends React.Component {
   render() {
-    return <>
-      <Grid container justify="center" alignItems="center" spacing="12">
-        <Grid item> <Typography>Coming soon</Typography></Grid>
-      </Grid>
-    </>;
+    const { classes } = this.props;
+    return <Paper className={classes.root}>
+      <Typography variant="h5">Dashboard coming soon</Typography>
+    </Paper>;
   }
 }
 
-export default withApiClient(Home);
+export default compose(
+  withApiClient,
+  withStyles(styles)
+)(DashboardPage);

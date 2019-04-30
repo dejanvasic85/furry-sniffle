@@ -8,9 +8,7 @@ import Alert from '../components/Alert';
 
 const styles = theme => ({
   root: {
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2
   },
   notification: {
     marginTop: '10px'
@@ -23,7 +21,8 @@ const styles = theme => ({
 class AgentDetailsPage extends React.Component {
   state = {
     agent: null,
-    saved: false
+    saved: false,
+    isFetching: false
   }
 
   componentDidMount() {
@@ -32,10 +31,10 @@ class AgentDetailsPage extends React.Component {
     });
   }
 
-  handleAgentSave = (updatedAgentDetails) => {
-    apiClient.updateAgent(updatedAgentDetails).then(agent => {
-      this.setState({ displaySuccess: true })
-    });
+  handleAgentSave = async (updatedAgentDetails) => {
+    this.setState({ isFetching: true });
+    await apiClient.updateAgent(updatedAgentDetails)
+    this.setState({ displaySuccess: true, isFetching: false });
   }
 
   handleAlertClose = () => {
@@ -43,24 +42,20 @@ class AgentDetailsPage extends React.Component {
   }
 
   render() {
-    const { agent, displaySuccess } = this.state;
+    const { agent, displaySuccess, isFetching } = this.state;
     const { classes } = this.props;
 
-    return <>
-      <Paper className={classes.paper}>
-        {
-          agent && <AgentEditor agent={agent} onSaveAgent={this.handleAgentSave} />
-        }
-
-        {
-          displaySuccess && <div className={classes.notification}><Alert
-            message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
-            variant="success"
-            onClose={this.handleAlertClose}></Alert></div>
-        }
-
-      </Paper >
-    </>
+    return <Paper className={classes.root}>
+      {
+        agent && <AgentEditor agent={agent} onSaveAgent={this.handleAgentSave} isFetching={isFetching} />
+      }
+      {
+        displaySuccess && <div className={classes.notification}><Alert
+          message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
+          variant="success"
+          onClose={this.handleAlertClose}></Alert></div>
+      }
+    </Paper>;
   }
 }
 

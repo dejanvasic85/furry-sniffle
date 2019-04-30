@@ -1,14 +1,13 @@
 import React from 'react';
+import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
-import { Fab, List, Paper, Typography, withStyles } from '@material-ui/core';
+import { List, Paper, Typography, withStyles } from '@material-ui/core';
 
-import AddIcon from '@material-ui/icons/Add';
-
+import withApiClient from '../decorators/withApiClient';
 import GiftListItem from '../components/GiftListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
-import { apiClient } from '../apiClient';
 
 const styles = theme => ({
   root: {
@@ -39,7 +38,7 @@ class GiftsPage extends React.Component {
   };
 
   async componentDidMount() {
-    const gifts = await apiClient.getGifts();
+    const gifts = await this.props.api.getGifts();
     this.setState({ gifts, isFetching: false });
   }
 
@@ -104,7 +103,7 @@ class GiftsPage extends React.Component {
                 <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">
                   email
                 </a>
-                &nbsp;us an for a help
+                &nbsp;us for a help
               </Typography>
             </div>
           </>
@@ -114,4 +113,8 @@ class GiftsPage extends React.Component {
   }
 }
 
-export default withRouter(withStyles(styles)(GiftsPage));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  withApiClient
+)(GiftsPage);
