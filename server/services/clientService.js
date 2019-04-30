@@ -8,7 +8,6 @@ const getMessageLink = (clientReferralCode, channelType) => {
   return `${webBaseUrl}/message?referralCode=${clientReferralCode}&`
 };
 
-
 const getProspectDetailUrl = (prospectId) => {
   return `${webBaseUrl}/app/prospects/${prospectId}`;
 };
@@ -21,6 +20,7 @@ const generateReferralCode = client => {
 
 module.exports = {
   getClientReferralUrl,
+  getMessageLink,
   getProspectDetailUrl,
   generateReferralCode
 };

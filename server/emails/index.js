@@ -67,6 +67,7 @@ const sendNewGiftEmail = async (agent, client, message, giftValue, giftUrl) => {
 
 const sendNewClientEmail = async (agent, client) => {
   const msg = createEmailMsg({
+    from: agent.email,
     to: client.email,
     templateId: TEMPLATE_IDS.NEW_CLIENT,
     templateData: {

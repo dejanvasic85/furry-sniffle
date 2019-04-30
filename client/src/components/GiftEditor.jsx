@@ -80,7 +80,7 @@ class GiftEditor extends React.Component {
   render() {
     const { formData } = this.state;
     const validation = this.validate(formData);
-    const { classes, inProgress } = this.props;
+    const { classes, isFetching } = this.props;
     const showValidation = field =>
       validation[field] && this.state.formData.touched[field] === true;
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
@@ -88,15 +88,14 @@ class GiftEditor extends React.Component {
     return (
       <Paper className={classes.paper}>
         <Grid container spacing={24}>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6">Send Gift card to the client</Typography>
-            <Typography>This operation is irreversible!</Typography>
             <Typography>
               This operation is irreversible! Make sure you are sending gift to
               the right client.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12}>
             <TextField
               value={formData.from}
               id="from"
@@ -111,7 +110,7 @@ class GiftEditor extends React.Component {
               }
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12}>
             <TextField
               value={formData.message}
               id="message"
@@ -127,7 +126,7 @@ class GiftEditor extends React.Component {
               }
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12}>
             <TextField
               value={formData.value}
               id="giftValue"
@@ -151,7 +150,7 @@ class GiftEditor extends React.Component {
                 variant="contained"
                 color="primary"
                 onClick={this.handleSave}
-                disabled={isSaveDisabled || inProgress}
+                disabled={isSaveDisabled || isFetching}
               >
                 Send Gift
               </Button>
@@ -166,7 +165,7 @@ class GiftEditor extends React.Component {
 GiftEditor.propTypes = {
   details: PropTypes.object,
   onSave: PropTypes.func.isRequired,
-  inProgress: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(GiftEditor);

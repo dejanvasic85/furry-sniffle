@@ -17,23 +17,25 @@ const styles = theme => ({
 
 class NewGiftPage extends React.Component {
   state = {
-    saved: false
+    saved: false,
+    isFetching: false
   };
 
   handleSave = async giftDetails => {
+    this.setState({ isFetching: true });
     const { id } = this.props.match.params;
     await apiClient.sendGift(id, giftDetails);
-    this.setState({ saved: true });
+    this.setState({ saved: true, isFetching: false });
   };
 
   render() {
-    const { saved } = this.state;
+    const { isFetching, saved } = this.state;
 
     return (
       <>
         {saved && <Redirect to="/app/gifts" />}
 
-        <GiftEditor onSave={this.handleSave} />
+        <GiftEditor onSave={this.handleSave} isFetching={isFetching} />
       </>
     );
   }

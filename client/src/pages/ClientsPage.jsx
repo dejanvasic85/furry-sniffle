@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
@@ -20,13 +20,10 @@ import Loader from '../components/Loader';
 import { apiClient } from '../apiClient';
 
 const styles = theme => ({
-  root: {
-    position: 'relative'
-  },
   fab: {
     position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
+    bottom: theme.spacing.unit * 4,
+    right: theme.spacing.unit * 4,
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,
@@ -83,7 +80,7 @@ export class ClientsPage extends React.Component {
       ? filteredClients
       : clients;
 
-    return <div className={classes.root}>
+    return <Fragment>
       <Paper>
         {
           isFetching && <Loader />
@@ -123,7 +120,7 @@ export class ClientsPage extends React.Component {
       <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
         <AddIcon />
       </Fab>
-    </div>;
+    </Fragment>;
   }
 }
 
