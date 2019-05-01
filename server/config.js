@@ -19,8 +19,8 @@ const conf = {
   webBaseUrl: WEB_BASE_URL || 'http://localhost:3000',
   connectionString: DATABASE_URL,
   auth0: {
-    baseUri: AUTH0_URI || 'https://paramount.au.auth0.com/',
-    audience: AUTH0_AUDIENCE || 'http://localhost:5000'
+    baseUri: AUTH0_URI || 'https://foxrewarder.au.auth0.com/',
+    audience: AUTH0_AUDIENCE || 'https://www.foxrewarder.com.au/api'
   },
   sendGrid: {
     baseUrl: SENDGRID_BASEURL || 'https://api.sendgrid.com/v3',
