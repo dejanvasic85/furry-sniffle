@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid, TextField, Button, Switch, Typography, withStyles } from '@material-ui/core';
+import { Grid, TextField, Switch, Typography, withStyles } from '@material-ui/core';
 
+import Button from './Button';
 import emailValidator from '../services/emailValidator';
 
 const styles = theme => ({
@@ -139,7 +140,8 @@ class ClientEditor extends React.Component {
               variant="contained"
               color="primary"
               onClick={this.handleSave}
-              disabled={isSaveDisabled || inProgress}
+              isFetching={inProgress}
+              disabled={isSaveDisabled}
             >
               Save
             </Button>

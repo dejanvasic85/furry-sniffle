@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { withStyles, Grid, TextField } from '@material-ui/core';
 
-import Button from '../components/Button';
+import Button from './Button';
 
 const styles = theme => ({
   buttons: {

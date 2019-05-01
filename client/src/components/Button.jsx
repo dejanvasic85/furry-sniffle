@@ -18,10 +18,10 @@ const styles = theme => ({
 });
 
 const Button = props => {
-  const { classes, isFetching, children, ...restProps } = props;
+  const { classes, disabled, isFetching, children, ...restProps } = props;
 
   return <div className={classes.wrapper}>
-    <MaterialButton {...restProps} disabled={isFetching}>
+    <MaterialButton {...restProps} disabled={disabled || isFetching}>
       {children}
     </MaterialButton>
     {isFetching && <CircularProgress size={24} className={classes.progress} />}
@@ -30,6 +30,7 @@ const Button = props => {
 
 Button.propTypes = {
   isFetching: PropTypes.bool,
+  disabled: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
