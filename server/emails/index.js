@@ -105,7 +105,7 @@ const sendNewProspectEmail = async (prospect, client, agent) => {
     templateData: {
       clientName: client.firstName,
       prospectName: prospect.firstName,
-      prospectDetailUrl: getProspectDetailUrl(prospect.id)
+      prospectUrl: getProspectDetailUrl(prospect.id)
     }
   });
   await sgMail.send(emailToAgent);
