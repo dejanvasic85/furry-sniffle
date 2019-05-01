@@ -39,8 +39,9 @@ class ClientDetailsPage extends React.Component {
   }
 
   handleEmailSent = email => {
+    const newState = [email];
     this.setState({
-      emails: [...this.state.emails, email]
+      emails: [...newState, ...this.state.emails]
     });
   };
 
