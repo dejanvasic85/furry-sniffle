@@ -1,17 +1,22 @@
 import React from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { Fab, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { Grid, Paper, TextField, Typography } from '@material-ui/core';
 
 import { apiClient } from '../apiClient';
 import emailValidator from '../services/emailValidator';
+import Button from '../components/Button';
 
 const whiteTextStyle = {
   color: '#FFFFFF'
 };
 const styles = theme => ({
   root: {},
+  centered: {
+    textAlign: 'center'
+  },
   buttons: {
+    marginTop: '20px',
     display: 'flex',
     justifyContent: 'center'
   },
@@ -91,7 +96,7 @@ const styles = theme => ({
 class InvitationPage extends React.Component {
   state = {
     completed: false,
-    fetching: true,
+    isFetching: true,
     isValid: null,
     invite: null,
     formData: {
@@ -104,21 +109,16 @@ class InvitationPage extends React.Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { referralCode } = this.props.match.params;
 
-    apiClient
-      .invite({ referralCode })
-      .then(result => {
-        this.setState({
-          isValid: true,
-          invite: result.invite,
-          fetching: false
-        });
-      })
-      .catch(err => {
-        this.setState({ isValid: false });
-      });
+    this.setState({ isFetching: true });
+    const result = await apiClient.invite({ referralCode });
+    this.setState({
+      isValid: true,
+      invite: result.invite,
+      isFetching: false
+    });
   }
 
   validate = ({ firstName, lastName, email, phone }) => {
@@ -159,10 +159,18 @@ class InvitationPage extends React.Component {
     return validation[field] && this.state.formData.touched[field] === true;
   };
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     this.setState({
       fetching: true
     });
+
+    const validation = this.validate(this.state.formData);
+    
+    const hasErrors = Object.keys(validation).some(k => validation[k]);
+
+    if (hasErrors) {
+      return;
+    }
 
     const { agentId, clientId } = this.state.invite;
     const prospect = Object.assign({}, this.state.formData, {
@@ -170,26 +178,26 @@ class InvitationPage extends React.Component {
       clientId
     });
 
-    apiClient.createProspect(prospect).then(result => {
-      this.setState({
-        fetching: false,
-        completed: true
-      });
+    this.setState({ isFetching: true });
+    const result = await apiClient.createProspect(prospect);
+    this.setState({
+      isFetching: false,
+      completed: true
     });
   };
 
   render() {
-    const { isValid, invite, formData, completed, fetching } = this.state;
+    const { isValid, invite, formData, completed, isFetching } = this.state;
+
     const { classes } = this.props;
     const validation = this.validate(this.state.formData);
-    const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
     if (completed) {
       return (
-        <div>
+        <div className={classes.centered}>
           <Typography variant="h4">
             Thank you! {invite.agentName} has been notified and he'll be in
-            tough with you shortly.
+            touch with you shortly.
           </Typography>
         </div>
       );
@@ -220,18 +228,9 @@ class InvitationPage extends React.Component {
                   Your trusted friend {invite.clientName} has referred you
                 </Typography>
               </div>
-              {/* <div className={classes.hero}>
-                <Typography variant="h4" gutterBottom align="left">
-                  Contact {invite.agentName}
-                </Typography>
-
-                <Typography variant="h6" gutterBottom align="left">
-                  Your trusted friend {invite.clientName} has referred you
-                </Typography>
-              </div> */}
               <div className={classes.container}>
                 <Grid container spacing={24}>
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="firstName"
                       name="firstName"
@@ -245,7 +244,24 @@ class InvitationPage extends React.Component {
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      label="Your email"
+                      fullWidth
+                      onChange={this.handleChange}
+                      onBlur={() => this.handleBlur('email')}
+                      error={this.showError(validation, 'email')}
+                      helperText={
+                        this.showValidation('email') &&
+                        'Please provide a valid email'
+                      }
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
                     <TextField
                       id="phone"
                       name="phone"
@@ -256,13 +272,13 @@ class InvitationPage extends React.Component {
                       onBlur={() => this.handleBlur('phone')}
                       error={this.showError(validation, 'phone')}
                       helperText={
-                        this.showValidation('email') &&
-                        'Please provide a valid email'
+                        this.showValidation('phone') &&
+                        'Please provide a valid phone'
                       }
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="phone"
                       name="message"
@@ -278,15 +294,15 @@ class InvitationPage extends React.Component {
 
                   <Grid item xs={12}>
                     <div className={classes.buttons}>
-                      <Fab
-                        variant="extended"
-                        // variant="contained"
+                      <Button
                         color="primary"
+                        variant="outlined"
+                        size="large"
                         onClick={this.handleSubmit}
-                        // disabled={isSaveDisabled}
+                        isFetching={isFetching}
                       >
                         Get in touch
-                      </Fab>
+                      </Button>
                     </div>
                   </Grid>
                 </Grid>
