@@ -43,13 +43,14 @@ function MessageProspect(props) {
       window.location = `whatsapp://send?text=${message}`;
       return null;
     case 'messenger':
-      window.location = `fb-messenger://text=${message}`;
+      //window.location = `fb-messenger://text=${message}`;
+      window.open(`fb-messenger://share?link=${encodeURIComponent(clientReferralUrl)}`);
       return null;
     case 'email': 
-      window.location = `mailto://someone@yoursite.com?body=${message}&subject=Contact ${agentName}`;
+      window.location.href = `mailto:?body=${message}&subject=Contact ${agentName}`;
       return null;
     case 'sms':
-      window.location = `sms:;body=${message}`;
+      window.location = `sms:?body=${encodeURIComponent(message)}`;
       return null;
     default: {
       return <BadEntry />;
