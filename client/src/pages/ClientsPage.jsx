@@ -17,8 +17,6 @@ import ClientListItem from '../components/ClientListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
 
-import { apiClient } from '../apiClient';
-
 const styles = theme => ({
   fab: {
     position: 'absolute',
@@ -45,7 +43,7 @@ export class ClientsPage extends React.Component {
   };
 
   async componentDidMount() {
-    const clients = await apiClient.getClients();
+    const clients = await this.props.api.getClients();
     this.setState({ clients, isFetching: false });
   }
 
@@ -81,10 +79,10 @@ export class ClientsPage extends React.Component {
       : clients;
 
     return <Fragment>
-      <Paper>
-        {
+      {
           isFetching && <Loader />
-        }
+      }
+      <Paper> 
         {
           !isFetching && clientsToDisplay.length > 0 && <>
             <div className={classes.padded}>

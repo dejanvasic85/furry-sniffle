@@ -24,7 +24,8 @@ const styles = theme => ({
     width: '100%'
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    minHeight: '93vh'
   },
   content: {
     flex: '1 auto'

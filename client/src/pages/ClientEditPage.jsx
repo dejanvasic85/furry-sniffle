@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Paper, withStyles } from '@material-ui/core';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
@@ -40,15 +40,16 @@ export class ClientEditPage extends React.Component {
     const { client, isFetching, isClientSaving } = this.state;
     const { classes } = this.props;
 
-    return <Paper className={classes.root}>
+    return <Fragment>
       {
         isFetching && <Loader />
       }
-      {
-        !isFetching && <ClientEditor client={client} inProgress={isClientSaving} onSaveClient={this.handleClientSave} />
-      }
-      
-    </Paper>;
+      <Paper className={classes.root}>
+        {
+          !isFetching && <ClientEditor client={client} inProgress={isClientSaving} onSaveClient={this.handleClientSave} />
+        }
+      </Paper>
+    </Fragment>;
   }
 }
 
