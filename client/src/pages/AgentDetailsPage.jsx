@@ -9,9 +9,7 @@ import Alert from '../components/Alert';
 import Loader from '../components/Loader';
 
 const styles = theme => ({
-  root: {
-    padding: theme.spacing.unit * 2
-  },
+  root: {},
   notification: {
     marginTop: '10px'
   },
@@ -53,7 +51,7 @@ class AgentDetailsPage extends React.Component {
       }
       {
         isFetching === false && agent && <Fragment>
-          <Paper className={classes.root}>
+          <div className={classes.root}>
             {
               agent && <AgentEditor 
                 agent={agent} 
@@ -66,7 +64,7 @@ class AgentDetailsPage extends React.Component {
                 variant="success"
                 onClose={this.handleAlertClose}></Alert></div>
             }
-          </Paper>
+          </div>
         </Fragment>
       }
     </Fragment>;
