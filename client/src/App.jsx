@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
+import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 import { StripeProvider } from 'react-stripe-elements';
 
 import withRoot from './withRoot';
+import withConfig from './decorators/withConfig';
 
 import Header from './components/Header';
 import Menu from './components/Menu';
@@ -46,12 +48,12 @@ class App extends React.Component {
   };
 
   render() {
-    const { auth, classes } = this.props;
+    const { auth, classes, config } = this.props;
 
     return (
       <Router>
         <div className={classes.root}>
-          <StripeProvider apiKey="pk_test_up5zZ6Vfb5BBGawIb2ugkN0o00ezT4zWqH">
+          <StripeProvider apiKey={config.stripe_key}>
             <Fragment>
               <Header onLogout={this.handleLogout} />
               <div className={classes.container}>
@@ -131,6 +133,9 @@ App.propTypes = {
   auth: PropTypes.object.isRequired
 };
 
-export default withRoot(
-  withRouter(withStyles(styles, { withTheme: true })(App))
-);
+export default compose(
+  withRoot,
+  withRouter,
+  withConfig,
+  withStyles(styles, { withTheme: true })
+)(App);

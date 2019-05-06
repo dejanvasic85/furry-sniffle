@@ -75,7 +75,7 @@ router.post('/deposit', jwtAuth, agentAuth, withAsync(async (req, res) => {
 
     res.json({ status });
   } catch (err) {
-    logger.error(`Stripe Payment failed. Request ${req.body}`);
+    logger.error(`Stripe Payment failed. Request ${JSON.stringify(req.body)}`);
     logger.error(err);
     res.status(500).end();
   }

@@ -25,10 +25,14 @@ const styles = theme => ({
   paymentElement: {
     maxWidth: '400px'
   },
-  gutter: {
-    marginTop: '10px'
+  cardElement: {
+    marginTop: '10px',
+    border: '1px solid #eee',
+    padding: '15px'
   }
 });
+
+const AUD_BASE_VALUE = 100;
 
 class DepositForm extends Component {
   state = {
@@ -40,10 +44,11 @@ class DepositForm extends Component {
   submit = async () => {
     this.setState({ isFetching: true });
     const { agent } = this.props;
+    const amount = this.state.amount * AUD_BASE_VALUE;
     const { token } = await this.props.stripe.createToken({ name: agent.email });
-    const response = await this.props.api.completeDeposit(token.id);
+    const { status } = await this.props.api.completeDeposit({ amount, stripeToken: token.id });
 
-    if (response.ok) {
+    if (status === "succeeded") {
       console.log("Deposit Complete!");
       this.setState({ isFetching: false, depositComplete: true });
     }
@@ -79,7 +84,7 @@ class DepositForm extends Component {
               }}
               margin="normal"
             />
-            <div className={classes.gutter}>
+            <div className={classes.cardElement}>
               <CardElement hidePostalCode={true} />
             </div>
           </div>
