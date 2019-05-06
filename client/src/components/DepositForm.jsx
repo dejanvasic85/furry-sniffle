@@ -38,15 +38,16 @@ class DepositForm extends Component {
   state = {
     amount: 50,
     isFetching: false,
-    depositComplete: false
+    depositComplete: false,
+    paymentFormReady: false
   };
 
   submit = async () => {
     this.setState({ isFetching: true });
-    const { agent } = this.props;
     const amount = this.state.amount * AUD_BASE_VALUE;
-    const { token } = await this.props.stripe.createToken({ name: agent.email });
-    const { status } = await this.props.api.completeDeposit({ amount, stripeToken: token.id });
+    const { agent, api, stripe } = this.props;
+    const { token } = await stripe.createToken({ name: agent.email });
+    const { status } = await api.completeDeposit({ amount, stripeToken: token.id });
 
     if (status === "succeeded") {
       console.log("Deposit Complete!");
@@ -54,13 +55,18 @@ class DepositForm extends Component {
     }
   }
 
-  handleAmountChange = (event) => {
+  handleAmountChange = event => {
     this.setState({ amount: event.target.value });
+  }
+
+  handlePaymentChange = event => {
+    this.setState({ paymentFormReady: event.complete });
   }
 
   render() {
     const { accountBalance, classes } = this.props;
-    const { amount, isFetching } = this.state;
+    const { amount, isFetching, paymentFormReady } = this.state;
+    const canSubmit = amount > 0 && paymentFormReady;
 
     return (
       <Card>
@@ -87,7 +93,8 @@ class DepositForm extends Component {
             <div className={classes.cardElement}>
               <CardElement 
                 hidePostalCode={true} 
-                style={{base: {fontSize: '18px'}}}/>
+                style={{base: {fontSize: '18px'}}}
+                onChange={this.handlePaymentChange}/>
             </div>
           </div>
         </CardContent>
@@ -96,7 +103,7 @@ class DepositForm extends Component {
           <Button
             variant="contained"
             color="primary"
-            disabled={amount <= 0}
+            disabled={!canSubmit}
             onClick={this.submit}
             isFetching={isFetching}>Deposit</Button>
         </CardActions>
