@@ -23,7 +23,7 @@ const styles = theme => ({
     justifyContent: 'flex-end'
   },
   paymentElement: {
-    maxWidth: '400px'
+    maxWidth: '450px'
   },
   cardElement: {
     marginTop: '10px',
@@ -85,7 +85,9 @@ class DepositForm extends Component {
               margin="normal"
             />
             <div className={classes.cardElement}>
-              <CardElement hidePostalCode={true} />
+              <CardElement 
+                hidePostalCode={true} 
+                style={{base: {fontSize: '18px'}}}/>
             </div>
           </div>
         </CardContent>
