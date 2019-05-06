@@ -80,41 +80,43 @@ export class ClientsPage extends React.Component {
 
     return <Fragment>
       {
-          isFetching && <Loader />
+        isFetching && <Loader />
       }
-      <Paper> 
-        {
-          !isFetching && clientsToDisplay.length > 0 && <>
-            <div className={classes.padded}>
-              <SearchInput value={filter}
-                onSearchTextChange={this.handleSearchTextchange} />
-            </div>
-            <List className={classes.clients}>
-              {
-                clientsToDisplay.map(client => (<ClientListItem
-                  key={client.id}
-                  client={client}
-                  onClick={() => this.handleClientClick(client)} />))
-              }
-            </List>
+      {
+        !isFetching && <Fragment>
+          <Paper>
+            {
+              !isFetching && <Fragment>
+                <div className={classes.padded}>
+                  <SearchInput value={filter}
+                    onSearchTextChange={this.handleSearchTextchange} />
+                </div>
+                <List className={classes.clients}>
+                  {
+                    clientsToDisplay.map(client => (<ClientListItem
+                      key={client.id}
+                      client={client}
+                      onClick={() => this.handleClientClick(client)} />))
+                  }
+                </List>
+              </Fragment>
+            }
+            {
+              clients.length === 0 && <Fragment>
+                <div className={classes.padded}>
+                  <Typography variant="h6">No clients at the moment</Typography>
+                  <Typography variant="body1">
+                    Click on the plus icon in the bottom right to add one. Or you can always
+                    &nbsp;<a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">email</a>
+                    &nbsp;us an exported file and we can add them for you.
+                  </Typography>
+                </div>
+              </Fragment>
+            }
+          </Paper>
+        </Fragment>
+      }
 
-          </>
-        }
-        {
-          !isFetching && clientsToDisplay.length === 0 && <>
-            <div className={classes.padded}>
-              <Typography variant="h6">
-                No clients at the moment
-          </Typography>
-              <Typography variant="body1">
-                Click on the plus icon in the bottom right to add one. Or you can always
-              &nbsp;<a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">email</a>
-                &nbsp;us an exported file and we can add them for you.
-          </Typography>
-            </div>
-          </>
-        }
-      </Paper>
       <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
         <AddIcon />
       </Fab>
