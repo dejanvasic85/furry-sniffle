@@ -10,7 +10,9 @@ const {
   WEB_BASE_URL,
   DATABASE_URL,
   GIFTPAY_BASEURL,
-  GIFTPAY_APIKEY
+  GIFTPAY_APIKEY,
+  STRIPE_KEY,
+  STRIPE_SECRET
 } = process.env;
 
 const conf = {
@@ -29,6 +31,10 @@ const conf = {
   giftPay: {
     apiKey: GIFTPAY_APIKEY,
     baseUrl: GIFTPAY_BASEURL || 'https://sandbox.express.giftpay.com'
+  },
+  stripeConfig: {
+    key: STRIPE_KEY,
+    secret: STRIPE_SECRET
   }
 };
 

@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
+import { StripeProvider } from 'react-stripe-elements';
+
 import withRoot from './withRoot';
+import withConfig from './decorators/withConfig';
 
 import Header from './components/Header';
 import Menu from './components/Menu';
@@ -24,7 +28,8 @@ const styles = theme => ({
     width: '100%'
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    minHeight: '93vh'
   },
   content: {
     flex: '1 auto'
@@ -43,77 +48,81 @@ class App extends React.Component {
   };
 
   render() {
-    const { auth, classes } = this.props;
+    const { auth, classes, config } = this.props;
 
     return (
       <Router>
         <div className={classes.root}>
-          <Header onLogout={this.handleLogout} />
-          <div className={classes.container}>
-            <div className={classes.desktopMenu}>
-              <Menu showTitle={false} onLogout={this.handleLogout} />
-            </div>
-            <main className={classes.content}>
-              <PageLayout>
-                <Switch>
-                  {/* Private Routes */}
-                  <PrivateRoute
-                    path="/app"
-                    exact
-                    component={DashboardPage}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/agent/details"
-                    exact
-                    component={AgentDetailsPage}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/clients"
-                    exact
-                    component={ClientsPage}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/gifts"
-                    exact
-                    component={GiftsPage}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/clients/:id/gifts/new"
-                    exact
-                    component={NewGiftPage}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/clients/new"
-                    exact
-                    component={NewClientPage}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/campaigns"
-                    component={Campaigns}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/clients/:id"
-                    exact={true}
-                    component={ClientDetailsPage}
-                    auth={auth}
-                  />
-                  <PrivateRoute
-                    path="/app/clients/:id/edit"
-                    exact={true}
-                    component={ClientEditPage}
-                    auth={auth}
-                  />
-                </Switch>
-              </PageLayout>
-            </main>
-          </div>
+          <StripeProvider apiKey={config.stripe_key}>
+            <Fragment>
+              <Header onLogout={this.handleLogout} />
+              <div className={classes.container}>
+                <div className={classes.desktopMenu}>
+                  <Menu showTitle={false} onLogout={this.handleLogout} />
+                </div>
+                <main className={classes.content}>
+                  <PageLayout>
+                    <Switch>
+                      {/* Private Routes */}
+                      <PrivateRoute
+                        path="/app"
+                        exact
+                        component={DashboardPage}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/agent/details"
+                        exact
+                        component={AgentDetailsPage}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/clients"
+                        exact
+                        component={ClientsPage}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/gifts"
+                        exact
+                        component={GiftsPage}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/clients/:id/gifts/new"
+                        exact
+                        component={NewGiftPage}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/clients/new"
+                        exact
+                        component={NewClientPage}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/campaigns"
+                        component={Campaigns}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/clients/:id"
+                        exact={true}
+                        component={ClientDetailsPage}
+                        auth={auth}
+                      />
+                      <PrivateRoute
+                        path="/app/clients/:id/edit"
+                        exact={true}
+                        component={ClientEditPage}
+                        auth={auth}
+                      />
+                    </Switch>
+                  </PageLayout>
+                </main>
+              </div>
+            </Fragment>
+          </StripeProvider>
         </div>
       </Router>
     );
@@ -124,6 +133,9 @@ App.propTypes = {
   auth: PropTypes.object.isRequired
 };
 
-export default withRoot(
-  withRouter(withStyles(styles, { withTheme: true })(App))
-);
+export default compose(
+  withRoot,
+  withRouter,
+  withConfig,
+  withStyles(styles, { withTheme: true })
+)(App);

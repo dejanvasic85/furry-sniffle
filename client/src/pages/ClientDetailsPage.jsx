@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 import { withStyles } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
@@ -13,10 +13,6 @@ const styles = theme => ({
   root: {},
   interactions: {
     marginTop: '20px'
-  },
-  progress: {
-    margin: 'auto',
-    width: '40px'
   }
 });
 
@@ -54,25 +50,25 @@ class ClientDetailsPage extends React.Component {
     const { classes } = this.props;
 
     return (
-      <>
+      <Fragment>
         {isFetching && <Loader />}
         {!isFetching && (
-          <>
+          <Fragment>
             <ClientDetails
               client={client}
               onEmailSent={this.handleEmailSent}
               onNewGift={this.handleOnNewGift}
             />
             <div className={classes.interactions}>
-              <ClientEmails emails={emails || []} />
-            </div>
-
-            <div className={classes.interactions}>
               <ClientGifts gifts={gifts || []} />
             </div>
-          </>
+            
+            <div className={classes.interactions}>
+              <ClientEmails emails={emails || []} />
+            </div>
+          </Fragment>
         )}
-      </>
+      </Fragment>
     );
   }
 }

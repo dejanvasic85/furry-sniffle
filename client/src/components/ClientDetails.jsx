@@ -1,4 +1,5 @@
 import React from 'react';
+import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -22,10 +23,10 @@ import LinkIcon from '@material-ui/icons/Link';
 import EditIcon from '@material-ui/icons/Edit';
 import GiftCardIcon from '@material-ui/icons/CardGiftcard';
 
+import withApiClient from '../decorators/withApiClient';
 import DateDisplay from './DateDisplay';
 import PersonAvatar from './PersonAvatar';
 import Button from '../components/Button';
-import { apiClient } from '../apiClient';
 
 const styles = theme => ({
   actions: {
@@ -46,7 +47,7 @@ class ClientDetails extends React.Component {
 
   handleSendEmailClick = async () => {
     this.setState({ isEmailSending: true });
-    const email = await apiClient.sendEmail(this.props.client.id);
+    const email = await this.props.api.sendEmail(this.props.client.id);
     this.setState({ isEmailSending: false });
     this.props.onEmailSent(email);
   };
@@ -140,4 +141,7 @@ ClientDetails.propTypes = {
   onNewGift: PropTypes.func
 };
 
-export default withStyles(styles)(ClientDetails);
+export default compose( 
+  withStyles(styles),
+  withApiClient
+)(ClientDetails);

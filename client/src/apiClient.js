@@ -90,6 +90,10 @@ class Api {
   invite(data) {
     return this.doFetch(`/prospects/invite`, 'POST', data);
   }
+
+  completeDeposit({ amount, stripeToken }) {
+    return this.doFetch(`/agents/deposit`, 'POST', { amount, stripeToken });
+  }
 }
 
 const apiClient = new Api();

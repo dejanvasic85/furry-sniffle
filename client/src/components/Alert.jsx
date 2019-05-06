@@ -20,6 +20,9 @@ const variantIcon = {
 };
 
 const styles = theme => ({
+  root: {
+    margin: 'auto'
+  },
   success: {
     backgroundColor: green[600],
   },
@@ -46,12 +49,12 @@ const styles = theme => ({
 });
 
 function Alert(props) {
-  const { classes, className, message, onClose, variant, ...other } = props;
+  const { classes, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
 
   return (
     <SnackbarContent
-      className={classNames(classes[variant], className)}
+      className={classNames(classes[variant], classes.root)}
       aria-describedby="client-snackbar"
       message={
         <span id="client-snackbar" className={classes.message}>
