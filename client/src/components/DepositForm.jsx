@@ -8,6 +8,7 @@ import {
   CardHeader,
   Divider,
   Typography,
+  TextField,
   withStyles
 } from '@material-ui/core';
 import CurrencyFormat from 'react-currency-format';
@@ -21,27 +22,40 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
+  paymentElement: {
+    maxWidth: '400px'
+  },
   gutter: {
-    marginTop: '15px'
+    marginTop: '10px'
   }
 });
 
 class DepositForm extends Component {
   state = {
-    isFetching: false
+    amount: 50,
+    isFetching: false,
+    depositComplete: false
   };
 
   submit = async () => {
+    this.setState({ isFetching: true });
     const { agent } = this.props;
     const { token } = await this.props.stripe.createToken({ name: agent.email });
     const response = await this.props.api.completeDeposit(token.id);
 
-    if (response.ok) console.log("Purchase Complete!")
+    if (response.ok) {
+      console.log("Deposit Complete!");
+      this.setState({ isFetching: false, depositComplete: true });
+    }
+  }
+
+  handleAmountChange = (event) => {
+    this.setState({ amount: event.target.value });
   }
 
   render() {
     const { accountBalance, classes } = this.props;
-    const { isFetching } = this.state;
+    const { amount, isFetching } = this.state;
 
     return (
       <Card>
@@ -50,9 +64,24 @@ class DepositForm extends Component {
           subheader={<CurrencyFormat value={accountBalance} displayType={'text'} thousandSeparator={true} prefix={'$'} />} />
         <Divider />
         <CardContent>
-          <Typography>In order to gift your client you must deposit money first.</Typography>
-          <div className={classes.gutter}>
-            <CardElement />
+          {
+            accountBalance === 0 && <Typography>In order to gift your client you must deposit money first.</Typography>
+          }
+          <div className={classes.paymentElement}>
+            <TextField
+              id="filled-number"
+              label="Amount"
+              value={amount}
+              onChange={this.handleAmountChange}
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              margin="normal"
+            />
+            <div className={classes.gutter}>
+              <CardElement hidePostalCode={true} />
+            </div>
           </div>
         </CardContent>
         <Divider />
@@ -60,7 +89,9 @@ class DepositForm extends Component {
           <Button
             variant="contained"
             color="primary"
-            onClick={this.submit} isFetching={isFetching}>Deposit</Button>
+            disabled={amount <= 0}
+            onClick={this.submit}
+            isFetching={isFetching}>Deposit</Button>
         </CardActions>
       </Card>
     );

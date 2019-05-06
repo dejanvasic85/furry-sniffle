@@ -91,8 +91,8 @@ class Api {
     return this.doFetch(`/prospects/invite`, 'POST', data);
   }
 
-  completeDeposit(token) {
-    return this.doFetch(`/agents/deposit`, 'POST', { token });
+  completeDeposit({ amount, stripeToken }) {
+    return this.doFetch(`/agents/deposit`, 'POST', { amount, stripeToken });
   }
 }
 
