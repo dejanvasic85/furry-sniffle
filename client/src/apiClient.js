@@ -90,6 +90,10 @@ class Api {
   invite(data) {
     return this.doFetch(`/prospects/invite`, 'POST', data);
   }
+
+  completeDeposit(token) {
+    return this.doFetch(`/agents/deposit`, 'POST', { token });
+  }
 }
 
 const apiClient = new Api();

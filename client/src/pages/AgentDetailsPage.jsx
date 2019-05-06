@@ -1,16 +1,18 @@
 import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 import { Link, withRouter } from 'react-router-dom';
-import { withStyles, Paper } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
+import { Elements } from 'react-stripe-elements';
 
 import withApiClient from '../decorators/withApiClient';
 import AgentEditor from '../components/AgentEditor';
 import Alert from '../components/Alert';
 import Loader from '../components/Loader';
+import DepositForm from '../components/DepositForm';
 
 const styles = theme => ({
   root: {},
-  notification: {
+  gutter: {
     marginTop: '10px'
   },
   link: {
@@ -50,21 +52,28 @@ class AgentDetailsPage extends React.Component {
         isFetching && <Loader />
       }
       {
-        isFetching === false && agent && <Fragment>
-          <div className={classes.root}>
-            {
-              agent && <AgentEditor 
-                agent={agent} 
-                onSaveAgent={this.handleAgentSave} 
-                isFetching={isSaving} />
-            }
-            {
-              displaySuccess && <div className={classes.notification}><Alert
-                message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
-                variant="success"
-                onClose={this.handleAlertClose}></Alert></div>
-            }
-          </div>
+        !isFetching && agent && <Fragment>
+
+          {
+            agent && <AgentEditor
+              agent={agent}
+              onSaveAgent={this.handleAgentSave}
+              isFetching={isSaving} />
+          }
+          {
+            displaySuccess && <div className={classes.gutter}><Alert
+              message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
+              variant="success"
+              onClose={this.handleAlertClose}></Alert></div>
+          }
+          <Elements>
+            <div className={classes.gutter}>
+              <DepositForm 
+                accountBalance={agent.accountBalance || 0}
+                agent={agent} />
+            </div>
+          </Elements>
+
         </Fragment>
       }
     </Fragment>;
