@@ -15,6 +15,7 @@ import CurrencyFormat from 'react-currency-format';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 
 import withApiClient from '../decorators/withApiClient';
+import Alert from './Alert';
 import Button from './Button';
 
 const styles = theme => ({
@@ -29,6 +30,10 @@ const styles = theme => ({
     marginTop: '10px',
     border: '1px solid #eee',
     padding: '15px'
+  },
+  alert: {
+    width: '100%',
+    padding: '20px'
   }
 });
 
@@ -65,7 +70,7 @@ class DepositForm extends Component {
 
   render() {
     const { accountBalance, classes } = this.props;
-    const { amount, isFetching, paymentFormReady } = this.state;
+    const { amount, depositComplete, isFetching, paymentFormReady } = this.state;
     const canSubmit = amount > 0 && paymentFormReady;
 
     return (
@@ -75,9 +80,12 @@ class DepositForm extends Component {
           subheader={<CurrencyFormat value={accountBalance} displayType={'text'} thousandSeparator={true} prefix={'$'} />} />
         <Divider />
         <CardContent>
-          {
-            accountBalance === 0 && <Typography>In order to gift your client you must deposit money first.</Typography>
-          }
+
+          <Typography>
+            In order to gift your client you must deposit money first. Allow up to 2 working days
+            for the deposit to reach our bank account.
+          </Typography>
+
           <div className={classes.paymentElement}>
             <TextField
               id="filled-number"
@@ -91,10 +99,10 @@ class DepositForm extends Component {
               margin="normal"
             />
             <div className={classes.cardElement}>
-              <CardElement 
-                hidePostalCode={true} 
-                style={{base: {fontSize: '18px'}}}
-                onChange={this.handlePaymentChange}/>
+              <CardElement
+                hidePostalCode={true}
+                style={{ base: { fontSize: '18px' } }}
+                onChange={this.handlePaymentChange} />
             </div>
           </div>
         </CardContent>
@@ -107,6 +115,14 @@ class DepositForm extends Component {
             onClick={this.submit}
             isFetching={isFetching}>Deposit</Button>
         </CardActions>
+        {
+          depositComplete && <div className={classes.alert}>
+            <Alert
+              message="Success. Please allow up to 2 working days for settlement."
+              variant="success"
+              onClose={this.handleAlertClose}></Alert>
+          </div>
+        }
       </Card>
     );
   }

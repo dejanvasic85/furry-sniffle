@@ -53,7 +53,6 @@ class AgentDetailsPage extends React.Component {
       }
       {
         !isFetching && agent && <Fragment>
-
           {
             agent && <AgentEditor
               agent={agent}

@@ -143,4 +143,5 @@ ClientDetails.propTypes = {
 
 export default compose( 
   withStyles(styles),
-  withApiClient)(ClientDetails);
+  withApiClient
+)(ClientDetails);
