@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import classNames from 'classnames';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 import {
+  colors,
   Card,
   CardActions,
   CardContent,
@@ -11,6 +13,7 @@ import {
   TextField,
   withStyles
 } from '@material-ui/core';
+import { CreditCard, AccountBalance } from '@material-ui/icons';
 import CurrencyFormat from 'react-currency-format';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 
@@ -23,28 +26,53 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  paymentElement: {
-    maxWidth: '450px'
-  },
+ 
   cardElement: {
     marginTop: '10px',
-    border: '1px solid #eee',
+    border: `1px solid ${colors.blueGrey[400]}`,
     padding: '15px'
   },
   alert: {
     width: '100%',
     padding: '20px'
+  },
+  depositChoices: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    marginTop: '18px'
+  },
+  depositChoice: {
+    cursor: 'pointer',
+    border: `1px solid ${colors.blueGrey[400]}`,
+    flexGrow: '1',
+    textAlign: 'center',
+    padding: '18px',
+    borderRadius: '8px',
+    margin: '0 10px'
+  },
+  selected: {
+    backgroundColor: colors.blueGrey[100]
+  },
+  icon: {
+    fontSize: '60px'
+  },
+  paymentInput: { 
+    padding: '18px',
+    minHeight: '200px'
   }
 });
 
 const AUD_BASE_VALUE = 100;
+const PAYMENT_CREDIT_CARD = 'credit card';
+const PAYMENT_DIRECT_DEBIT = 'direct debit';
 
 class DepositForm extends Component {
   state = {
     amount: 50,
     isFetching: false,
     depositComplete: false,
-    paymentFormReady: false
+    paymentFormReady: false,
+    selectedPaymentType: PAYMENT_CREDIT_CARD
   };
 
   submit = async () => {
@@ -60,6 +88,10 @@ class DepositForm extends Component {
     }
   }
 
+  handlePaymentTypeChange = selectedPaymentType => {
+    this.setState({ selectedPaymentType });
+  }
+
   handleAmountChange = event => {
     this.setState({ amount: event.target.value });
   }
@@ -68,43 +100,96 @@ class DepositForm extends Component {
     this.setState({ paymentFormReady: event.complete });
   }
 
+  renderAccountBalance = accountBalance => {
+    return <div>
+      <CurrencyFormat 
+        value={accountBalance} 
+        displayType={'text'} 
+        thousandSeparator={true} 
+        prefix={'$'} />
+    </div>;
+  }
+
   render() {
-    const { accountBalance, classes } = this.props;
-    const { amount, depositComplete, isFetching, paymentFormReady } = this.state;
+    const { 
+      accountBalance, 
+      classes 
+    } = this.props;
+
+    const { 
+      amount, 
+      depositComplete, 
+      isFetching, 
+      paymentFormReady, 
+      selectedPaymentType 
+    } = this.state;
+
     const canSubmit = amount > 0 && paymentFormReady;
+    const isCreditSelected = selectedPaymentType === PAYMENT_CREDIT_CARD;
+    const isDirectDebitSelected = selectedPaymentType === PAYMENT_DIRECT_DEBIT;
 
     return (
       <Card>
         <CardHeader
           title="Balance"
-          subheader={<CurrencyFormat value={accountBalance} displayType={'text'} thousandSeparator={true} prefix={'$'} />} />
+          subheader={this.renderAccountBalance(accountBalance)} />
         <Divider />
         <CardContent>
-
-          <Typography>
+          <Typography variant="h5">
+            Deposit
+          </Typography>
+          <Typography variant="body1">
             In order to gift your client you must deposit money first. Allow up to 2 working days
             for the deposit to reach our bank account.
           </Typography>
-
-          <div className={classes.paymentElement}>
-            <TextField
-              id="filled-number"
-              label="Amount"
-              value={amount}
-              onChange={this.handleAmountChange}
-              type="number"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              margin="normal"
-            />
-            <div className={classes.cardElement}>
-              <CardElement
-                hidePostalCode={true}
-                style={{ base: { fontSize: '18px' } }}
-                onChange={this.handlePaymentChange} />
+          <div className={classes.depositChoices}>
+            <div className={classNames(classes.depositChoice, { [classes.selected]: isCreditSelected })}
+              onClick={() => this.handlePaymentTypeChange(PAYMENT_CREDIT_CARD)}>
+              <Typography variant="h6">Credit Card</Typography>
+              <CreditCard className={classes.icon} />
+            </div>
+            <div className={classNames(classes.depositChoice, { [classes.selected]: isDirectDebitSelected })}
+              onClick={() => this.handlePaymentTypeChange(PAYMENT_DIRECT_DEBIT)}>
+              <Typography variant="h6">Direct Debit</Typography>
+              <AccountBalance className={classes.icon} />
             </div>
           </div>
+
+          <div className={classes.paymentInput}>
+            {
+              isCreditSelected && <Fragment>
+                <div className={classes.paymentElement}>
+                  <TextField
+                    id="filled-number"
+                    label="Amount"
+                    value={amount}
+                    onChange={this.handleAmountChange}
+                    type="number"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    margin="normal"
+                  />
+                  <div className={classes.cardElement}>
+                    <CardElement
+                      hidePostalCode={true}
+                      style={{ base: { fontSize: '18px' } }}
+                      onChange={this.handlePaymentChange} />
+                  </div>
+                </div>
+              </Fragment>
+            }
+
+            {
+              isDirectDebitSelected && <Fragment>
+                <Typography>
+                  Direct debit details go here
+              </Typography>
+              </Fragment>
+            }
+
+          </div>
+
         </CardContent>
         <Divider />
         <CardActions className={classes.buttons}>
