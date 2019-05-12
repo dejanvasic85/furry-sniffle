@@ -9,6 +9,7 @@ const clients = require('./server/routes/clients');
 const emailWebhook = require('./server/routes/emailWebhook');
 const agents = require('./server/routes/agents');
 const prospects = require('./server/routes/prospects');
+const dashboard = require('./server/routes/dashboard');
 const gifts = require('./server/routes/gifts');
 const { db } = require('./server/db');
 const logger = require('./server/logger');
@@ -22,6 +23,8 @@ app.use('/api/prospects', prospects); // todo: why prospects are not protected?
 app.use('/api/agents', agents); // todo: why agents are not protected?
 app.use('/api/email', emailWebhook);
 app.use('/api/clients', jwtAuth, agentAuth, clients);
+app.use('/api/dashboard', jwtAuth, agentAuth, dashboard);
+
 app.use('/api/gifts', jwtAuth, agentAuth, gifts);
 app.get('/index.html', (req, res) => {
   res.sendFile(path.join(__dirname + '/landing/index.html'));
