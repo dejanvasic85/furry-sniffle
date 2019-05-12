@@ -12,8 +12,8 @@ class Api {
       method: method || 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth}`
-      }
+        Authorization: `Bearer ${auth}`,
+      },
     };
 
     if (data) {
@@ -49,9 +49,13 @@ class Api {
     const request = {
       message: giftDetails.message,
       giftValue: Number.parseInt(giftDetails.giftValue),
-      from: giftDetails.from
+      from: giftDetails.from,
     };
     return this.doFetch(`/clients/${id}/gift`, 'POST', request);
+  }
+
+  getDashboard() {
+    return this.doFetch(`/dashboard`);
   }
 
   getClientGifts(id) {
