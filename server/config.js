@@ -3,6 +3,8 @@ const logger = require('./logger');
 const {
   AUTH0_URI,
   AUTH0_AUDIENCE,
+  DEPOSIT_FEE_PERCENT,
+  DEPOSIT_FEE_CENTS,
   NODE_ENV,
   PORT,
   SENDGRID_BASEURL,
@@ -20,6 +22,10 @@ const conf = {
   portNumber: PORT || 5000,
   webBaseUrl: WEB_BASE_URL || 'http://localhost:3000',
   connectionString: DATABASE_URL,
+  feeConfiguration: {
+    depositFeePercent: DEPOSIT_FEE_PERCENT,
+    depositFeeCents: DEPOSIT_FEE_CENTS,
+  },
   auth0: {
     baseUri: AUTH0_URI || 'https://foxrewarder.au.auth0.com/',
     audience: AUTH0_AUDIENCE || 'https://www.foxrewarder.com.au/api'

@@ -2,6 +2,7 @@
   "name": "example-create-react-app-express",
   "version": "1.0.0",
   "scripts": {
+    "test": "mocha ./lib/*-spec.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "start": "node api.js",
     "client": "cd client && yarn start",
@@ -32,7 +33,9 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "concurrently": "^4.1.0",
+    "mocha": "^6.1.4",
     "nodemon": "1.18.10"
   }
 }
