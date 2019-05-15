@@ -3,5 +3,5 @@ export const authConfig = {
   domain: 'foxrewarder.au.auth0.com',
   clientId: 'WgWzBgqXpTQn2DPJKlmYVllf6OHu3fjJ',
   callbackUrl:
-    process.env.REACT_APP_AUTH_CALLBACK_URL || 'http://localhost:3000/callback'
+    process.env.REACT_APP_AUTH_CALLBACK_URL
 };

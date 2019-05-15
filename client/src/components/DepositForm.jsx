@@ -14,19 +14,22 @@ import {
   withStyles
 } from '@material-ui/core';
 import { CreditCard, AccountBalance } from '@material-ui/icons';
-import CurrencyFormat from 'react-currency-format';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 
-import withApiClient from '../decorators/withApiClient';
-import Alert from './Alert';
-import Button from './Button';
+import { withApiClient, withConfig } from '../decorators';
+import {
+  Alert,
+  Button,
+  Currency
+} from './index';
+
 
 const styles = theme => ({
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end'
   },
- 
+
   cardElement: {
     marginTop: '10px',
     border: `1px solid ${colors.blueGrey[400]}`,
@@ -56,7 +59,7 @@ const styles = theme => ({
   icon: {
     fontSize: '60px'
   },
-  paymentInput: { 
+  paymentInput: {
     padding: '18px',
     minHeight: '200px'
   }
@@ -77,10 +80,13 @@ class DepositForm extends Component {
 
   submit = async () => {
     this.setState({ isFetching: true });
-    const amount = this.state.amount * AUD_BASE_VALUE;
+    const baseAmount = this.state.amount * AUD_BASE_VALUE;
     const { agent, api, stripe } = this.props;
     const { token } = await stripe.createToken({ name: agent.email });
-    const { status } = await api.completeDeposit({ amount, stripeToken: token.id });
+    const { status } = await api.completeDeposit({
+      amount: baseAmount,      
+      stripeToken: token.id
+    });
 
     if (status === "succeeded") {
       console.log("Deposit Complete!");
@@ -100,28 +106,29 @@ class DepositForm extends Component {
     this.setState({ paymentFormReady: event.complete });
   }
 
-  renderAccountBalance = accountBalance => {
-    return <div>
-      <CurrencyFormat 
-        value={accountBalance} 
-        displayType={'text'} 
-        thousandSeparator={true} 
-        prefix={'$'} />
-    </div>;
+  calculateTotalDepositAmount = ({ amount, depositFeeCents, depositFeePercent }) => {
+    let totalAmount = 0;
+    if (amount > 0) {
+      const baseAmount = amount * AUD_BASE_VALUE;
+      totalAmount = baseAmount + (baseAmount * (depositFeePercent / 100));
+    }
+
+    return totalAmount;
   }
 
   render() {
-    const { 
-      accountBalance, 
-      classes 
+    const {
+      accountBalance,
+      classes,
+      config: { feeConfiguration }
     } = this.props;
 
-    const { 
-      amount, 
-      depositComplete, 
-      isFetching, 
-      paymentFormReady, 
-      selectedPaymentType 
+    const {
+      amount,
+      depositComplete,
+      isFetching,
+      paymentFormReady,
+      selectedPaymentType
     } = this.state;
 
     const canSubmit = amount > 0 && paymentFormReady;
@@ -132,7 +139,7 @@ class DepositForm extends Component {
       <Card>
         <CardHeader
           title="Balance"
-          subheader={this.renderAccountBalance(accountBalance)} />
+          subheader={<Currency baseAmount={accountBalance} />} />
         <Divider />
         <CardContent>
           <Typography variant="h5">
@@ -170,6 +177,15 @@ class DepositForm extends Component {
                     }}
                     margin="normal"
                   />
+                  <div>
+                    <Typography> + Processing fee = {feeConfiguration.depositFeePercent}
+                      % + {feeConfiguration.depositFeeCents} cents</Typography>
+                  </div>
+                  <div>
+                    <Typography>
+                      = <Currency baseAmount={this.calculateTotalDepositAmount({ amount, ...feeConfiguration })} />
+                    </Typography>
+                  </div>
                   <div className={classes.cardElement}>
                     <CardElement
                       hidePostalCode={true}
@@ -221,5 +237,6 @@ DepositForm.propTypes = {
 export default compose(
   withStyles(styles),
   injectStripe,
-  withApiClient
+  withApiClient,
+  withConfig
 )(DepositForm);
