@@ -21,6 +21,7 @@ router.post('/login', jwtAuth, withAsync(async (req, res) => {
   const userAuthId = req.user.sub;
   const agent = await Agent.findOne({ where: { userAuthId } });
   if (agent) {
+    logger.info('Agent found');
     res.json(agent);
     return;
   }
@@ -36,7 +37,7 @@ router.post('/login', jwtAuth, withAsync(async (req, res) => {
     where: { email: newAgent.email },
     defaults: newAgent
   });
-
+  logger.info('Agent created successfully');
   res.status(201).json(createdAgent);
 }));
 
