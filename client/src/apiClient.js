@@ -70,12 +70,12 @@ class Api {
     return this.doFetch(`/clients/${id}`, 'PUT', client);
   }
 
-  getAgent(accessToken) {
-    if (accessToken) {
-      return this.doFetch('/agents', 'GET', null, accessToken);
-    }
-
-    // Get the current agent details from auth token
+  login(accessToken) {
+    return this.doFetch('/agents/login', 'POST', null, accessToken);
+  }
+  
+  getAgent() {
+    // Returns the current agent stored in token (local storage)
     return this.doFetch('/agents');
   }
 

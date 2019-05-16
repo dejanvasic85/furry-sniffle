@@ -71,8 +71,10 @@ export default class Auth {
     localStorage.removeItem('idToken');
     localStorage.removeItem('accessToken');
 
-    // Log back in ... should redirect to login
-    this.login();
+    this.auth0.logout({
+      clientID: authConfig.clientId,
+      returnTo: window.location.origin
+    });
   }
 
   isAuthenticated = () => {
