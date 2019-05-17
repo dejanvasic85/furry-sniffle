@@ -8,41 +8,37 @@ const logger = require('../logger');
 const { getUserInfo } = require('../services/auth0client');
 const { agentAuth, jwtAuth, withAsync } = require('../middleware');
 
-router.get('/', jwtAuth, withAsync(async (req, res) => {
-  const userAuthId = req.user.sub; // user is the subject of the token
-  logger.info(`getAgent sub: ${userAuthId}`)
-  return Agent.findOne({ where: { userAuthId } })
-    .then(agent => {
-      res.json(agent);
-    });
+router.get('/', jwtAuth, agentAuth, withAsync(async (req, res) => {
+  const agent = await Agent.findOne({
+    where: { userAuthId: req.user.sub }
+  });
+
+  res.json(agent);
 }));
 
-router.post('/', jwtAuth, withAsync(async (req, res) => {
+router.post('/login', jwtAuth, withAsync(async (req, res) => {
+  logger.info(`Login. Token verified. Checking agent in database`);
   const userAuthId = req.user.sub;
+  const agent = await Agent.findOne({ where: { userAuthId } });
+  if (agent) {
+    logger.info('Agent found');
+    res.json(agent);
+    return;
+  }
+
   const accessToken = req.get('Authorization');
+  const authResponse = await getUserInfo(accessToken);
+  const newAgent = {
+    userAuthId: userAuthId,
+    email: authResponse.email
+  };
 
-  getUserInfo(accessToken).then(authResponse => {
-    const newAgent = {
-      userAuthId: userAuthId,
-      email: authResponse.email
-    };
-
-    Agent.findOrCreate({
-      where: { email: newAgent.email },
-      defaults: newAgent
-    }).spread((agent, created) => {
-      if (!created) {
-        res.status(400).json({ error: 'Agent with email already registered' });
-        return;
-      }
-      res.status(201).json(agent);
-      return;
-    }).catch(err => {
-      res.status(500).json(err);
-    });
-  }).catch(err => {
-    res.status(500).json({ error: err })
+  const [createdAgent] = await Agent.findOrCreate({
+    where: { email: newAgent.email },
+    defaults: newAgent
   });
+  logger.info('Agent created successfully');
+  res.status(201).json(createdAgent);
 }));
 
 router.put('/', jwtAuth, withAsync(async (req, res) => {

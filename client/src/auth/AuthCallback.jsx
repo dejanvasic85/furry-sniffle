@@ -1,56 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { compose } from 'recompose';
 import { Redirect } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 
-import { apiClient } from '../apiClient';
-import { agentRequiresSetup } from '../services/agentService';
+import { withApiClient } from '../decorators';
 
-class AuthCallback extends React.Component {
-  state = {
-    goHome: false,
-    goCompleteRegistration: false
-  };
+const AuthCallback = ({ api, auth }) => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
 
-  componentDidMount() {
-    const { auth } = this.props;
-    auth
-      .handleAuthentication()
-      .then(authResult => {
-        apiClient
-          .getAgent(authResult.accessToken)
-          .then(profile => {
-            if (!profile) {
-              apiClient.createAgent().then(() => {
-                this.setState({ goCompleteRegistration: true });
-              });
-            } else {
-              if (agentRequiresSetup(profile) === true) {
-                this.setState({ goCompleteRegistration: true });
-              } else {
-                this.setState({ goHome: true });
-              }
-            }
-          })
-          .catch(e => {
-            console.error(`getAgent failed`, e, authResult);
-          });
-      })
-      .catch(e => {
-        console.error(`handleAuthentication failed`, e);
-      });
+  useEffect(() => {
+    const login = async () => {
+      const authResult = await auth.handleAuthentication();
+      await api.login(authResult.accessToken);
+      setLoggedIn(true);
+    };
+
+    if (!isLoggedIn) {
+      login();
+    }
+  });
+
+  if (isLoggedIn) {
+    return <Redirect to="/app" />;
   }
 
-  render() {
-    if (this.state.goCompleteRegistration) {
-      return <Redirect to="/app/agent/details" />;
-    }
-
-    if (this.state.goHome) {
-      return <Redirect to="/app" />;
-    }
-
-    return <div><Typography>Logging in... please wait</Typography></div>;
-  }
+  return <div><Typography>Logging in... please wait</Typography></div>;
 }
 
-export default AuthCallback;
+export default compose(
+  withApiClient
+)(AuthCallback);
