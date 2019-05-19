@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
 const { Email } = require('../db');
 
 const processEvent = async singleEvent => {
@@ -57,6 +56,9 @@ router.post('/webhook', async (req, res) => {
   } catch (e) {
     console.error('Failure', e);
   }
+
+  // todo: use axios and call webhook of staging environment. so we can use same sendgrid with 2 envs
+
   res.status(200).json({});
 });
 

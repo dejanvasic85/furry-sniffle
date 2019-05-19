@@ -14,6 +14,7 @@ import PageLayout from './components/PageLayout';
 
 import DashboardPage from './pages/DashboardPage';
 import ClientsPage from './pages/ClientsPage';
+import ProspectsPage from './prospects/ProspectsPage';
 import GiftsPage from './pages/GiftsPage';
 import NewClientPage from './pages/NewClientPage';
 import NewGiftPage from './pages/NewGiftPage';
@@ -115,6 +116,12 @@ class App extends React.Component {
                         path="/app/clients/:id/edit"
                         exact={true}
                         component={ClientEditPage}
+                        auth={auth}
+                      />
+                        <PrivateRoute
+                        path="/app/prospects"
+                        exact={true}
+                        component={ProspectsPage}
                         auth={auth}
                       />
                     </Switch>

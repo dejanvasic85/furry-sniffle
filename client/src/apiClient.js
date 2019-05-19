@@ -83,6 +83,14 @@ class Api {
     return this.doFetch('/agents', 'POST', {});
   }
 
+  getProspect(prospectId) {
+    return this.doFetch(`/prospects/${prospectId}`);
+  }
+
+  getProspects() {
+    return this.doFetch('/prospects');
+  }
+
   createProspect(prospect) {
     return this.doFetch('/prospects', 'POST', prospect);
   }

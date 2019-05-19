@@ -39,7 +39,7 @@ const conf = {
     baseUrl: GIFTPAY_BASEURL || 'https://sandbox.express.giftpay.com'
   },
   stripeConfig: {
-    key: STRIPE_KEY,
+    key: STRIPE_KEY || '123',
     secret: STRIPE_SECRET
   }
 };
