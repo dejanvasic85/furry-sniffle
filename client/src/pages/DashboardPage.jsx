@@ -58,7 +58,7 @@ export class DashboardPage extends React.Component {
             <DashboardItem icon={<EmailIcon />} title="Emails Sent" data={data.emails} />
           </Grid>
           <Grid item xs={6}>
-            <DashboardItem icon={<PhoneIcon />} title="Referals Received" data={data.prospects} />
+            <DashboardItem icon={<PhoneIcon />} title="Prospects Received" data={data.prospects} />
           </Grid>
         </Grid>
       </Paper>

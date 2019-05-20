@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Client, Email, Gift } = require('../db');
+const { Client, Email, Gift, Prospect } = require('../db');
 const { withAsync } = require('../middleware');
 const {
   getClientReferralUrl,
@@ -52,11 +52,21 @@ router.get(
       order: [['createdAt', 'DESC']]
     });
 
+    const prospects = await Prospect.findAll({
+      where: { clientId: id, agentId: agentId },
+      include: [{
+        model: Client,
+        required: true
+      }],
+      order: [['createdAt', 'DESC']]
+    });
+
     const response = {
       ...client.dataValues,
       referralUrl: getClientReferralUrl(client.referralCode),
       emails: sentEmails,
-      gifts: sentGifts
+      gifts: sentGifts,
+      prospects: prospects
     };
 
     res.json(response);
@@ -111,7 +121,7 @@ router.post(
 
     logger.info(
       `Link generated clientRef: ${
-        generatedGift.clientRef
+      generatedGift.clientRef
       }, value:${giftValue}, message:${message}`
     );
 
@@ -132,7 +142,7 @@ router.post(
 
     logger.info(
       `Gift persisted: ${
-        generatedGift.clientRef
+      generatedGift.clientRef
       }, value:${giftValue}, message:${message}`
     );
 
@@ -146,7 +156,7 @@ router.post(
 
     logger.info(
       `Gift emailed: ${
-        generatedGift.clientRef
+      generatedGift.clientRef
       }, value:${giftValue}, message:${message}`
     );
 

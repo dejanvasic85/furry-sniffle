@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
-import {
-  ListItem,
-  ListItemText,
-  Typography
-} from '@material-ui/core';
+import { ListItem, ListItemText, Typography } from '@material-ui/core';
 
 import PersonAvatar from '../components/PersonAvatar';
 
@@ -16,44 +13,43 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: theme.palette.secondary.main,
-    color: '#fff'
+    color: '#fff',
   },
   inline: {
     display: 'inline',
-  }
+  },
 });
 
 export class ProspectListItem extends React.Component {
   render() {
     const { classes, prospect } = this.props;
-    return <ListItem alignItems="center" className={classes.root} onClick={this.props.onClick}>
-      <PersonAvatar details={prospect} />
-      <ListItemText
-        primary={`${prospect.firstName} ${prospect.lastName}`}
-        secondary={
-          <React.Fragment>
-            <Typography component="span" className={classes.inline} color="textPrimary">
-              {prospect.email}
-            </Typography>
-            &nbsp; {prospect.phone}
-
-            <div>
+    return (
+      <ListItem alignItems="center" className={classes.root} component={Link} to={`/app/prospects/${prospect.id}`}>
+        <PersonAvatar details={prospect} />
+        <ListItemText
+          primary={`${prospect.firstName} ${prospect.lastName}`}
+          secondary={
+            <React.Fragment>
               <Typography component="span" className={classes.inline} color="textPrimary">
-                Referred by 
+                {prospect.email}
               </Typography>
-
-              &nbsp; {prospect.Client.firstName}  {prospect.Client.lastName}
-            </div>
-          </React.Fragment>
-        }
-      />
-    </ListItem>;
+              &nbsp; {prospect.phone}
+              <div>
+                <Typography component="span" className={classes.inline} color="textPrimary">
+                  Referred by
+                </Typography>
+                &nbsp; {prospect.Client.firstName} {prospect.Client.lastName}
+              </div>
+            </React.Fragment>
+          }
+        />
+      </ListItem>
+    );
   }
 }
 
 ProspectListItem.propTypes = {
   prospect: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ProspectListItem);
