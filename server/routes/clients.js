@@ -203,10 +203,15 @@ router.post(
     }
 
     const agentId = req.agent.id;
+
+    const number = Math.floor(Math.random() * 1000);
+    const firstName = req.body.firstName.substring(0, 15);
+    const referralCode = `${firstName}${number}`;
+
     const createClientRequest = Object.assign({}, req.body, {
       agentId,
       isActive: true,
-      referralCode: 'temp'
+      referralCode: referralCode
     });
 
     const createResult = await Client.findOrCreate({
