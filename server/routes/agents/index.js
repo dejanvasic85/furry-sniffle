@@ -1,12 +1,12 @@
 const express = require('express');
-const { stripeConfig } = require('../config');
+const { stripeConfig } = require('../../config');
 const stripe = require("stripe")(stripeConfig.secret);
 const router = express.Router();
 
-const { Agent } = require('../db');
-const logger = require('../logger');
-const { getUserInfo } = require('../services/auth0client');
-const { agentAuth, jwtAuth, withAsync } = require('../middleware');
+const { Agent } = require('../../db');
+const logger = require('../../logger');
+const { getUserInfo } = require('../../services/auth0client');
+const { agentAuth, jwtAuth, withAsync } = require('../../middleware');
 
 const deposit = require('./deposit');
 
