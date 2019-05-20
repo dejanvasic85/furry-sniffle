@@ -84,7 +84,7 @@ class DepositForm extends Component {
     const { agent, api, stripe } = this.props;
     const { token } = await stripe.createToken({ name: agent.email });
     const { status } = await api.completeDeposit({
-      amount: baseAmount,      
+      amount: baseAmount,
       stripeToken: token.id
     });
 

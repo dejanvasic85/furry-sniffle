@@ -1,12 +1,14 @@
 const express = require('express');
-const { stripeConfig } = require('../config');
+const { stripeConfig } = require('../../config');
 const stripe = require("stripe")(stripeConfig.secret);
 const router = express.Router();
 
-const { Agent } = require('../db');
-const logger = require('../logger');
-const { getUserInfo } = require('../services/auth0client');
-const { agentAuth, jwtAuth, withAsync } = require('../middleware');
+const { Agent } = require('../../db');
+const logger = require('../../logger');
+const { getUserInfo } = require('../../services/auth0client');
+const { agentAuth, jwtAuth, withAsync } = require('../../middleware');
+
+const deposit = require('./deposit');
 
 router.get('/', jwtAuth, agentAuth, withAsync(async (req, res) => {
   const agent = await Agent.findOne({
@@ -58,23 +60,6 @@ router.put('/', jwtAuth, withAsync(async (req, res) => {
   });
 }));
 
-router.post('/deposit', jwtAuth, agentAuth, withAsync(async (req, res) => {
-  try {
-    const { amount, stripeToken } = req.body;
-    const { firstName, lastName } = req.agent;
-    const { status } = await stripe.charges.create({
-      amount: amount,
-      currency: 'aud',
-      description: `Agent Deposit by ${firstName} ${lastName}`,
-      source: stripeToken
-    });
-
-    res.json({ status });
-  } catch (err) {
-    logger.error(`Stripe Payment failed. Request ${JSON.stringify(req.body)}`);
-    logger.error(err);
-    res.status(500).end();
-  }
-}));
+router.post('/deposit', jwtAuth, agentAuth, withAsync(deposit));
 
 module.exports = router;
