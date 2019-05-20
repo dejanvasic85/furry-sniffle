@@ -8,19 +8,20 @@ import ClientDetails from '../components/ClientDetails';
 import ClientEmails from '../components/ClientEmails';
 import ClientGifts from '../components/ClientGifts';
 import Loader from '../components/Loader';
+import ProspectList from '../prospects/ProspectList';
 
 const styles = theme => ({
   root: {},
   interactions: {
-    marginTop: '20px'
-  }
+    marginTop: '20px',
+  },
 });
 
 class ClientDetailsPage extends React.Component {
   state = {
     isFetching: true,
     client: {},
-    emails: []
+    emails: [],
   };
 
   async componentDidMount() {
@@ -30,14 +31,15 @@ class ClientDetailsPage extends React.Component {
       client,
       emails: client.emails,
       gifts: client.gifts,
-      isFetching: false
+      prospects: client.prospects,
+      isFetching: false,
     });
   }
 
   handleEmailSent = email => {
     const newState = [email];
     this.setState({
-      emails: [...newState, ...this.state.emails]
+      emails: [...newState, ...this.state.emails],
     });
   };
 
@@ -46,7 +48,7 @@ class ClientDetailsPage extends React.Component {
   };
 
   render() {
-    const { client, emails, gifts, isFetching } = this.state;
+    const { client, emails, gifts, prospects, isFetching } = this.state;
     const { classes } = this.props;
 
     return (
@@ -54,15 +56,16 @@ class ClientDetailsPage extends React.Component {
         {isFetching && <Loader />}
         {!isFetching && (
           <Fragment>
-            <ClientDetails
-              client={client}
-              onEmailSent={this.handleEmailSent}
-              onNewGift={this.handleOnNewGift}
-            />
+            <ClientDetails client={client} onEmailSent={this.handleEmailSent} onNewGift={this.handleOnNewGift} />
+
+            <div className={classes.interactions}>
+              <ProspectList prospects={prospects || []} />
+            </div>
+
             <div className={classes.interactions}>
               <ClientGifts gifts={gifts || []} />
             </div>
-            
+
             <div className={classes.interactions}>
               <ClientEmails emails={emails || []} />
             </div>
@@ -76,5 +79,5 @@ class ClientDetailsPage extends React.Component {
 export default compose(
   withRouter,
   withStyles(styles),
-  withApiClient,
+  withApiClient
 )(ClientDetailsPage);

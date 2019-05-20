@@ -15,6 +15,7 @@ import PageLayout from './components/PageLayout';
 import DashboardPage from './pages/DashboardPage';
 import ClientsPage from './pages/ClientsPage';
 import ProspectsPage from './prospects/ProspectsPage';
+import ProspectDetailsPage from './prospects/ProspectDetailsPage';
 import GiftsPage from './pages/GiftsPage';
 import NewClientPage from './pages/NewClientPage';
 import NewGiftPage from './pages/NewGiftPage';
@@ -26,20 +27,20 @@ import AgentDetailsPage from './pages/AgentDetailsPage';
 
 const styles = theme => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   container: {
     display: 'flex',
-    minHeight: '93vh'
+    minHeight: '93vh',
   },
   content: {
-    flex: '1 auto'
+    flex: '1 auto',
   },
   desktopMenu: {
     width: '300px',
     [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
 });
 
@@ -65,63 +66,20 @@ class App extends React.Component {
                   <PageLayout>
                     <Switch>
                       {/* Private Routes */}
+                      <PrivateRoute path="/app" exact component={DashboardPage} auth={auth} />
+                      <PrivateRoute path="/app/agent/details" exact component={AgentDetailsPage} auth={auth} />
+                      <PrivateRoute path="/app/clients" exact component={ClientsPage} auth={auth} />
+                      <PrivateRoute path="/app/gifts" exact component={GiftsPage} auth={auth} />
+                      <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} auth={auth} />
+                      <PrivateRoute path="/app/clients/new" exact component={NewClientPage} auth={auth} />
+                      <PrivateRoute path="/app/campaigns" component={Campaigns} auth={auth} />
+                      <PrivateRoute path="/app/clients/:id" exact={true} component={ClientDetailsPage} auth={auth} />
+                      <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} auth={auth} />
+                      <PrivateRoute path="/app/prospects" exact={true} component={ProspectsPage} auth={auth} />
                       <PrivateRoute
-                        path="/app"
-                        exact
-                        component={DashboardPage}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/agent/details"
-                        exact
-                        component={AgentDetailsPage}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/clients"
-                        exact
-                        component={ClientsPage}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/gifts"
-                        exact
-                        component={GiftsPage}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/clients/:id/gifts/new"
-                        exact
-                        component={NewGiftPage}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/clients/new"
-                        exact
-                        component={NewClientPage}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/campaigns"
-                        component={Campaigns}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/clients/:id"
+                        path="/app/prospects/:id"
                         exact={true}
-                        component={ClientDetailsPage}
-                        auth={auth}
-                      />
-                      <PrivateRoute
-                        path="/app/clients/:id/edit"
-                        exact={true}
-                        component={ClientEditPage}
-                        auth={auth}
-                      />
-                        <PrivateRoute
-                        path="/app/prospects"
-                        exact={true}
-                        component={ProspectsPage}
+                        component={ProspectDetailsPage}
                         auth={auth}
                       />
                     </Switch>
@@ -137,7 +95,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
 export default compose(
