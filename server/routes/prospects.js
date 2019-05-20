@@ -19,6 +19,10 @@ router.get(
     const agentId = req.agent.id;
     logger.info(`Fetching all prospects for agentId ${agentId}`);
     const prospects = await Prospect.findAll({
+      include: [{
+        model: Client,
+        required: true
+       }],
       where: { agentId }
     });
 

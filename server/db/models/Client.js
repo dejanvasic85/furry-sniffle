@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-  return sequelize.define('Client', {
+  const Client =  sequelize.define('Client', {
     id: {
       type: type.INTEGER,
       primaryKey: true,
@@ -35,4 +35,11 @@ module.exports = (sequelize, type) => {
     createdAt: type.DATE,
     updatedAt: type.DATE
   }, {});
+
+  Client.associate = function(models) {
+    models.Client.hasMany(models.Prospect,
+      { foreignKey: 'clientId'} );
+  };
+
+  return Client;
 };

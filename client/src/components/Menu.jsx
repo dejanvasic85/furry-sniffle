@@ -13,6 +13,7 @@ import {
 
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import UserIcon from '@material-ui/icons/Accessibility';
 import PowerOffIcon from '@material-ui/icons/PowerOffOutlined';
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
@@ -62,6 +63,13 @@ function Menu(props) {
           </ListItemIcon>
           <ListItemText primary="Gifts" />
         </ListItem>
+        <ListItem component={Link} to="/app/prospects" button>
+          <ListItemIcon>
+            <QuestionAnswerIcon />
+          </ListItemIcon>
+          <ListItemText primary="Prospects" />
+        </ListItem>
+
         <ListItem component={Link} to="/app/agent/details" button>
           <ListItemIcon>
             <UserIcon />

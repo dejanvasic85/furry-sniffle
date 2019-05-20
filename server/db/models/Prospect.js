@@ -1,6 +1,7 @@
+
 module.exports = (sequelize, type) => {
-  return sequelize.define(
-    'Prospects',
+  const Prospect =  sequelize.define(
+    'Prospect',
     {
       id: {
         type: type.INTEGER,
@@ -18,10 +19,6 @@ module.exports = (sequelize, type) => {
       },
       clientId: {
         type: type.INTEGER,
-        references: {
-          model: 'Clients',
-          id: 'id'
-        },
         allowNull: false
       },
       status: {
@@ -48,4 +45,13 @@ module.exports = (sequelize, type) => {
     },
     {}
   );
+
+  Prospect.associate = function (models) {
+    models.Prospect.belongsTo(models.Client, {
+      foreignKey: "clientId"
+    });
+  };
+
+  return Prospect;
 };
+
