@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { Paper, withStyles } from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
-import ClientEditor from '../components/ClientEditor';
+import ClientEditor from './ClientEditor';
 import Alert from '../components/Alert';
 
 const styles = theme => ({
@@ -34,7 +34,6 @@ class NewClientPage extends React.Component {
       await this.props.api.createClient(clientDetails);
       this.setState({ saved: true, isFetching: false });
     } catch (e) {
-      console.log(e);
       this.setState({ saved: false, isFetching: false, error: e });
     }
   };

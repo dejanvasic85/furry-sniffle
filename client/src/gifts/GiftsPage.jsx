@@ -5,28 +5,28 @@ import { withRouter } from 'react-router-dom';
 import { List, Paper, Typography, withStyles } from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
-import GiftListItem from '../components/GiftListItem';
+import GiftListItem from './GiftListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
 
 const styles = theme => ({
   root: {
-    position: 'relative'
+    position: 'relative',
   },
   fab: {
     position: 'absolute',
     bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2
+    right: theme.spacing.unit * 2,
   },
   extendedIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
   },
   gifts: {
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   padded: {
-    padding: '20px'
-  }
+    padding: '20px',
+  },
 });
 
 class GiftsPage extends React.Component {
@@ -34,7 +34,7 @@ class GiftsPage extends React.Component {
     gifts: [],
     filteredGifts: [],
     filter: '',
-    isFetching: true
+    isFetching: true,
   };
 
   async componentDidMount() {
@@ -53,15 +53,12 @@ class GiftsPage extends React.Component {
   handleSearchTextchange = event => {
     const filter = event.target.value.toLowerCase();
     const filteredGifts = this.state.gifts.filter(({ message, giftValue }) => {
-      return (
-        message.toLowerCase().indexOf(filter) > -1 ||
-        giftValue.toLowerCase().indexOf(filter) > -1
-      );
+      return message.toLowerCase().indexOf(filter) > -1 || giftValue.toLowerCase().indexOf(filter) > -1;
     });
 
     this.setState({
       filter: event.target.value,
-      filteredGifts
+      filteredGifts,
     });
   };
 
@@ -77,10 +74,7 @@ class GiftsPage extends React.Component {
         {!isFetching && giftsToDisplay.length > 0 && (
           <>
             <div className={classes.padded}>
-              <SearchInput
-                value={filter}
-                onSearchTextChange={this.handleSearchTextchange}
-              />
+              <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
             </div>
             <List className={classes.gifts}>
               {giftsToDisplay.map((gift, hackishIndex) => (
@@ -98,11 +92,8 @@ class GiftsPage extends React.Component {
             <div className={classes.padded}>
               <Typography variant="h6">No gifts cards were sent. </Typography>
               <Typography variant="body1">
-                You can send gifts to your clients from the clients details page
-                . Or you can always &nbsp;
-                <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">
-                  email
-                </a>
+                You can send gifts to your clients from the clients details page . Or you can always &nbsp;
+                <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">email</a>
                 &nbsp;us for a help
               </Typography>
             </div>

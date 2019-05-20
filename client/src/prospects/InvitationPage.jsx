@@ -181,7 +181,7 @@ class InvitationPage extends React.Component {
     });
 
     this.setState({ isFetching: true });
-    const result = await apiClient.createProspect(prospect);
+    await apiClient.createProspect(prospect);
     this.setState({
       isFetching: false,
       completed: true,

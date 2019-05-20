@@ -3,22 +3,22 @@ import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 
 import { apiClient } from '../apiClient';
-import GiftEditor from '../components/GiftEditor';
+import GiftEditor from './GiftEditor';
 
 const styles = theme => ({
   paper: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
   },
   buttons: {
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 });
 
 class NewGiftPage extends React.Component {
   state = {
     saved: false,
-    isFetching: false
+    isFetching: false,
   };
 
   handleSave = async giftDetails => {
