@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Paper, TextField, Typography } from '@material-ui/core';
@@ -8,32 +8,32 @@ import emailValidator from '../services/emailValidator';
 import Button from '../components/Button';
 
 const whiteTextStyle = {
-  color: '#FFFFFF'
+  color: '#FFFFFF',
 };
 const styles = theme => ({
   root: {},
   centered: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   buttons: {
     marginTop: '20px',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   fontMain: {
-    color: '#757575'
+    color: '#757575',
   },
   fontGreyed: {
-    color: '#8E8E96'
+    color: '#8E8E96',
   },
   separator: {
-    color: '#A9A9A9'
+    color: '#A9A9A9',
   },
   submitTutton: {
-    color: '#4EAE3E'
+    color: '#4EAE3E',
   },
   container: {
-    padding: '20px'
+    padding: '20px',
   },
   tinted: {
     '&::before': {
@@ -44,8 +44,8 @@ const styles = theme => ({
       bottom: 0,
       left: 0,
       right: 0,
-      background: 'rgba(0,0,255, 0.5)'
-    }
+      background: 'rgba(0,0,255, 0.5)',
+    },
   },
 
   contactFormTitle: {
@@ -70,8 +70,8 @@ const styles = theme => ({
       left: 0,
       width: '100%',
       height: '100%',
-      background: 'rgba(54,84,99,0.7);'
-    }
+      background: 'rgba(54,84,99,0.7);',
+    },
   },
 
   hero: {
@@ -79,7 +79,11 @@ const styles = theme => ({
     backgroundSize: 'cover',
     height: '150px',
     width: '560px',
-    marginBottom: '20px'
+    marginBottom: '20px',
+  },
+
+  thankYou: {
+    padding: '40px',
   },
   layout: {
     width: 'auto',
@@ -88,9 +92,9 @@ const styles = theme => ({
     [theme.breakpoints.up(600 + theme.spacing.unit * 2 * 2)]: {
       width: 600,
       marginLeft: 'auto',
-      marginRight: 'auto'
-    }
-  }
+      marginRight: 'auto',
+    },
+  },
 });
 
 class InvitationPage extends React.Component {
@@ -105,8 +109,8 @@ class InvitationPage extends React.Component {
       phone: '',
       email: '',
       message: '',
-      touched: []
-    }
+      touched: [],
+    },
   };
 
   async componentDidMount() {
@@ -117,7 +121,7 @@ class InvitationPage extends React.Component {
     this.setState({
       isValid: true,
       invite: result.invite,
-      isFetching: false
+      isFetching: false,
     });
   }
 
@@ -125,15 +129,13 @@ class InvitationPage extends React.Component {
     const errors = {
       firstName: firstName.length === 0,
       email: email.length === 0 || !emailValidator(email),
-      phone: phone.length === 0 || !/^\d+$/.test(phone)
+      phone: phone.length === 0 || !/^\d+$/.test(phone),
     };
     return errors;
   };
 
   showError = (validationResult, field) => {
-    return (
-      validationResult[field] && this.state.formData.touched[field] === true
-    );
+    return validationResult[field] && this.state.formData.touched[field] === true;
   };
 
   handleChange = event => {
@@ -148,8 +150,8 @@ class InvitationPage extends React.Component {
       ...this.state.formData,
       touched: {
         ...this.state.formData.touched,
-        [field]: true
-      }
+        [field]: true,
+      },
     };
 
     this.setState({ formData });
@@ -161,11 +163,11 @@ class InvitationPage extends React.Component {
 
   handleSubmit = async () => {
     this.setState({
-      fetching: true
+      fetching: true,
     });
 
     const validation = this.validate(this.state.formData);
-    
+
     const hasErrors = Object.keys(validation).some(k => validation[k]);
 
     if (hasErrors) {
@@ -175,14 +177,14 @@ class InvitationPage extends React.Component {
     const { agentId, clientId } = this.state.invite;
     const prospect = Object.assign({}, this.state.formData, {
       agentId,
-      clientId
+      clientId,
     });
 
     this.setState({ isFetching: true });
     const result = await apiClient.createProspect(prospect);
     this.setState({
       isFetching: false,
-      completed: true
+      completed: true,
     });
   };
 
@@ -194,12 +196,29 @@ class InvitationPage extends React.Component {
 
     if (completed) {
       return (
-        <div className={classes.centered}>
-          <Typography variant="h4">
-            Thank you! {invite.agentName} has been notified and he'll be in
-            touch with you shortly.
-          </Typography>
-        </div>
+        <main className={classes.layout}>
+          <Paper>
+            <Fragment>
+              <div className={classes.contactFormTitle}>
+                <Typography style={whiteTextStyle} variant="h4" gutterBottom align="center">
+                  Contact {invite.agentName}
+                </Typography>
+
+                <Typography style={whiteTextStyle} variant="h6" gutterBottom align="center">
+                  Your trusted friend {invite.clientName} has referred you
+                </Typography>
+              </div>
+              <div className={classes.thankYou}>
+                <Typography variant="h5" align="center">
+                  <div>Thank you!</div>
+                </Typography>
+                <Typography variant="body1" align="center">
+                  {invite.agentName} has been notified and he'll be in touch with you shortly.
+                </Typography>
+              </div>
+            </Fragment>
+          </Paper>
+        </main>
       );
     }
 
@@ -210,21 +229,11 @@ class InvitationPage extends React.Component {
           {invite && (
             <div>
               <div className={classes.contactFormTitle}>
-                <Typography
-                  style={whiteTextStyle}
-                  variant="h4"
-                  gutterBottom
-                  align="center"
-                >
+                <Typography style={whiteTextStyle} variant="h4" gutterBottom align="center">
                   Contact {invite.agentName}
                 </Typography>
 
-                <Typography
-                  style={whiteTextStyle}
-                  variant="h6"
-                  gutterBottom
-                  align="center"
-                >
+                <Typography style={whiteTextStyle} variant="h6" gutterBottom align="center">
                   Your trusted friend {invite.clientName} has referred you
                 </Typography>
               </div>
@@ -254,10 +263,7 @@ class InvitationPage extends React.Component {
                       onChange={this.handleChange}
                       onBlur={() => this.handleBlur('email')}
                       error={this.showError(validation, 'email')}
-                      helperText={
-                        this.showValidation('email') &&
-                        'Please provide a valid email'
-                      }
+                      helperText={this.showValidation('email') && 'Please provide a valid email'}
                     />
                   </Grid>
 
@@ -271,10 +277,7 @@ class InvitationPage extends React.Component {
                       onChange={this.handleChange}
                       onBlur={() => this.handleBlur('phone')}
                       error={this.showError(validation, 'phone')}
-                      helperText={
-                        this.showValidation('phone') &&
-                        'Please provide a valid phone'
-                      }
+                      helperText={this.showValidation('phone') && 'Please provide a valid phone'}
                     />
                   </Grid>
 
