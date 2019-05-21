@@ -61,7 +61,7 @@ const styles = theme => ({
   },
   paymentInput: {
     padding: '18px',
-    minHeight: '200px'
+    minHeight: '250px'
   }
 });
 
@@ -90,6 +90,7 @@ class DepositForm extends Component {
 
     if (status === "succeeded") {
       console.log("Deposit Complete!");
+      // Todo - update balance in the UI
       this.setState({ isFetching: false, depositComplete: true });
     }
   }
@@ -110,7 +111,7 @@ class DepositForm extends Component {
     let totalAmount = 0;
     if (amount > 0) {
       const baseAmount = amount * AUD_BASE_VALUE;
-      totalAmount = baseAmount + (baseAmount * (depositFeePercent / 100));
+      totalAmount = baseAmount + (baseAmount * (depositFeePercent / 100)) + depositFeeCents;
     }
 
     return totalAmount;
