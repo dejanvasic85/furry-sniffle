@@ -5,6 +5,7 @@ import { Paper, withStyles } from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
 import ClientEditor from '../components/ClientEditor';
+import Alert from '../components/Alert';
 
 const styles = theme => ({
   root: {
@@ -12,37 +13,47 @@ const styles = theme => ({
   },
   buttons: {
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 });
 
 class NewClientPage extends React.Component {
   state = {
     saved: false,
-    isFetching: false
-  }
+    isFetching: false,
+    error: null,
+  };
 
-  handleSave = (clientDetails) => {
+  handleAlertClose = () => {
+    this.setState({ error: null });
+  };
+
+  handleSave = async clientDetails => {
     this.setState({ isFetching: true });
-    this.props.api.createClient(clientDetails).then(() => {
+    try {
+      await this.props.api.createClient(clientDetails);
       this.setState({ saved: true, isFetching: false });
-    });
-  }
+    } catch (e) {
+      console.log(e);
+      this.setState({ saved: false, isFetching: false, error: e });
+    }
+  };
 
   render() {
-    const { saved, isFetching } = this.state;
+    const { saved, isFetching, error } = this.state;
     const { classes } = this.props;
 
-    return <Paper className={classes.root}>
-      {
-        saved && <Redirect to="/app/clients" />
-      }
-      <ClientEditor onSaveClient={this.handleSave} inProgress={isFetching} />
-    </Paper>;
+    return (
+      <Paper className={classes.root}>
+        {saved && <Redirect to="/app/clients" />}
+        {error && <Alert message={`${error}`} variant="error" onClose={this.handleAlertClose} />}
+        <ClientEditor onSaveClient={this.handleSave} inProgress={isFetching} />
+      </Paper>
+    );
   }
 }
 
 export default compose(
   withStyles(styles),
-  withApiClient,
+  withApiClient
 )(NewClientPage);

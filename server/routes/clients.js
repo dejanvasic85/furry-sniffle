@@ -203,44 +203,48 @@ router.post(
     }
 
     const agentId = req.agent.id;
-    const createClientRequest = Object.assign({}, req.body, {
-      agentId,
-      isActive: true,
-      referralCode: 'temp'
-    });
+    const details = req.body;
 
-    const createResult = await Client.findOrCreate({
+    const existingClient = await Client.findOne({
       where: {
-        email: createClientRequest.email,
-        isActive: true,
-        agentId
-      },
-      defaults: createClientRequest
-    });
+        agentId: agentId,
+        email: details.email
+      }
+    })
 
-    const created = createResult[1];
-    if (!created) {
+    if (existingClient) {
+      console.log('Unable to create client as it already exists.', details.email);
       res.status(400).json({
-        error: `Client with email ${createClientRequest.email} already exists`
+        error: `Client with email ${details.email} already exists`
       });
       return;
     }
 
-    const clientWithoutReferralCode = createResult[0].dataValues;
+    const createClientRequest = Object.assign({}, details, {
+      agentId,
+      isActive: true,
+      referralCode: "temp"
+    });
+
+    const createResult = await Client.create(createClientRequest);
+
+    const createdClient = createResult.dataValues;
+    const referalCode = generateReferralCode(createdClient);
 
     // Now that we have an id, we can create a new client with referral code
-    const client = generateReferralCode(clientWithoutReferralCode);
     await Client.update(
-      { referralCode: clientWithoutReferralCode.referralCode },
-      { where: { id: clientWithoutReferralCode.id } }
+      { referralCode: referalCode },
+      { where: { id: createdClient.id } }
     );
 
-    if (createClientRequest.sendNewClientEmail === true) {
-      logger.info(`Sending email to ${client.email}`);
-      await emails.sendNewClientEmail(req.agent, client);
+    createdClient.referralCode = referalCode;
+
+    if (createClientRequest.sendEmail === true) {
+      logger.info(`Sending email to ${createdClient.email}`);
+      await emails.sendNewClientEmail(req.agent, createdClient);
     }
 
-    res.status(201).json({ client });
+    res.status(201).json({ createdClient });
   })
 );
 
