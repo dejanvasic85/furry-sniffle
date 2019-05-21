@@ -5,7 +5,7 @@ class Api {
     this.authService = new AuthService();
   }
 
-  doFetch(path, method, data, accessToken) {
+  async doFetch(path, method, data, accessToken) {
     const auth = accessToken || this.authService.getToken();
 
     let options = {
@@ -20,13 +20,19 @@ class Api {
       options.body = JSON.stringify(data);
     }
 
-    return fetch(`/api${path}`, options).then(res => {
-      if (res.ok) {
-        return res.json();
-      }
+    const res = await fetch(`/api${path}`, options);
+    if (res.ok) {
+      return await res.json();
+    }
 
-      throw new Error('API call was not successful', res);
-    });
+    if (res.status >= 400) {
+      const payload = await res.json();
+      if (payload.error) {
+        throw new Error(payload.error);
+      }
+    }
+
+    throw new Error('Oops.. something went wrong. Check your connect or try again.', res);
   }
 
   createClient(client) {
@@ -73,7 +79,7 @@ class Api {
   login(accessToken) {
     return this.doFetch('/agents/login', 'POST', null, accessToken);
   }
-  
+
   getAgent() {
     // Returns the current agent stored in token (local storage)
     return this.doFetch('/agents');

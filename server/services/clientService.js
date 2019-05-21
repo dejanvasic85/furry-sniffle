@@ -12,10 +12,8 @@ const getProspectDetailUrl = (prospectId) => {
   return `${webBaseUrl}/app/prospects/${prospectId}`;
 };
 
-const generateReferralCode = client => {
-  return Object.assign({}, client, {
-    referralCode: `${client.firstName.toLowerCase()}-${client.id}`
-  });
+const generateReferralCode = ({ firstName, id }) => {
+  return `${firstName.toLowerCase()}-${id}`
 }
 
 module.exports = {
