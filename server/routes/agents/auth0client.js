@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { auth0 } = require('../config');
-const logger = require('../logger');
+const { auth0 } = require('../../config');
+const logger = require('../../logger');
 
 const getUserInfo = (accessToken) => {
   const url = `${auth0.baseUri}userinfo`;
