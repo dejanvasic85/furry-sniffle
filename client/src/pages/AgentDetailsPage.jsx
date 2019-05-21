@@ -61,7 +61,7 @@ class AgentDetailsPage extends React.Component {
           }
           {
             displaySuccess && <div className={classes.gutter}><Alert
-              message={<span>Saved Successfully. <Link to="/app/clients" className={classes.link}>Start managing clients.</Link></span>}
+              message={<span>Saved Successfully</span>}
               variant="success"
               onClose={this.handleAlertClose}></Alert></div>
           }
