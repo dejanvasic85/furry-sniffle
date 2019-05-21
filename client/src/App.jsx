@@ -8,22 +8,21 @@ import { StripeProvider } from 'react-stripe-elements';
 import withRoot from './withRoot';
 import withConfig from './decorators/withConfig';
 
-import Header from './components/Header';
-import Menu from './components/Menu';
-import PageLayout from './components/PageLayout';
+import Header from './menu/Header';
+import Menu from './menu/Menu';
+import PageLayout from './menu/PageLayout';
 
-import DashboardPage from './pages/DashboardPage';
-import ClientsPage from './pages/ClientsPage';
+import DashboardPage from './dashboard/DashboardPage';
+import ClientsPage from './clients/ClientsPage';
 import ProspectsPage from './prospects/ProspectsPage';
 import ProspectDetailsPage from './prospects/ProspectDetailsPage';
-import GiftsPage from './pages/GiftsPage';
-import NewClientPage from './pages/NewClientPage';
-import NewGiftPage from './pages/NewGiftPage';
-import Campaigns from './pages/Campaigns';
+import GiftsPage from './gifts/GiftsPage';
+import NewClientPage from './clients/NewClientPage';
+import NewGiftPage from './gifts/NewGiftPage';
 import PrivateRoute from './auth/PrivateRoute';
-import ClientDetailsPage from './pages/ClientDetailsPage';
-import ClientEditPage from './pages/ClientEditPage';
-import AgentDetailsPage from './pages/AgentDetailsPage';
+import ClientDetailsPage from './clients/ClientDetailsPage';
+import ClientEditPage from './clients/ClientEditPage';
+import AgentDetailsPage from './agents/AgentDetailsPage';
 
 const styles = theme => ({
   root: {
@@ -72,7 +71,6 @@ class App extends React.Component {
                       <PrivateRoute path="/app/gifts" exact component={GiftsPage} auth={auth} />
                       <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} auth={auth} />
                       <PrivateRoute path="/app/clients/new" exact component={NewClientPage} auth={auth} />
-                      <PrivateRoute path="/app/campaigns" component={Campaigns} auth={auth} />
                       <PrivateRoute path="/app/clients/:id" exact={true} component={ClientDetailsPage} auth={auth} />
                       <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} auth={auth} />
                       <PrivateRoute path="/app/prospects" exact={true} component={ProspectsPage} auth={auth} />

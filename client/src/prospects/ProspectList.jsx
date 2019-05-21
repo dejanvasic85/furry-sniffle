@@ -37,7 +37,7 @@ export class ProspectList extends React.Component {
 }
 
 ProspectList.propTypes = {
-  prospects: PropTypes.object.isRequired,
+  prospects: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClick: PropTypes.func,
 };
 

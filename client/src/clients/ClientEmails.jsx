@@ -1,11 +1,5 @@
 import React from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  List,
-  Divider
-} from '@material-ui/core';
+import { Card, CardContent, CardHeader, List, Divider } from '@material-ui/core';
 
 import EmailInteraction from './EmailInteraction';
 
@@ -20,7 +14,9 @@ class ClientEmails extends React.Component {
         <CardContent>
           {
             <List>
-              { emails.map(e => (<EmailInteraction email={e} key={e.id} />)) }
+              {emails.map(e => (
+                <EmailInteraction email={e} key={e.id} />
+              ))}
             </List>
           }
         </CardContent>

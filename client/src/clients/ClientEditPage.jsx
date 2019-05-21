@@ -4,20 +4,20 @@ import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 
 import withApiClient from '../decorators/withApiClient';
-import ClientEditor from '../components/ClientEditor';
+import ClientEditor from './ClientEditor';
 import Loader from '../components/Loader';
 
 const styles = theme => ({
   root: {
     padding: theme.spacing.unit * 2,
-  }
+  },
 });
 
 export class ClientEditPage extends React.Component {
   state = {
     client: null,
     isFetching: true,
-    isClientSaving: false
+    isClientSaving: false,
   };
 
   async componentDidMount() {
@@ -25,31 +25,31 @@ export class ClientEditPage extends React.Component {
     const client = await this.props.api.getClient(clientId);
     this.setState({
       client,
-      isFetching: false
+      isFetching: false,
     });
   }
 
-  handleClientSave = async (client) => {
+  handleClientSave = async client => {
     const { id } = this.props.match.params;
-    this.setState({ isClientSaving: true })
+    this.setState({ isClientSaving: true });
     await this.props.api.updateClient(id, client);
     this.props.history.push(`/app/clients/${id}`);
-  }
+  };
 
   render() {
     const { client, isFetching, isClientSaving } = this.state;
     const { classes } = this.props;
 
-    return <Fragment>
-      {
-        isFetching && <Loader />
-      }
-      <Paper className={classes.root}>
-        {
-          !isFetching && <ClientEditor client={client} inProgress={isClientSaving} onSaveClient={this.handleClientSave} />
-        }
-      </Paper>
-    </Fragment>;
+    return (
+      <Fragment>
+        {isFetching && <Loader />}
+        <Paper className={classes.root}>
+          {!isFetching && (
+            <ClientEditor client={client} inProgress={isClientSaving} onSaveClient={this.handleClientSave} />
+          )}
+        </Paper>
+      </Fragment>
+    );
   }
 }
 

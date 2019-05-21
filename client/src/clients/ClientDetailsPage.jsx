@@ -4,9 +4,9 @@ import { withStyles } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 
 import withApiClient from '../decorators/withApiClient';
-import ClientDetails from '../components/ClientDetails';
-import ClientEmails from '../components/ClientEmails';
-import ClientGifts from '../components/ClientGifts';
+import ClientDetails from './ClientDetails';
+import ClientEmails from './ClientEmails';
+import ClientGifts from './ClientGifts';
 import Loader from '../components/Loader';
 import ProspectList from '../prospects/ProspectList';
 
