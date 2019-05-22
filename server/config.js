@@ -14,7 +14,8 @@ const {
   GIFTPAY_BASEURL,
   GIFTPAY_APIKEY,
   STRIPE_KEY,
-  STRIPE_SECRET
+  STRIPE_SECRET,
+  PROXY_EMAIL_HOOKS_TO
 } = process.env;
 
 const conf = {
@@ -30,6 +31,7 @@ const conf = {
     baseUri: AUTH0_URI || 'https://foxrewarder.au.auth0.com/',
     audience: AUTH0_AUDIENCE || 'https://www.foxrewarder.com.au/api'
   },
+  proxyEmailHooksTo:PROXY_EMAIL_HOOKS_TO || 'https://fox-rewarder.herokuapp.com/api/email/webhook',
   sendGrid: {
     baseUrl: SENDGRID_BASEURL || 'https://api.sendgrid.com/v3',
     apiKey: SENDGRID_APIKEY
