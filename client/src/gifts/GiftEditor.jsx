@@ -1,23 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Grid,
-  TextField,
-  Paper,
-  Button,
-  Typography,
-  withStyles
-} from '@material-ui/core';
+import { Grid, TextField, Paper, Button, Typography, withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   paper: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
   },
   buttons: {
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 });
 
 class GiftEditor extends React.Component {
@@ -33,9 +26,9 @@ class GiftEditor extends React.Component {
         touched: {
           message: false,
           giftValue: false,
-          from: false
-        }
-      }
+          from: false,
+        },
+      },
     };
   }
 
@@ -45,7 +38,7 @@ class GiftEditor extends React.Component {
     this.props.onSave({
       message,
       giftValue,
-      from
+      from,
     });
   };
 
@@ -61,8 +54,8 @@ class GiftEditor extends React.Component {
       ...this.state.formData,
       touched: {
         ...this.state.formData.touched,
-        [field]: true
-      }
+        [field]: true,
+      },
     };
 
     this.setState({ formData });
@@ -72,7 +65,7 @@ class GiftEditor extends React.Component {
     const errors = {
       message: message.length === 0,
       giftValue: giftValue < 5 || giftValue > 100 || giftValue % 5 !== 0,
-      from: from.length === 0
+      from: from.length === 0,
     };
     return errors;
   };
@@ -81,8 +74,7 @@ class GiftEditor extends React.Component {
     const { formData } = this.state;
     const validation = this.validate(formData);
     const { classes, isFetching } = this.props;
-    const showValidation = field =>
-      validation[field] && this.state.formData.touched[field] === true;
+    const showValidation = field => validation[field] && this.state.formData.touched[field] === true;
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
     return (
@@ -90,10 +82,7 @@ class GiftEditor extends React.Component {
         <Grid container spacing={24}>
           <Grid item xs={12}>
             <Typography variant="h6">Send Gift card to the client</Typography>
-            <Typography>
-              This operation is irreversible! Make sure you are sending gift to
-              the right client.
-            </Typography>
+            <Typography>This operation is irreversible! Make sure you are sending gift to the right client.</Typography>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -105,9 +94,7 @@ class GiftEditor extends React.Component {
               onChange={this.handleChange}
               onBlur={() => this.handleBlur('from')}
               error={showValidation('from')}
-              helperText={
-                showValidation('from') && 'Let know who sent the gift'
-              }
+              helperText={showValidation('from') && 'Let know who sent the gift'}
             />
           </Grid>
           <Grid item xs={12}>
@@ -120,10 +107,7 @@ class GiftEditor extends React.Component {
               onChange={this.handleChange}
               onBlur={() => this.handleBlur('message')}
               error={showValidation('message')}
-              helperText={
-                showValidation('message') &&
-                'Message to explain why gift is sent'
-              }
+              helperText={showValidation('message') && 'Message to explain why gift is sent'}
             />
           </Grid>
           <Grid item xs={12}>
@@ -137,10 +121,7 @@ class GiftEditor extends React.Component {
               onChange={this.handleChange}
               onBlur={() => this.handleBlur('giftValue')}
               error={showValidation('giftValue')}
-              helperText={
-                showValidation('giftValue') &&
-                'Gift value - from $5 to $100 in $5 increments'
-              }
+              helperText={showValidation('giftValue') && 'Gift value - from $5 to $100 in $5 increments'}
             />
           </Grid>
 
@@ -165,7 +146,7 @@ class GiftEditor extends React.Component {
 GiftEditor.propTypes = {
   details: PropTypes.object,
   onSave: PropTypes.func.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(GiftEditor);

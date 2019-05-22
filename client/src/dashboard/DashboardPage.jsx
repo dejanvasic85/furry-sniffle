@@ -1,19 +1,13 @@
 import React from 'react';
 import { compose } from 'recompose';
-import { Paper, Typography, withStyles, Grid, IconButton } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
+import { Paper, Typography, withStyles, Grid } from '@material-ui/core';
 
-import DashboardItem from '../components/DashboardItem';
-import Loader from '../components/Loader';
+import DashboardItem from './DashboardItem';
 
-import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
-import UserIcon from '@material-ui/icons/Accessibility';
-import PowerOffIcon from '@material-ui/icons/PowerOffOutlined';
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
-import LinkIcon from '@material-ui/icons/Link';
 
 import withApiClient from '../decorators/withApiClient';
 
@@ -58,7 +52,7 @@ export class DashboardPage extends React.Component {
             <DashboardItem icon={<EmailIcon />} title="Emails Sent" data={data.emails} />
           </Grid>
           <Grid item xs={6}>
-            <DashboardItem icon={<PhoneIcon />} title="Referals Received" data={data.prospects} />
+            <DashboardItem icon={<PhoneIcon />} title="Prospects Received" data={data.prospects} />
           </Grid>
         </Grid>
       </Paper>

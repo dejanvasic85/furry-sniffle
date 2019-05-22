@@ -14,7 +14,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  withStyles
+  withStyles,
 } from '@material-ui/core';
 
 import EmailIcon from '@material-ui/icons/Email';
@@ -24,20 +24,20 @@ import EditIcon from '@material-ui/icons/Edit';
 import GiftCardIcon from '@material-ui/icons/CardGiftcard';
 
 import withApiClient from '../decorators/withApiClient';
-import DateDisplay from './DateDisplay';
-import PersonAvatar from './PersonAvatar';
+import DateDisplay from '../components/DateDisplay';
+import PersonAvatar from '../components/PersonAvatar';
 import Button from '../components/Button';
 
 const styles = theme => ({
   actions: {
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 });
 
 class ClientDetails extends React.Component {
   state = {
-    isEmailSending: false
+    isEmailSending: false,
   };
 
   handleSendGiftClick = () => {
@@ -67,11 +67,7 @@ class ClientDetails extends React.Component {
               </>
             }
             action={
-              <IconButton
-                aria-label="Edit"
-                component={RouterLink}
-                to={`/app/clients/${client.id}/edit`}
-              >
+              <IconButton aria-label="Edit" component={RouterLink} to={`/app/clients/${client.id}/edit`}>
                 <EditIcon />
               </IconButton>
             }
@@ -97,11 +93,7 @@ class ClientDetails extends React.Component {
                   <LinkIcon />
                 </ListItemIcon>
                 <ListItemText>
-                  <a
-                    href={client.referralUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={client.referralUrl} target="_blank" rel="noopener noreferrer">
                     {client.referralCode}
                   </a>
                 </ListItemText>
@@ -110,11 +102,7 @@ class ClientDetails extends React.Component {
           </CardContent>
           <Divider />
           <CardActions className={classes.actions}>
-            <Button
-              variant="outlined"
-              onClick={this.handleSendGiftClick}
-              color="secondary"
-            >
+            <Button variant="outlined" onClick={this.handleSendGiftClick} color="secondary">
               <GiftCardIcon />
               &nbsp;Send Gift
             </Button>
@@ -138,10 +126,10 @@ class ClientDetails extends React.Component {
 ClientDetails.propTypes = {
   client: PropTypes.object.isRequired,
   onEmailSent: PropTypes.func,
-  onNewGift: PropTypes.func
+  onNewGift: PropTypes.func,
 };
 
-export default compose( 
+export default compose(
   withStyles(styles),
   withApiClient
 )(ClientDetails);

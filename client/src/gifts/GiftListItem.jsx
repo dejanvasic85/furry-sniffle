@@ -1,40 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DateDisplay from './DateDisplay';
+import DateDisplay from '../components/DateDisplay';
 import { withStyles } from '@material-ui/core/styles';
-import {
-  ListItem,
-  ListItemText,
-  Typography,
-  ListItemIcon
-} from '@material-ui/core';
+import { ListItem, ListItemText, Typography, ListItemIcon } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   item: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   avatar: {
     backgroundColor: theme.palette.secondary.main,
-    color: '#fff'
+    color: '#fff',
   },
   inline: {
-    display: 'inline'
-  }
+    display: 'inline',
+  },
 });
 
 export class GiftListItem extends React.Component {
   render() {
     const { classes, giftDetails } = this.props;
     return (
-      <ListItem
-        alignItems="center"
-        className={classes.root}
-        onClick={this.props.onClick}
-      >
+      <ListItem alignItems="center" className={classes.root} onClick={this.props.onClick}>
         <ListItemIcon>
           <Typography variant="h6">{`$${giftDetails.value}`}</Typography>
         </ListItemIcon>
@@ -54,7 +45,7 @@ export class GiftListItem extends React.Component {
 
 GiftListItem.propTypes = {
   giftDetails: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(GiftListItem);

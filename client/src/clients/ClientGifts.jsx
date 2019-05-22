@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  List,
-  Divider
-} from '@material-ui/core';
+import { Card, CardContent, CardHeader, List, Divider } from '@material-ui/core';
 
-import GiftListItem from './GiftListItem';
+import GiftListItem from '../gifts/GiftListItem';
 
 class ClientGifts extends React.Component {
   render() {
@@ -21,7 +15,13 @@ class ClientGifts extends React.Component {
           {
             <List>
               {gifts.map(gift => (
-                <GiftListItem giftDetails={gift} key={gift.id} onClick={() => {console.log('Shrug- what should happen?')}} />
+                <GiftListItem
+                  giftDetails={gift}
+                  key={gift.id}
+                  onClick={() => {
+                    console.log('Shrug- what should happen?');
+                  }}
+                />
               ))}
             </List>
           }

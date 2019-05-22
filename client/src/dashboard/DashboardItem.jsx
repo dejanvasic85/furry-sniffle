@@ -1,29 +1,11 @@
 import React from 'react';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
 import Loader from '../components/Loader';
 
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Card, CardContent, Divider, Typography, withStyles } from '@material-ui/core';
 
-import DateDisplay from './DateDisplay';
-import PersonAvatar from './PersonAvatar';
-import Button from '../components/Button';
-import PeopleIcon from '@material-ui/icons/People';
-const styles = theme => ({
+const styles = () => ({
   header: {
     display: 'flex',
     alignItems: 'center',

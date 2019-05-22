@@ -2,10 +2,12 @@ import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
-import { List, Paper, Typography, withStyles } from '@material-ui/core';
+import { Fab, List, Paper, Typography, withStyles } from '@material-ui/core';
+
+import AddIcon from '@material-ui/icons/Add';
 
 import withApiClient from '../decorators/withApiClient';
-import ProspectListItem from './ProspectListItem';
+import ClientListItem from './ClientListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
 
@@ -18,7 +20,7 @@ const styles = theme => ({
   extendedIcon: {
     marginRight: theme.spacing.unit,
   },
-  prospects: {
+  clients: {
     backgroundColor: theme.palette.background.paper,
   },
   padded: {
@@ -26,22 +28,30 @@ const styles = theme => ({
   },
 });
 
-export class ProspectsPage extends React.Component {
+export class ClientsPage extends React.Component {
   state = {
-    prospects: [],
-    filteredProspects: [],
+    clients: [],
+    filteredClients: [],
     filter: '',
     isFetching: true,
   };
 
   async componentDidMount() {
-    const prospects = await this.props.api.getProspects();
-    this.setState({ prospects, isFetching: false });
+    const clients = await this.props.api.getClients();
+    this.setState({ clients, isFetching: false });
   }
+
+  addClient = () => {
+    this.props.history.push('/app/clients/new');
+  };
+
+  handleClientClick = client => {
+    this.props.history.push(`/app/clients/${client.id}`);
+  };
 
   handleSearchTextchange = event => {
     const filter = event.target.value.toLowerCase();
-    const filteredProspects = this.state.prospects.filter(({ firstName, lastName, email }) => {
+    const filteredClients = this.state.clients.filter(({ firstName, lastName, email }) => {
       return (
         firstName.toLowerCase().indexOf(filter) > -1 ||
         lastName.toLowerCase().indexOf(filter) > -1 ||
@@ -51,15 +61,15 @@ export class ProspectsPage extends React.Component {
 
     this.setState({
       filter: event.target.value,
-      filteredProspects,
+      filteredClients,
     });
   };
 
   render() {
     const { classes } = this.props;
-    const { prospects, filteredProspects, filter, isFetching } = this.state;
+    const { clients, filteredClients, filter, isFetching } = this.state;
 
-    const prospectsToDisplay = filter ? filteredProspects : prospects;
+    const clientsToDisplay = filter ? filteredClients : clients;
 
     return (
       <Fragment>
@@ -72,23 +82,21 @@ export class ProspectsPage extends React.Component {
                   <div className={classes.padded}>
                     <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
                   </div>
-                  <List className={classes.prospects}>
-                    {prospectsToDisplay.map(prospect => (
-                      <ProspectListItem
-                        key={prospect.id}
-                        prospect={prospect}
-                        onClick={() => this.handleProspectlick(prospect)}
-                      />
+                  <List className={classes.clients}>
+                    {clientsToDisplay.map(client => (
+                      <ClientListItem key={client.id} client={client} onClick={() => this.handleClientClick(client)} />
                     ))}
                   </List>
                 </Fragment>
               )}
-              {prospects.length === 0 && (
+              {clients.length === 0 && (
                 <Fragment>
                   <div className={classes.padded}>
-                    <Typography variant="h6">No prospects at the moment</Typography>
+                    <Typography variant="h6">No clients at the moment</Typography>
                     <Typography variant="body1">
-                      Start sharing invitation with your existing clients so they could refer their friends to you...
+                      Click on the plus icon in the bottom right to add one. Or you can always &nbsp;
+                      <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">email</a>
+                      &nbsp;us an exported file and we can add them for you.
                     </Typography>
                   </div>
                 </Fragment>
@@ -96,6 +104,10 @@ export class ProspectsPage extends React.Component {
             </Paper>
           </Fragment>
         )}
+
+        <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.addClient}>
+          <AddIcon />
+        </Fab>
       </Fragment>
     );
   }
@@ -105,4 +117,4 @@ export default compose(
   withRouter,
   withStyles(styles),
   withApiClient
-)(ProspectsPage);
+)(ClientsPage);
