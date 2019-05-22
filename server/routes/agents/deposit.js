@@ -1,31 +1,9 @@
 const { feeConfiguration, stripeConfig } = require('../../config');
 const stripe = require('stripe')(stripeConfig.secret);
 const logger = require('../../logger');
-const { Account, AccountTxn, Agent } = require('../../db');
 const { calculateFee } = require('../../services/feeCalculator');
-
-const STRIPE_CONSTANTS = Object.freeze({
-  STATUS: {
-    SUCCEEDED: 'succeeded'
-  }
-});
-
-const updateOrCreateAccount = async ({ agentId, accountId, amount }) => {
-  if (!accountId) {
-    const account = await Account.create({ balance: amount, availableFunds: 0 });
-    await Agent.update(
-      { accountId: account.id }, 
-      { where: { id: agentId } });
-
-    return account;
-  } else {
-    const account = await Account.findOne({ where: { id: accountId }});
-    const balance = account.balance + amount;
-    account.update({ balance });
-    
-    return account;
-  }
-};
+const { updateOrCreateAccount, createTransaction } = require('../../services/accountService');
+const { STRIPE, PAYMENT_METHOD } = require('../../constants');
 
 const calculateDepositFee = () => {
   return 1;
@@ -34,7 +12,7 @@ const calculateDepositFee = () => {
 const deposit = async (req, res) => {
   try {
     const { amount, stripeToken } = req.body;
-    const { agentId, accountId, firstName, lastName } = req.agent;
+    const { id: agentId, accountId, firstName, lastName } = req.agent;
 
     if (amount <= 0) {
       res.json({ error: 'The amount must be greater than zero.' });
@@ -43,7 +21,7 @@ const deposit = async (req, res) => {
 
     logger.info(`Depositing money using stripe for Agent ${agentId}`);
 
-    const amountWithFee = calculateFee(amount, ...feeConfiguration);
+    const amountWithFee = calculateFee(amount, feeConfiguration);
 
     const { id, status } = await stripe.charges.create({
       amount: amountWithFee.total,
@@ -52,12 +30,19 @@ const deposit = async (req, res) => {
       source: stripeToken
     });
 
-    if (status !== STRIPE_CONSTANTS.STATUS.SUCCEEDED) {
+    if (status !== STRIPE.STATUS.SUCCEEDED) {
       res.json({ error: 'Stripe failed to process payment. Check stripe logs.' });
       return;
     }
 
-    updateOrCreateAccount({ agentId, accountId, amount });
+    const account = await updateOrCreateAccount({ agentId, accountId, amount });
+    const txn = await createTransaction({
+      accountId: account.id,
+      description: 'Credit Card via Stripe',
+      paymentMethod: PAYMENT_METHOD.CREDIT_CARD,
+      paymentReference: id,
+      ...amountWithFee
+    });
 
     res.json({ status });
 
