@@ -1,6 +1,8 @@
 const express = require('express');
+const axios = require('axios');
 const router = express.Router();
 const { Email } = require('../db');
+const { proxyEmailHooksTo } = require('../config');
 
 const processEvent = async singleEvent => {
   const { event, email, emailId, timestamp, custom_args } = singleEvent;
@@ -35,6 +37,7 @@ const processEvent = async singleEvent => {
   console.info(
     `Updated email. event : [${emailId}] to status: ${event}, email: ${email}`
   );
+
 };
 
 router.post('/webhook', async (req, res) => {
@@ -57,7 +60,15 @@ router.post('/webhook', async (req, res) => {
     console.error('Failure', e);
   }
 
-  // todo: use axios and call webhook of staging environment. so we can use same sendgrid with 2 envs
+  if (proxyEmailHooksTo) { 
+    try{
+      console.info(`proxying web hook to ${proxyEmailHooksTo}`);
+      await axios.post(proxyEmailHooksTo, req.body);
+    }
+    catch(e){
+      console.warn(`failed to proxy web hook to ${proxyEmailHooksTo}`,e);
+    }
+  }
 
   res.status(200).json({});
 });
