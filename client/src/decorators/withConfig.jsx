@@ -3,8 +3,8 @@ import React from 'react';
 const config = {
   stripe_key: process.env.REACT_APP_STRIPE_KEY || '1234',
   feeConfiguration: {
-    depositFeePercent: process.env.REACT_APP_DEPOSIT_FEE_PERCENT,
-    depositFeeCents: process.env.REACT_APP_DEPOSIT_FEE_CENTS,
+    depositFeePercent: Number(process.env.REACT_APP_DEPOSIT_FEE_PERCENT),
+    depositFeeCents: Number(process.env.REACT_APP_DEPOSIT_FEE_CENTS),
   }
 }
 

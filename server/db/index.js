@@ -1,16 +1,19 @@
 const Sequelize = require('sequelize');
 const { connectionString } = require('../config');
 
-// dv: First initialise the connection / pg then load the models
+// dv: First initialise the connection then load the models
 const db = new Sequelize(connectionString);
+const Account = require('./models/Account')(db, Sequelize);
+const AccountTxn = require('./models/AccountTxn')(db, Sequelize);
 const Agent = require('./models/Agent')(db, Sequelize);
 const Client = require('./models/Client')(db, Sequelize);
 const Prospect = require('./models/Prospect')(db, Sequelize);
 const Email = require('./models/Email')(db, Sequelize);
 const Gift = require('./models/Gift')(db, Sequelize);
 
-
 const models = {
+  Account,
+  AccountTxn,
   Agent,
   Client,
   Prospect,
@@ -21,5 +24,6 @@ const models = {
 
 Client.associate(models);
 Prospect.associate(models);
+Account.associate(models);
 
 module.exports = models;

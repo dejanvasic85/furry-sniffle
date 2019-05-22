@@ -11,6 +11,7 @@
     "heroku:logs": "heroku logs --tail",
     "heroku-postbuild": "yarn run db:migrate && cd client && yarn && yarn run build",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
+    "db:migrate:undo": "./node_modules/.bin/sequelize db:migrate:undo",
     "db:generate-migration": "./node_modules/.bin/sequelize migration:generate --name",
     "db:docker-run": "docker run -d --name my_postgres -v my_dbdata:/var/lib/postgresql/data -p 54320:5432 postgres:11",
     "db:get-connection": "heroku config:get DATABASE_URL -a fox-rewarder"

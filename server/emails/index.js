@@ -1,6 +1,6 @@
 const sgMail = require('@sendgrid/mail');
 const uuidv4 = require('uuid/v4');
-const { MESSAGE_CHANNEL } = require('../constants');
+const { MESSAGE_CHANNEL} = require('../constants');
 const { webBaseUrl, sendGrid } = require('../config');
 const {
   getClientReferralUrl,

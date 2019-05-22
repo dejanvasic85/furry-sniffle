@@ -23,6 +23,7 @@ module.exports = (sequelize, type) => {
     businessName: type.STRING,
     abn: type.STRING,
     phone: type.STRING,
+    accountId: type.INTEGER,
     createdAt: type.DATE,
     updatedAt: type.DATE
   }, {});
