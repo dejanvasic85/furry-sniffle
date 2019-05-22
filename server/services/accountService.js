@@ -29,6 +29,7 @@ const createTransaction = async({ accountId, description, paymentMethod, payment
     accountId,
     description,
     paymentReference,
+    paymentMethod,
     amount,
     fee, 
     totalAmount: total
