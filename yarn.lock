@@ -754,9 +754,10 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
-dotenv@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-7.0.0.tgz#a2be3cd52736673206e8a85fb5210eea29628e7c"
+dotenv@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.0.0.tgz#ed310c165b4e8a97bb745b0a9d99c31bda566440"
+  integrity sha512-30xVGqjLjiUOArT4+M5q9sYdvuR4riM6yK9wMcas9Vbp6zZa+ocC9dp6QoftuhTPhFAiLK/0C5Ni2nou/Bk8lg==
 
 dottie@^2.0.0:
   version "2.0.1"
@@ -3122,10 +3123,10 @@ strip-json-comments@2.0.1, strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-stripe@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-7.0.0.tgz#6761e7ef03e28f7c1d773abbdd6431c78b2b4fbb"
-  integrity sha512-2CzGN1oHqEoEYxo5H5t7/pd/3NdmK1f4ZJSXKa+mBfWh3yqTpKscxKU5ZbH9NpdvE7n5awkwj1oygaMwfi9dOw==
+stripe@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-7.0.1.tgz#ac76db7b3f82e974f0c9b9d2bf891a4d33ac0036"
+  integrity sha512-OxiqELnA9U2bMxETxR68qHRKzSyKvgiHRPx9giBchssRCGskw7NRUIJ7UNdkDLyPGL4QgvngcBVrsSQAn/tHfQ==
   dependencies:
     lodash.isplainobject "^4.0.6"
     qs "^6.6.0"
