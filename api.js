@@ -1,3 +1,5 @@
+const { requireHttps } = require("./server/middleware/requireHttps");
+
 const express = require('express');
 require('dotenv').config();
 const bodyParser = require('body-parser');
@@ -15,6 +17,8 @@ const { db } = require('./server/db');
 const logger = require('./server/logger');
 
 const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
+
+app.use(requireHttps);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
