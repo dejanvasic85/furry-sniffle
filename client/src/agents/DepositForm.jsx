@@ -66,6 +66,8 @@ const PAYMENT_DIRECT_DEBIT = 'direct debit';
 
 class DepositForm extends Component {
   state = {
+    balance: 0,
+    availableFunds: 0,
     amount: 50,
     isFetching: false,
     depositComplete: false,
@@ -73,18 +75,31 @@ class DepositForm extends Component {
     selectedPaymentType: PAYMENT_CREDIT_CARD,
   };
 
+  componentDidMount = async () => {
+    const { accountId, api } = this.props;
+    if (accountId) {
+      debugger;
+      const { balance, availableFunds } = await api.getAccount(accountId);
+      this.setState({
+        account: {
+          balance: balance,
+          availableFunds: availableFunds
+        }
+      });
+    }
+  };
+
   submit = async () => {
     this.setState({ isFetching: true });
     const baseAmount = this.state.amount * AUD_BASE_VALUE;
-    const { agent, api, stripe } = this.props;
-    const { token } = await stripe.createToken({ name: agent.email });
+    const { email, accountId, api, stripe } = this.props;
+    const { token } = await stripe.createToken({ name: email });
     const { status } = await api.completeDeposit({
       amount: baseAmount,
       stripeToken: token.id,
     });
 
     if (status === "succeeded") {
-      console.log("Deposit Complete!");
       // Todo - update balance in the UI
       this.setState({ isFetching: false, depositComplete: true });
     }
@@ -114,12 +129,18 @@ class DepositForm extends Component {
 
   render() {
     const {
-      accountBalance,
       classes,
       config: { feeConfiguration },
     } = this.props;
 
-    const { amount, depositComplete, isFetching, paymentFormReady, selectedPaymentType } = this.state;
+    const { 
+      balance, 
+      amount, 
+      depositComplete, 
+      isFetching,
+      paymentFormReady, 
+      selectedPaymentType 
+    } = this.state;
 
     const canSubmit = amount > 0 && paymentFormReady;
     const isCreditSelected = selectedPaymentType === PAYMENT_CREDIT_CARD;
@@ -127,13 +148,13 @@ class DepositForm extends Component {
 
     return (
       <Card>
-        <CardHeader title="Balance" subheader={<Currency baseAmount={accountBalance} />} />
+        <CardHeader title="Balance" subheader={<Currency baseAmount={balance} />} />
         <Divider />
         <CardContent>
           <Typography variant="h5">Deposit</Typography>
           <Typography variant="body1">
-            In order to gift your client you must deposit money first. Allow up to 2 working days for the deposit to
-            reach our bank account.
+            In order to gift your client you must deposit money first. 
+            Allow up to 2 working days for the deposit to reach our bank account.
           </Typography>
           <div className={classes.depositChoices}>
             <div
@@ -224,8 +245,8 @@ class DepositForm extends Component {
 }
 
 DepositForm.propTypes = {
-  accountBalance: PropTypes.number.isRequired,
-  agent: PropTypes.object.isRequired,
+  email: PropTypes.string.isRequired,
+  accountId: PropTypes.number.isRequired
 };
 
 export default compose(

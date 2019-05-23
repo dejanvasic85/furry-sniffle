@@ -42,7 +42,7 @@ class AgentDetailsPage extends React.Component {
   handleAlertClose = () => {
     this.setState({ displaySuccess: false });
   };
-
+  
   render() {
     const { agent, displaySuccess, isFetching, isSaving } = this.state;
     const { classes } = this.props;
@@ -71,7 +71,10 @@ class AgentDetailsPage extends React.Component {
             )}
             <Elements>
               <div className={classes.gutter}>
-                <DepositForm accountBalance={agent.accountBalance || 0} agent={agent} />
+                <DepositForm 
+                  email={agent.email} 
+                  accountId={agent.accountId} 
+                  />
               </div>
             </Elements>
           </Fragment>

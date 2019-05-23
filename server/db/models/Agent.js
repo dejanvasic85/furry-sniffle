@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-  return sequelize.define('Agent', {
+  const Agent = sequelize.define('Agent', {
     id: {
       type: type.INTEGER,
       primaryKey: true,
@@ -27,4 +27,6 @@ module.exports = (sequelize, type) => {
     createdAt: type.DATE,
     updatedAt: type.DATE
   }, {});
+
+  return Agent;
 };
