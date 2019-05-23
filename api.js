@@ -1,5 +1,3 @@
-const { requireHttps } = require("./server/middleware/requireHttps");
-
 const express = require('express');
 require('dotenv').config();
 const bodyParser = require('body-parser');
@@ -16,7 +14,7 @@ const gifts = require('./server/routes/gifts');
 const { db } = require('./server/db');
 const logger = require('./server/logger');
 
-const { agentAuth, jwtAuth, errorHandler } = require('./server/middleware');
+const { agentAuth, jwtAuth, errorHandler, requireHttps } = require('./server/middleware');
 
 app.use(requireHttps);
 
