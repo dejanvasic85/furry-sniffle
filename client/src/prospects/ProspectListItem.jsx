@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 
 import PersonAvatar from '../components/PersonAvatar';
 
@@ -25,7 +26,7 @@ export class ProspectListItem extends React.Component {
     const { classes, prospect } = this.props;
     return (
       <ListItem alignItems="center" className={classes.root} component={Link} to={`/app/prospects/${prospect.id}`}>
-        <PersonAvatar details={prospect} />
+       <QuestionAnswerIcon></QuestionAnswerIcon>
         <ListItemText
           primary={`${prospect.firstName} ${prospect.lastName}`}
           secondary={

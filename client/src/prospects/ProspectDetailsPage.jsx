@@ -21,6 +21,15 @@ class ProspectDetailsPage extends React.Component {
     });
   }
 
+  handleCancel = async () => {
+    const { prospect } = this.state;
+    await this.props.api.updateProspectStatus(prospect.id, 'cancel');
+  };
+  handleProcessed = async () => {
+    const { prospect } = this.state;
+    await this.props.api.updateProspectStatus(prospect.id, 'processed');
+  };
+
   render() {
     const { prospect, isFetching } = this.state;
 
@@ -29,7 +38,7 @@ class ProspectDetailsPage extends React.Component {
         {isFetching && <Loader />}
         {!isFetching && (
           <Fragment>
-            <ProspectDetails prospect={prospect} />
+            <ProspectDetails prospect={prospect} onCancel={this.handleCancel} onProcess={this.handleProcessed} />
           </Fragment>
         )}
       </Fragment>
