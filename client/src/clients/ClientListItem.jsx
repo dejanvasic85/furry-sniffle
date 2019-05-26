@@ -7,6 +7,7 @@ import {
   ListItemText,
   Typography
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 import PersonAvatar from '../components/PersonAvatar';
 
@@ -26,7 +27,7 @@ const styles = theme => ({
 export class ClientListItem extends React.Component {
   render() {
     const { classes, client } = this.props;
-    return <ListItem alignItems="center" className={classes.root} onClick={this.props.onClick}>
+    return <ListItem alignItems="center" className={classes.root}  component={Link} to={`/app/clients/${client.id}`}>
       <PersonAvatar details={client} />
       <ListItemText
         primary={`${client.firstName} ${client.lastName}`}
@@ -45,7 +46,6 @@ export class ClientListItem extends React.Component {
 
 ClientListItem.propTypes = {
   client: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ClientListItem);

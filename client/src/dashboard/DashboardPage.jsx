@@ -43,16 +43,16 @@ export class DashboardPage extends React.Component {
         <Typography variant="h5">Dashboard</Typography>
         <Grid container spacing={24}>
           <Grid item xs={6}>
-            <DashboardItem title="Clients " icon={<PeopleIcon />} data={data.clients} />
+            <DashboardItem link="/app/clients" title="Clients " icon={<PeopleIcon />} data={data.clients} />
           </Grid>
           <Grid item xs={6}>
-            <DashboardItem icon={<CardGiftcardIcon />} title="Gifts Sent" data={data.gifts} />
+            <DashboardItem link="/app/gifts"  icon={<CardGiftcardIcon />} title="Gifts Sent" data={data.gifts} />
           </Grid>
           <Grid item xs={6}>
-            <DashboardItem icon={<EmailIcon />} title="Emails Sent" data={data.emails} />
+            <DashboardItem link="/app/clients"  icon={<EmailIcon />} title="Emails Sent" data={data.emails} />
           </Grid>
           <Grid item xs={6}>
-            <DashboardItem icon={<PhoneIcon />} title="Prospects Received" data={data.prospects} />
+            <DashboardItem  link="/app/prospects" icon={<PhoneIcon />} title="Prospects Received" data={data.prospects} />
           </Grid>
         </Grid>
       </Paper>

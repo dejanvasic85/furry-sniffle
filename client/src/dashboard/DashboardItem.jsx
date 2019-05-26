@@ -2,8 +2,10 @@ import React from 'react';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 import Loader from '../components/Loader';
-
 import { Card, CardContent, Divider, Typography, withStyles } from '@material-ui/core';
+
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
 
 const styles = () => ({
   header: {
@@ -25,7 +27,7 @@ class DashboardItem extends React.Component {
   };
 
   render() {
-    const { icon, title, data, classes } = this.props;
+    const { icon, title, data, classes, link } = this.props;
     if (!data) {
       return (
         <Card>
@@ -43,10 +45,15 @@ class DashboardItem extends React.Component {
       <Card>
         <CardContent>
           <div className={classes.header}>
-            {icon}
-            <Typography className={classes.title} variant="h6">
-              {title}
-            </Typography>
+          
+              {icon}
+
+              <Typography className={classes.title} variant="h6">
+              <Link component={RouterLink} to={link}>
+                {title}
+                </Link>
+              </Typography>
+           
           </div>
 
           <Typography variant="h5">{data.now}</Typography>
@@ -60,6 +67,7 @@ class DashboardItem extends React.Component {
 
 DashboardItem.propTypes = {
   title: PropTypes.string,
+  link: PropTypes.string,
   data: PropTypes.shape({
     now: PropTypes.number,
     before: PropTypes.number,

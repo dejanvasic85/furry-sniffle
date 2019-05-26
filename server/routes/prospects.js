@@ -39,7 +39,11 @@ router.get(
     const id = req.params.id;
     logger.info(`Fetching prospect id: ${id} for agentId: ${agentId}`);
     const prospect = await Prospect.findOne({
-      where: { id, agentId }
+      where: { id, agentId },
+      include: [{
+        model: Client,
+        required: true
+       }],
     });
     if (!prospect) {
       res.status(404).json({ error: 'Not Found' });
@@ -58,6 +62,7 @@ router.put(
     const agentId = req.agent.id;
     const id = req.params.id;
     const { status } = req.body;
+    logger.info(`Updaing prospect id: ${id} for agentId: ${agentId} - ${status}`);
 
     let prospect = await Prospect.findOne({
       where: { id, agentId }
@@ -68,11 +73,12 @@ router.put(
       return;
     }
 
-    prospect = await prospect.update({
-      status
-    });
+    const [recordsAffected, result] = await Prospect.update(
+      { status },
+      {  where: { id, agentId }, returning: true });
 
-    res.status(204).json(prospect);
+      
+    res.status(200).json(result);
   })
 );
 

@@ -93,6 +93,10 @@ class Api {
     return this.doFetch(`/prospects/${prospectId}`);
   }
 
+  updateProspectStatus(prospectId, status) {
+    return this.doFetch(`/prospects/${prospectId}`,'PUT',{status});
+  }
+
   getProspects() {
     return this.doFetch('/prospects');
   }
