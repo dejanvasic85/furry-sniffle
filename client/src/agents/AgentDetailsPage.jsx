@@ -25,11 +25,13 @@ class AgentDetailsPage extends React.Component {
     agent: null,
     saved: false,
     isFetching: true,
-    isSaving: false,
+    isSaving: false
   };
 
   async componentDidMount() {
-    const agent = await this.props.api.getAgent();
+    const { api } = this.props;
+    const agent = await api.getAgent();
+    
     this.setState({ agent, isFetching: false });
   }
 
@@ -69,14 +71,6 @@ class AgentDetailsPage extends React.Component {
                 />
               </div>
             )}
-            <Elements>
-              <div className={classes.gutter}>
-                <DepositForm 
-                  email={agent.email} 
-                  accountId={agent.accountId} 
-                  />
-              </div>
-            </Elements>
           </Fragment>
         )}
       </Fragment>

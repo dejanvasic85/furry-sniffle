@@ -117,8 +117,8 @@ class Api {
     return this.doFetch(`/agents/deposit`, 'POST', { amount, stripeToken });
   }
 
-  getAccount(accountId) {
-    return this.doFetch(`/accounts/${accountId}`);
+  getAccount() {
+    return this.doFetch(`/accounts`);
   }
 }
 

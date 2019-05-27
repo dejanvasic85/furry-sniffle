@@ -69,7 +69,7 @@ class DepositForm extends Component {
     balance: 0,
     availableFunds: 0,
     amount: 50,
-    isFetching: false,
+    isFetching: true,
     depositComplete: false,
     paymentFormReady: false,
     selectedPaymentType: PAYMENT_CREDIT_CARD,
@@ -78,12 +78,11 @@ class DepositForm extends Component {
   componentDidMount = async () => {
     const { accountId, api } = this.props;
     if (accountId) {
-      const { balance, availableFunds } = await api.getAccount(accountId);
+      const { account: { balance, availableFunds } } = await api.getAccount(accountId);
+
       this.setState({
-        account: {
-          balance: balance,
-          availableFunds: availableFunds
-        }
+        balance, 
+        availableFunds
       });
     }
   };
@@ -91,7 +90,7 @@ class DepositForm extends Component {
   submit = async () => {
     this.setState({ isFetching: true });
     const baseAmount = this.state.amount * AUD_BASE_VALUE;
-    const { email, accountId, api, stripe } = this.props;
+    const { email, api, stripe } = this.props;
     const { token } = await stripe.createToken({ name: email });
     const { status } = await api.completeDeposit({
       amount: baseAmount,

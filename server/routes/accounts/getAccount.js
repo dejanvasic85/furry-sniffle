@@ -1,15 +1,15 @@
 const { Account } = require('../../db');
 
 module.exports = async (req, res) => {
-  const { id } = req.params;
+  const { accountId } = req.agent;
 
-  if (!id) {
-    res.status(404);
+  if (!accountId) {
+    res.json({ balance: 0, availableFunds: 0})
     return;
   }
 
   const account = await Account.findOne({
-    where: { id }
+    where: { id: accountId }
   });
 
   res.json({
