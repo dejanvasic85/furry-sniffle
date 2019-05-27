@@ -13,6 +13,8 @@ import {
   ListItemIcon,
   ListItemText,
   withStyles,
+  Typography,
+  Avatar
 } from '@material-ui/core';
 
 import EmailIcon from '@material-ui/icons/Email';
@@ -20,8 +22,9 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import EditIcon from '@material-ui/icons/Edit';
 import GiftCardIcon from '@material-ui/icons/CardGiftcard';
 
-import DateDisplay from '../components/DateDisplay';
+import DateTime from '../components/DateTime';
 import Button from '../components/Button';
+import ClientListItem from '../clients/ClientListItem';
 
 const styles = theme => ({
   actions: {
@@ -33,17 +36,32 @@ const styles = theme => ({
 class ProspectDetails extends React.Component {
   state = {};
 
-  render() {
-    const { classes, prospect } = this.props;
 
+  render() {
+    const { classes, prospect, onCancel, onProcess } = this.props;
+    const client = prospect.Client;
+    
+    const displayStatus={
+      "New":"New",
+      "cancel":"Cancelled",
+      "processed":"Processed"
+
+    }
+    const status = displayStatus[prospect.status];
+    const showActions = status === 'New';
     return (
       <>
         <Card>
           <CardHeader
+          avatar={
+            <Typography variant="h6">
+              {status}
+           </Typography> }
+          
             title={`${prospect.firstName} ${prospect.lastName}`}
             subheader={
               <>
-                enquired at: <DateDisplay date={prospect.createdAt} />
+                enquired: <DateTime date={prospect.createdAt} />
               </>
             }
           />
@@ -70,18 +88,28 @@ class ProspectDetails extends React.Component {
                 <ListItemText>{prospect.message}</ListItemText>
               </ListItem>
             </List>
+            <Divider />
+            <Typography variant="subheading">Referred By</Typography>
+            <ClientListItem client={client} />
           </CardContent>
           <Divider />
-          <CardActions className={classes.actions}>
-            <Button variant="outlined" color="secondary">
-              <GiftCardIcon />
-              &nbsp;Mark as invalid
-            </Button>
 
-            <Button variant="outlined" color="secondary">
-              <EmailIcon />
-              &nbsp;Mark as processed
-            </Button>
+          <Divider />
+
+          <CardActions className={classes.actions}>
+            {showActions && (
+              <Button variant="outlined" color="secondary" onClick={onCancel}>
+                <GiftCardIcon />
+                &nbsp;Mark as invalid
+              </Button>
+            )}
+
+            {showActions && (
+              <Button variant="outlined" color="secondary" onClick={onProcess}>
+                <EmailIcon />
+                &nbsp;Mark as processed
+              </Button>
+            )}
           </CardActions>
         </Card>
       </>
@@ -91,6 +119,8 @@ class ProspectDetails extends React.Component {
 
 ProspectDetails.propTypes = {
   prospect: PropTypes.object.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onProcess: PropTypes.func.isRequired,
 };
 
 export default compose(withStyles(styles))(ProspectDetails);

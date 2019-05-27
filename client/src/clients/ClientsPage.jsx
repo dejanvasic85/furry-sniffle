@@ -45,9 +45,6 @@ export class ClientsPage extends React.Component {
     this.props.history.push('/app/clients/new');
   };
 
-  handleClientClick = client => {
-    this.props.history.push(`/app/clients/${client.id}`);
-  };
 
   handleSearchTextchange = event => {
     const filter = event.target.value.toLowerCase();
@@ -84,7 +81,7 @@ export class ClientsPage extends React.Component {
                   </div>
                   <List className={classes.clients}>
                     {clientsToDisplay.map(client => (
-                      <ClientListItem key={client.id} client={client} onClick={() => this.handleClientClick(client)} />
+                      <ClientListItem key={client.id} client={client} />
                     ))}
                   </List>
                 </Fragment>
