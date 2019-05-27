@@ -78,7 +78,6 @@ class DepositForm extends Component {
   componentDidMount = async () => {
     const { accountId, api } = this.props;
     if (accountId) {
-      debugger;
       const { balance, availableFunds } = await api.getAccount(accountId);
       this.setState({
         account: {
