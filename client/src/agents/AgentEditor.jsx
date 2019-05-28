@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, CardActions, CardContent, CardHeader, Divider, Grid, TextField, withStyles } from '@material-ui/core';
+import { Card, CardActions, CardContent, CardHeader, Divider, Grid, TextField, withStyles, Typography } from '@material-ui/core';
 
 import Button from '../components/Button';
 
@@ -82,85 +82,85 @@ class AgentEditor extends React.Component {
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
     return (
-      <Card>
-        <CardHeader title="My Details" />
-        <Divider />
-        <CardContent>
-          <Grid container spacing={24}>
-            <Grid item xs={12}>
-              <TextField disabled id="email" name="email" value={agent.email} label="Email" fullWidth />
-            </Grid>
+      <Fragment>
+        <Card>
+          <CardHeader
+            title="My Details"
+            subheader={`Email: ${agent.email}`} />
+          <Divider />
+          <CardContent>
+            <Grid container spacing={24}>
+              <Grid item xs={12}>
+                <TextField
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  label="First Name*"
+                  fullWidth
+                  onChange={this.handleChange}
+                  onBlur={() => this.handleBlur('firstName')}
+                  error={this.showError(validation, 'firstName')}
+                  helperText={'First name is required'}
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                label="First Name*"
-                fullWidth
-                onChange={this.handleChange}
-                onBlur={() => this.handleBlur('firstName')}
-                error={this.showError(validation, 'firstName')}
-                helperText={'First name is required'}
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  label="Last Name*"
+                  fullWidth
+                  onChange={this.handleChange}
+                  onBlur={() => this.handleBlur('lastName')}
+                  error={this.showError(validation, 'lastName')}
+                  helperText={'Last name is required'}
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                label="Last Name*"
-                fullWidth
-                onChange={this.handleChange}
-                onBlur={() => this.handleBlur('lastName')}
-                error={this.showError(validation, 'lastName')}
-                helperText={'Last name is required'}
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  label="Phone *"
+                  fullWidth
+                  onChange={this.handleChange}
+                  onBlur={() => this.handleBlur('phone')}
+                  helperText={'Phone is required'}
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                label="Phone *"
-                fullWidth
-                onChange={this.handleChange}
-                onBlur={() => this.handleBlur('phone')}
-                helperText={'Phone is required'}
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="businessName"
+                  name="businessName"
+                  value={formData.businessName}
+                  label="Business Name"
+                  fullWidth
+                  onChange={this.handleChange}
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                id="businessName"
-                name="businessName"
-                value={formData.businessName}
-                label="Business Name"
-                fullWidth
-                onChange={this.handleChange}
-              />
+              <Grid item xs={12}>
+                <TextField id="abn" name="abn" value={formData.abn} label="ABN" fullWidth onChange={this.handleChange} />
+              </Grid>
             </Grid>
-
-            <Grid item xs={12}>
-              <TextField id="abn" name="abn" value={formData.abn} label="ABN" fullWidth onChange={this.handleChange} />
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        <CardActions className={classes.buttons}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.handleSave}
-            disabled={isSaveDisabled}
-            isFetching={isFetching}
-          >
-            Save
+          </CardContent>
+          
+          <CardActions className={classes.buttons}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handleSave}
+              disabled={isSaveDisabled}
+              isFetching={isFetching}
+            >
+              Save
           </Button>
-        </CardActions>
-      </Card>
+          </CardActions>
+        </Card>
+      </Fragment>
     );
   }
 }
