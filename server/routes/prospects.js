@@ -97,10 +97,13 @@ router.post(
     const client = await Client.findOne({
       where: { id: newProspect.clientId }
     });
-    const prospect = await Prospect.create(newProspect);
+
+    const createResult = await Prospect.create(newProspect);
+    const createdProspect = createResult.dataValues;
+
     // Should we even await this?
-    await emailer.sendNewProspectEmail(newProspect, client, agent);
-    res.status(201).json({ prospect });
+    await emailer.sendNewProspectEmail(createdProspect, client, agent);
+    res.status(201).json({ createdProspect });
   })
 );
 
