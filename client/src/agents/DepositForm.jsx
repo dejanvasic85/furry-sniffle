@@ -24,7 +24,6 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
-
   cardElement: {
     marginTop: '10px',
     border: `1px solid ${colors.blueGrey[400]}`,

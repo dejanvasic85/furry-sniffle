@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { compose } from 'recompose';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import {
-  Paper,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Divider,
   Typography,
-  withStyles
+  TextField,
+  withStyles,
+  colors
 } from '@material-ui/core';
 
 import { withApiClient, withConfig } from '../decorators';
 import {
+  Alert,
   Button,
   Currency,
   Loader
@@ -17,13 +24,28 @@ import {
 const styles = theme => ({
   root: {
     padding: '20px'
+  },
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  disclaimer: {
+    color: colors.grey[600],
+    marginRight: '10px'
+  },
+  cardElement: {
+    marginTop: '10px',
+    border: `1px solid ${colors.blueGrey[400]}`,
+    padding: '15px',
   }
 });
 
 const DepositPage = ({ api, classes }) => {
   const [isFetching, setIsFetching] = useState(true);
   const [isDepositing, setIsDepositing] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const [isPaymentFormReady, setIsPaymentFormReady] = useState(false);
+  const [amount, setAmount] = useState(50);
   const [account, setAccount] = useState({
     balance: 0,
     availableFunds: 0
@@ -53,27 +75,59 @@ const DepositPage = ({ api, classes }) => {
     setIsPaymentFormReady(event.complete);
   };
 
-  if (isFetching || isDepositing) {
+  const handleAmountChange = event => {
+    setAmount(Number(event.target.value));
+  }
+
+  if (isFetching) {
     return <Loader />;
   }
 
   return (
-    <Paper className={classes.root}>
-      <Typography variant="h4">
-        Deposit
-      </Typography>
-      <Typography variant="h6">
-        Balance: <Currency baseAmount={Number(account.balance)} />
-      </Typography>
-      <Typography variant="h6">
-        Available Funds: <Currency baseAmount={Number(account.availableFunds)} />
-      </Typography>
-      <CardElement
-        hidePostalCode={true}
-        style={{ base: { fontSize: '18px' } }}
-        onChange={handlePaymentChange}
-      />
-    </Paper>
+    <div className={classes.root}>
+      <Card>
+        <CardHeader
+          title="Deposit"
+          subheader={<Fragment>Balance <Currency baseAmount={Number(account.balance)} /> </Fragment>} />
+        <Divider />
+        <CardContent>
+          <TextField
+            id="filled-number"
+            label="Amount"
+            value={amount}
+            onChange={handleAmountChange}
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal" />
+
+          <Typography>
+            Credit Card Details
+          </Typography>
+          <div className={classes.cardElement}>
+            <CardElement
+              hidePostalCode={true}
+              style={{ base: { fontSize: '16px' } }}
+              onChange={handlePaymentChange} />
+          </div>
+        </CardContent>
+        <Divider />
+        <CardActions className={classes.buttons}>
+          <Typography className={classes.disclaimer}>
+            Please allow up to 2 working days for funds to be available
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!isPaymentFormReady}
+            onClick={startDeposit}
+            isFetching={isDepositing}>
+            Deposit
+            </Button>
+        </CardActions>
+      </Card>
+    </div>
   );
 };
 
