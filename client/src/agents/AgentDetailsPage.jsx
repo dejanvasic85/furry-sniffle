@@ -120,7 +120,9 @@ class AgentDetailsPage extends React.Component {
               <CardActions className={classes.buttons}>
                 <Button
                   variant="outlined"
-                  color="primary">
+                  color="primary"
+                  to={"/app/agent/deposit"}
+                  component={Link}>
                   Deposit
                 </Button>
               </CardActions>
