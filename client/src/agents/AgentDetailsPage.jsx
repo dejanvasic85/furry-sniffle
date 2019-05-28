@@ -107,14 +107,14 @@ class AgentDetailsPage extends React.Component {
             <Card className={classes.gutter}>
               <CardHeader
                 title="Balance"
-                subheader="When funds have settled, you may gift your clients." />
+                subheader="You will need funds to gift your clients." />
               <Divider />
               <CardContent>
                 <Typography>
-                  Balance: <Currency baseAmount={account.balance} />
+                  Balance: <Currency baseAmount={Number(account.balance)} />
                 </Typography>
                 <Typography>
-                  Available Funds: <Currency baseAmount={account.availableFunds} />
+                  Available Funds: <Currency baseAmount={Number(account.availableFunds)} />
                 </Typography>
               </CardContent>
               <CardActions className={classes.buttons}>
