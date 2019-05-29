@@ -62,7 +62,7 @@ function Alert(props) {
           {message}
         </span>
       }
-      action={[
+      action={onClose && [
         <IconButton
           key="close"
           aria-label="Close"

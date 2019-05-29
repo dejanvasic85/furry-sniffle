@@ -8,7 +8,7 @@ import {
   CardActions,
   Divider,
   Typography,
-  TextField, 
+  TextField,
   withStyles,
   colors
 } from '@material-ui/core';
@@ -29,14 +29,13 @@ const styles = theme => ({
     marginRight: '10px'
   },
   cardElement: {
-    marginTop: '8px',
+    marginTop: '16px',
     border: `1px solid ${colors.blueGrey[400]}`,
     padding: '12px'
   },
   feeSummary: {
     marginTop: '16px',
-    fontSize: '16px',
-    color: colors.grey[600]
+    fontSize: '16px'
   }
 });
 
@@ -73,13 +72,14 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
     const profile = auth.getProfile();
     const { token } = await stripe.createToken({ name: profile.email });
     const baseAmount = amount * 100;
-    const { status } = await api.completeDeposit({
+    const { status, account: updatedAccount } = await api.completeDeposit({
       amount: baseAmount,
-      stripeToken: token.id,
+      stripeToken: token.id
     });
 
-    if (status === "succeeded") {
+    if (status === 'succeeded') {
       setIsComplete(true);
+      setAccount(updatedAccount);
     }
   };
 
@@ -88,7 +88,7 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
   };
 
   const handleAmountChange = event => {
-    setAmount(Number(event.target.value));
+    setAmount(event.target.value);
   };
 
   const calculateTotal = () => {
@@ -115,54 +115,62 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
           title="Deposit"
           subheader={
             <Fragment>
-              Balance <Currency baseAmount={Number(account.balance)} />{' '}
+              Balance <strong><Currency baseAmount={Number(account.balance)} /></strong>{' '}
+              Available Funds <strong><Currency baseAmount={Number(account.availableFunds)} /></strong>{' '}
             </Fragment>
           }
         />
         <Divider />
         <CardContent>
-          <TextField
-            id="filled-number"
-            label="Amount"
-            value={amount}
-            onChange={handleAmountChange}
-            type="number"
-            InputLabelProps={{
-              shrink: true
-            }}
-            margin="normal"
-          />
+          {isComplete && <Alert message="Deposit successful!" variant="success" />}
+          {!isComplete && (
+            <React.Fragment>
+              <TextField
+                id="filled-number"
+                label="Amount"
+                value={amount}
+                onChange={handleAmountChange}
+                type="number"
+                InputLabelProps={{
+                  shrink: true
+                }}
+                margin="normal"
+              />
 
-          <Typography>Credit Card Details</Typography>
+              <div className={classes.cardElement}>
+                <CardElement
+                  hidePostalCode={true}
+                  style={{ base: { fontSize: '16px' } }}
+                  onChange={handlePaymentChange}
+                />
+              </div>
 
-          <div className={classes.cardElement}>
-            <CardElement
-              hidePostalCode={true}
-              style={{ base: { fontSize: '16px' } }}
-              onChange={handlePaymentChange}
-            />
-          </div>
-
-          <Typography className={classes.feeSummary}>
-            Total: <Currency baseAmount={calculateTotal()} />
-            &nbsp;(incl {feeConfiguration.depositFeePercent}% +{feeConfiguration.depositFeeCents}{' '}
-            cents fee)
-          </Typography>
+              <Typography className={classes.feeSummary}>
+                Total: <Currency baseAmount={calculateTotal()} />
+                &nbsp;(incl {feeConfiguration.depositFeePercent}% +{' '}
+                {feeConfiguration.depositFeeCents} cents fee)
+              </Typography>
+            </React.Fragment>
+          )}
         </CardContent>
-        <Divider />
-        <CardActions className={classes.buttons}>
-          <Typography className={classes.disclaimer}>
-            Please allow up to 2 working days for funds to be available
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!isPaymentFormReady}
-            onClick={startDeposit}
-            isFetching={isDepositing}>
-            Deposit
-          </Button>
-        </CardActions>
+        {!isComplete && (
+          <React.Fragment>
+            <Divider />
+            <CardActions className={classes.buttons}>
+              <Typography className={classes.disclaimer}>
+                Please allow up to 2 working days for funds to be available
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!isPaymentFormReady}
+                onClick={startDeposit}
+                isFetching={isDepositing}>
+                Deposit
+              </Button>
+            </CardActions>
+          </React.Fragment>
+        )}
       </Card>
     </div>
   );
