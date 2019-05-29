@@ -8,44 +8,39 @@ import {
   CardActions,
   Divider,
   Typography,
-  TextField,
+  TextField, 
   withStyles,
   colors
 } from '@material-ui/core';
 
-import { withApiClient, withConfig } from '../decorators';
-import {
-  Alert,
-  Button,
-  Currency,
-  Loader
-} from '../components';
+import { withApiClient, withConfig, withAuth } from '../decorators';
+import { Alert, Button, Currency, Loader } from '../components';
 
 const styles = theme => ({
   root: {
-    padding: '20px',
+    padding: '20px'
   },
   buttons: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   disclaimer: {
     color: colors.grey[600],
-    marginRight: '10px',
+    marginRight: '10px'
   },
   cardElement: {
     marginTop: '8px',
     border: `1px solid ${colors.blueGrey[400]}`,
-    padding: '12px',
+    padding: '12px'
   },
   feeSummary: {
     marginTop: '16px',
     fontSize: '16px',
-    color: colors.grey[600],
+    color: colors.grey[600]
   }
 });
 
-const DepositPage = ({ api, classes, config }) => {
+const DepositPage = ({ api, classes, config, stripe, auth }) => {
   const [isFetching, setIsFetching] = useState(true);
   const [isDepositing, setIsDepositing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
@@ -71,11 +66,21 @@ const DepositPage = ({ api, classes, config }) => {
     if (isFetching) {
       fetchAccount();
     }
-
   }, [api, isFetching]);
 
-  const startDeposit = () => {
+  const startDeposit = async () => {
     setIsDepositing(true);
+    const profile = auth.getProfile();
+    const { token } = await stripe.createToken({ name: profile.email });
+    const baseAmount = amount * 100;
+    const { status } = await api.completeDeposit({
+      amount: baseAmount,
+      stripeToken: token.id,
+    });
+
+    if (status === "succeeded") {
+      setIsComplete(true);
+    }
   };
 
   const handlePaymentChange = event => {
@@ -84,14 +89,15 @@ const DepositPage = ({ api, classes, config }) => {
 
   const handleAmountChange = event => {
     setAmount(Number(event.target.value));
-  }
+  };
 
   const calculateTotal = () => {
     let totalAmount = 0;
     if (amount > 0) {
       const baseAmount = amount * 100;
-      totalAmount = baseAmount +
-        (baseAmount * (feeConfiguration.depositFeePercent / 100)) +
+      totalAmount =
+        baseAmount +
+        baseAmount * (feeConfiguration.depositFeePercent / 100) +
         feeConfiguration.depositFeeCents;
     }
 
@@ -107,7 +113,12 @@ const DepositPage = ({ api, classes, config }) => {
       <Card>
         <CardHeader
           title="Deposit"
-          subheader={<Fragment>Balance <Currency baseAmount={Number(account.balance)} /> </Fragment>} />
+          subheader={
+            <Fragment>
+              Balance <Currency baseAmount={Number(account.balance)} />{' '}
+            </Fragment>
+          }
+        />
         <Divider />
         <CardContent>
           <TextField
@@ -117,25 +128,25 @@ const DepositPage = ({ api, classes, config }) => {
             onChange={handleAmountChange}
             type="number"
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
-            margin="normal" />
+            margin="normal"
+          />
 
-          <Typography>
-            Credit Card Details
-          </Typography>
+          <Typography>Credit Card Details</Typography>
 
           <div className={classes.cardElement}>
             <CardElement
               hidePostalCode={true}
               style={{ base: { fontSize: '16px' } }}
-              onChange={handlePaymentChange} />
+              onChange={handlePaymentChange}
+            />
           </div>
 
           <Typography className={classes.feeSummary}>
-            Total: <Currency baseAmount={calculateTotal()} /> 
-            &nbsp;(incl {feeConfiguration.depositFeePercent}% + 
-            {feeConfiguration.depositFeeCents} cents fee)
+            Total: <Currency baseAmount={calculateTotal()} />
+            &nbsp;(incl {feeConfiguration.depositFeePercent}% +{feeConfiguration.depositFeeCents}{' '}
+            cents fee)
           </Typography>
         </CardContent>
         <Divider />
@@ -150,18 +161,17 @@ const DepositPage = ({ api, classes, config }) => {
             onClick={startDeposit}
             isFetching={isDepositing}>
             Deposit
-            </Button>
+          </Button>
         </CardActions>
       </Card>
     </div>
   );
 };
 
-export default (
-  compose(
-    injectStripe,
-    withStyles(styles),
-    withApiClient,
-    withConfig
-  )(DepositPage)
-);
+export default compose(
+  injectStripe,
+  withAuth,
+  withStyles(styles),
+  withApiClient,
+  withConfig
+)(DepositPage);

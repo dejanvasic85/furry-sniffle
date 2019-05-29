@@ -7,7 +7,7 @@ import { StripeProvider } from 'react-stripe-elements';
 import { Elements } from 'react-stripe-elements';
 
 import withRoot from './withRoot';
-import withConfig from './decorators/withConfig';
+import { withConfig, withAuth } from './decorators';
 
 import Header from './menu/Header';
 import Menu from './menu/Menu';
@@ -105,6 +105,7 @@ App.propTypes = {
 
 export default compose(
   withRoot,
+  withAuth,
   withRouter,
   withConfig,
   withStyles(styles, { withTheme: true })
