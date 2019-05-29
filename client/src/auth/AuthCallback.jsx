@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import { Redirect } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 
-import { withApiClient } from '../decorators';
+import { withApiClient, withAuth } from '../decorators';
 
 const AuthCallback = ({ api, auth }) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -28,5 +28,6 @@ const AuthCallback = ({ api, auth }) => {
 }
 
 export default compose(
+  withAuth,
   withApiClient
 )(AuthCallback);

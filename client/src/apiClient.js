@@ -116,6 +116,10 @@ class Api {
   completeDeposit({ amount, stripeToken }) {
     return this.doFetch(`/agents/deposit`, 'POST', { amount, stripeToken });
   }
+
+  getAccount() {
+    return this.doFetch(`/accounts`);
+  }
 }
 
 const apiClient = new Api();

@@ -15,61 +15,60 @@ export default class Auth {
     audience: authConfig.audience
   });
 
-  getToken = () => {
+  getProfile() {
+    return JSON.parse(localStorage.getItem('profile'));
+  }
+
+  getToken() {
     return localStorage.getItem('accessToken');
-  }
+  };
 
-  login = () => {
+  login() {
     this.auth0.authorize();
-  }
+  };
 
-  setSession = (authResult) => {
-    let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+  setSession(authResult) {
+    const expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
 
     localStorage.setItem('isLoggedIn', true);
     localStorage.setItem('expiresAt', expiresAt);
     localStorage.setItem('idToken', authResult.idToken);
     localStorage.setItem('accessToken', authResult.accessToken);
-
-    this.accessToken = authResult.accessToken;
-    this.idToken = authResult.idToken;
-    this.profile = authResult.idTokenPayload;
+    localStorage.setItem('profile', JSON.stringify(authResult.idTokenPayload));
   }
 
-  handleAuthentication = () => {
+  handleAuthentication() {
+    const me = this;
     return new Promise((resolve, reject) => {
-      this.auth0.parseHash((err, authResult) => {
+      me.auth0.parseHash((err, authResult) => {
         if (err) return reject(err);
         if (!authResult || !authResult.idToken) {
           return reject(err);
         }
-        this.setSession(authResult);
+        me.setSession(authResult);
         resolve(authResult);
       });
-    })
+    });
   }
 
-  renewSession = () => {
-    this.auth0.checkSession({}, (err, authResult) => {
+  renewSession() {
+    const me = this;
+    me.auth0.checkSession({}, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
+        me.setSession(authResult);
       } else if (err) {
-        this.logout();
+        me.logout();
         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
       }
     });
   }
 
-  logout = () => {
-    // Remove tokens and expiry time
-    this.accessToken = null;
-    this.idToken = null;
-
-    // Remove isLoggedIn flag from localStorage
+  logout() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('expiresAt');
     localStorage.removeItem('idToken');
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('profile');
 
     this.auth0.logout({
       clientID: authConfig.clientId,
@@ -77,10 +76,10 @@ export default class Auth {
     });
   }
 
-  isAuthenticated = () => {
+  isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    let expiresAt = localStorage.getItem('expiresAt');
+    const expiresAt = localStorage.getItem('expiresAt');
     return new Date().getTime() < expiresAt;
   }
 }

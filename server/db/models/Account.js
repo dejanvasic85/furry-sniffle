@@ -25,8 +25,7 @@ module.exports = (sequelize, type) => {
   }, {});
 
   Account.associate = function(models) {
-    models.Account.hasMany(models.AccountTxn,
-      { foreignKey: 'accountId'} );
+    models.Account.hasMany(models.AccountTxn, { foreignKey: 'accountId'} );
   };
 
   return Account;

@@ -56,8 +56,11 @@ class ClientDetailsPage extends React.Component {
         {isFetching && <Loader />}
         {!isFetching && (
           <Fragment>
-            <ClientDetails client={client} onEmailSent={this.handleEmailSent} onNewGift={this.handleOnNewGift} />
-
+            <ClientDetails 
+              client={client} 
+              onEmailSent={this.handleEmailSent} 
+              onNewGift={this.handleOnNewGift} />
+              
             <div className={classes.interactions}>
               <ProspectList prospects={prospects || []} />
             </div>

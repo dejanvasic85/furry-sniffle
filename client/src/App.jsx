@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 import { StripeProvider } from 'react-stripe-elements';
+import { Elements } from 'react-stripe-elements';
 
 import withRoot from './withRoot';
-import withConfig from './decorators/withConfig';
+import { withConfig, withAuth } from './decorators';
 
 import Header from './menu/Header';
 import Menu from './menu/Menu';
@@ -23,6 +24,7 @@ import PrivateRoute from './auth/PrivateRoute';
 import ClientDetailsPage from './clients/ClientDetailsPage';
 import ClientEditPage from './clients/ClientEditPage';
 import AgentDetailsPage from './agents/AgentDetailsPage';
+import DepositPage from './agents/DepositPage';
 
 const styles = theme => ({
   root: {
@@ -30,7 +32,7 @@ const styles = theme => ({
   },
   container: {
     display: 'flex',
-    minHeight: '93vh',
+    minHeight: '93vh', // We need a better way to do this. 93 is a random number
   },
   content: {
     flex: '1 auto',
@@ -64,22 +66,27 @@ class App extends React.Component {
                 <main className={classes.content}>
                   <PageLayout>
                     <Switch>
-                      {/* Private Routes */}
-                      <PrivateRoute path="/app" exact component={DashboardPage} auth={auth} />
-                      <PrivateRoute path="/app/agent/details" exact component={AgentDetailsPage} auth={auth} />
-                      <PrivateRoute path="/app/clients" exact component={ClientsPage} auth={auth} />
-                      <PrivateRoute path="/app/gifts" exact component={GiftsPage} auth={auth} />
-                      <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} auth={auth} />
-                      <PrivateRoute path="/app/clients/new" exact component={NewClientPage} auth={auth} />
-                      <PrivateRoute path="/app/clients/:id" exact={true} component={ClientDetailsPage} auth={auth} />
-                      <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} auth={auth} />
-                      <PrivateRoute path="/app/prospects" exact={true} component={ProspectsPage} auth={auth} />
-                      <PrivateRoute
-                        path="/app/prospects/:id"
-                        exact={true}
-                        component={ProspectDetailsPage}
-                        auth={auth}
-                      />
+                      <Elements>
+                        <div>
+                          {/* Private Routes */}
+                          <PrivateRoute path="/app" exact component={DashboardPage} auth={auth} />
+                          <PrivateRoute path="/app/agent/details" exact component={AgentDetailsPage} auth={auth} />
+                          <PrivateRoute path="/app/agent/deposit" exact component={DepositPage} auth={auth} />
+                          <PrivateRoute path="/app/clients" exact component={ClientsPage} auth={auth} />
+                          <PrivateRoute path="/app/gifts" exact component={GiftsPage} auth={auth} />
+                          <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} auth={auth} />
+                          <PrivateRoute path="/app/clients/new" exact component={NewClientPage} auth={auth} />
+                          <PrivateRoute path="/app/clients/:id" exact={true} component={ClientDetailsPage} auth={auth} />
+                          <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} auth={auth} />
+                          <PrivateRoute path="/app/prospects" exact={true} component={ProspectsPage} auth={auth} />
+                          <PrivateRoute
+                            path="/app/prospects/:id"
+                            exact={true}
+                            component={ProspectDetailsPage}
+                            auth={auth}
+                          />
+                        </div>
+                      </Elements>
                     </Switch>
                   </PageLayout>
                 </main>
@@ -98,6 +105,7 @@ App.propTypes = {
 
 export default compose(
   withRoot,
+  withAuth,
   withRouter,
   withConfig,
   withStyles(styles, { withTheme: true })

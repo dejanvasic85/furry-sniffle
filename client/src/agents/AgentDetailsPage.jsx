@@ -1,14 +1,24 @@
 import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 import { Link, withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/core';
-import { Elements } from 'react-stripe-elements';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  withStyles,
+  Typography,
+  CardActions,
+  Divider
+} from '@material-ui/core';
 
-import withApiClient from '../decorators/withApiClient';
+import { withApiClient } from '../decorators';
 import AgentEditor from './AgentEditor';
-import Alert from '../components/Alert';
-import Loader from '../components/Loader';
-import DepositForm from './DepositForm';
+import {
+  Alert,
+  Button,
+  Currency,
+  Loader
+} from '../components';
 
 const styles = theme => ({
   root: {},
@@ -18,18 +28,32 @@ const styles = theme => ({
   link: {
     color: '#fff',
   },
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 });
 
 class AgentDetailsPage extends React.Component {
   state = {
     agent: null,
+    account: {
+      balance: 0,
+      availableFunds: 0
+    },
     saved: false,
     isFetching: true,
-    isSaving: false,
+    isSaving: false
   };
 
   async componentDidMount() {
-    const agent = await this.props.api.getAgent();
+    const { api } = this.props;
+    const agent = await api.getAgent();
+    const { account } = await api.getAccount();
+    if (account) {
+      this.setState({ account });
+    }
+
     this.setState({ agent, isFetching: false });
   }
 
@@ -44,7 +68,14 @@ class AgentDetailsPage extends React.Component {
   };
 
   render() {
-    const { agent, displaySuccess, isFetching, isSaving } = this.state;
+    const {
+      agent,
+      account,
+      displaySuccess,
+      isFetching,
+      isSaving
+    } = this.state;
+
     const { classes } = this.props;
 
     return (
@@ -52,7 +83,10 @@ class AgentDetailsPage extends React.Component {
         {isFetching && <Loader />}
         {!isFetching && agent && (
           <Fragment>
-            {agent && <AgentEditor agent={agent} onSaveAgent={this.handleAgentSave} isFetching={isSaving} />}
+            {agent && (<AgentEditor
+              agent={agent}
+              onSaveAgent={this.handleAgentSave}
+              isFetching={isSaving} />)}
             {displaySuccess && (
               <div className={classes.gutter}>
                 <Alert
@@ -69,11 +103,30 @@ class AgentDetailsPage extends React.Component {
                 />
               </div>
             )}
-            <Elements>
-              <div className={classes.gutter}>
-                <DepositForm accountBalance={agent.accountBalance || 0} agent={agent} />
-              </div>
-            </Elements>
+
+            <Card className={classes.gutter}>
+              <CardHeader
+                title="Balance"
+                subheader="You will need funds to gift your clients." />
+              <Divider />
+              <CardContent>
+                <Typography>
+                  Balance: <Currency baseAmount={Number(account.balance)} />
+                </Typography>
+                <Typography>
+                  Available Funds: <Currency baseAmount={Number(account.availableFunds)} />
+                </Typography>
+              </CardContent>
+              <CardActions className={classes.buttons}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  to={"/app/agent/deposit"}
+                  component={Link}>
+                  Deposit
+                </Button>
+              </CardActions>
+            </Card>
           </Fragment>
         )}
       </Fragment>

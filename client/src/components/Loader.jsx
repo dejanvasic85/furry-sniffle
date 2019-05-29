@@ -11,9 +11,11 @@ const classes = theme => ({
 
 const Loader = props => {
   const { classes } = props;
-  return <div className={classes.root}>
-    <CircularProgress />
-  </div>
+  return (
+    <div className={classes.root}>
+      <CircularProgress />
+    </div>
+  );
 };
 
 export default withStyles(classes)(Loader);

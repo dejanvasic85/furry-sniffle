@@ -1,4 +1,4 @@
-const { Agent } = require('../../db');
+const { Agent, Account } = require('../../db');
 
 const getAgent = async (req, res) => {
   const agent = await Agent.findOne({

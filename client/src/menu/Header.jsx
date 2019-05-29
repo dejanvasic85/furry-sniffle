@@ -82,8 +82,7 @@ class Header extends React.Component {
             </Typography>
             <div className={classes.grow} />
             <Link className={classes.headerIcons} to="/app/agent/details">
-              <Typography className={classes.balance}>Balance $0</Typography>
-              <IconButton aria-haspopup="true" color="inherit" onClick={this.handleAccountClick}>
+              <IconButton aria-haspopup="true" color="inherit">
                 <AccountCircle />
               </IconButton>
             </Link>
