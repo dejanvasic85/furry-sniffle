@@ -1,16 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { Grid, TextField, Paper, Button, Typography, withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2
   },
   buttons: {
     display: 'flex',
-    justifyContent: 'flex-end',
-  },
+    justifyContent: 'flex-end'
+  }
 });
 
 class GiftEditor extends React.Component {
@@ -26,9 +27,9 @@ class GiftEditor extends React.Component {
         touched: {
           message: false,
           giftValue: false,
-          from: false,
-        },
-      },
+          from: false
+        }
+      }
     };
   }
 
@@ -38,7 +39,7 @@ class GiftEditor extends React.Component {
     this.props.onSave({
       message,
       giftValue,
-      from,
+      from
     });
   };
 
@@ -54,8 +55,8 @@ class GiftEditor extends React.Component {
       ...this.state.formData,
       touched: {
         ...this.state.formData.touched,
-        [field]: true,
-      },
+        [field]: true
+      }
     };
 
     this.setState({ formData });
@@ -65,16 +66,29 @@ class GiftEditor extends React.Component {
     const errors = {
       message: message.length === 0,
       giftValue: giftValue < 5 || giftValue > 100 || giftValue % 5 !== 0,
-      from: from.length === 0,
+      from: from.length === 0
     };
     return errors;
   };
 
   render() {
+    const { availableFunds, classes, isFetching } = this.props;
+
+    if (availableFunds <= 0) {
+      return (
+        <Paper className={classes.paper}>
+          <Typography>
+            You do not have any available funds to provide gifts.{' '}
+            <Link to="/app/agent/deposit">Please deposit first.</Link>
+          </Typography>
+        </Paper>
+      );
+    }
+
     const { formData } = this.state;
     const validation = this.validate(formData);
-    const { classes, isFetching } = this.props;
-    const showValidation = field => validation[field] && this.state.formData.touched[field] === true;
+    const showValidation = field =>
+      validation[field] && this.state.formData.touched[field] === true;
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
     return (
@@ -82,7 +96,9 @@ class GiftEditor extends React.Component {
         <Grid container spacing={24}>
           <Grid item xs={12}>
             <Typography variant="h6">Send Gift card to the client</Typography>
-            <Typography>This operation is irreversible! Make sure you are sending gift to the right client.</Typography>
+            <Typography>
+              This operation is irreversible! Make sure you are sending gift to the right client.
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -121,7 +137,9 @@ class GiftEditor extends React.Component {
               onChange={this.handleChange}
               onBlur={() => this.handleBlur('giftValue')}
               error={showValidation('giftValue')}
-              helperText={showValidation('giftValue') && 'Gift value - from $5 to $100 in $5 increments'}
+              helperText={
+                showValidation('giftValue') && 'Gift value - from $5 to $100 in $5 increments'
+              }
             />
           </Grid>
 
@@ -131,8 +149,7 @@ class GiftEditor extends React.Component {
                 variant="contained"
                 color="primary"
                 onClick={this.handleSave}
-                disabled={isSaveDisabled || isFetching}
-              >
+                disabled={isSaveDisabled || isFetching}>
                 Send Gift
               </Button>
             </div>
@@ -144,9 +161,10 @@ class GiftEditor extends React.Component {
 }
 
 GiftEditor.propTypes = {
+  availableFunds: PropTypes.number.isRequired,
   details: PropTypes.object,
   onSave: PropTypes.func.isRequired,
-  isFetching: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(GiftEditor);
