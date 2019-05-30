@@ -74,10 +74,10 @@ class App extends React.Component {
                           <PrivateRoute path="/app/agent/deposit" exact component={DepositPage} auth={auth} />
                           <PrivateRoute path="/app/clients" exact component={ClientsPage} auth={auth} />
                           <PrivateRoute path="/app/gifts" exact component={GiftsPage} auth={auth} />
-                          <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} auth={auth} />
-                          <PrivateRoute path="/app/clients/new" exact component={NewClientPage} auth={auth} />
-                          <PrivateRoute path="/app/clients/:id" exact={true} component={ClientDetailsPage} auth={auth} />
+                          <PrivateRoute path="/app/clients-new" exact component={NewClientPage} auth={auth} />
                           <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} auth={auth} />
+                          <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} auth={auth} />
+                          <PrivateRoute path="/app/clients/:id" exact component={ClientDetailsPage} auth={auth} />
                           <PrivateRoute path="/app/prospects" exact={true} component={ProspectsPage} auth={auth} />
                           <PrivateRoute
                             path="/app/prospects/:id"

@@ -15,6 +15,8 @@ class ProspectDetailsPage extends React.Component {
   state = {
     isFetching: true,
     prospect: {},
+    updatedToProcessed:false,
+    updatedToCancelled:false
   };
 
   async componentDidMount() {
@@ -61,8 +63,8 @@ class ProspectDetailsPage extends React.Component {
 
     return (
       <Fragment>
-        {updatedToProcessed && <Alert message="Prospect status updated. Do not forget to reward client who has recommened you." variant="success" />}
-        {updatedToCancelled && <Alert message="Prospect status updated... sorry to hear that it didn't work out for you..." variant="wa" />}
+        {!!updatedToProcessed && <Alert message="Prospect status updated. Do not forget to reward client who has recommened you." variant="success" />}
+        {!!updatedToCancelled && <Alert message="Prospect status updated... sorry to hear that it didn't work out for you..." variant="warning" />}
 
         {isFetching && <Loader />}
         {!isFetching && (
