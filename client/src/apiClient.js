@@ -12,17 +12,15 @@ class Api {
 
     if (res.status >= 400) {
       let payload;
-      try{
+      try {
         payload = await res.json();
-      }catch(parsingError){
-        console.error('failed to parse payload', res.status, res.body);
+      } catch (parsingError) {
         throw new Error('failed to parse payload');
       }
 
       if (payload.error) {
         throw new Error(payload.error);
-      }
-      
+      }      
     }
 
     throw new Error('Oops.. something went wrong. Check your connect or try again.', res);
@@ -43,7 +41,7 @@ class Api {
       headers: this.createHeaders(auth),
       params: queryParams
     };
-    console.log(options);
+    
     const res = await fetch(`/api${path}`, options);
     return this.processResponse(res);
   }
