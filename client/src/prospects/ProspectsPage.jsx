@@ -2,10 +2,10 @@ import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
-import { List, Paper, Typography, withStyles } from '@material-ui/core';
+import { List, Paper, Typography, withStyles, Divider } from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
-import ProspectListItem from './ProspectListItem';
+import DashboardProspectListItem from './DashboardProspectListItem';
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
 
@@ -20,9 +20,13 @@ const styles = theme => ({
   },
   prospects: {
     backgroundColor: theme.palette.background.paper,
+    padding: '20px',
   },
   padded: {
     padding: '20px',
+  },
+  divider: {
+    margin: '10px',
   },
 });
 
@@ -74,11 +78,10 @@ export class ProspectsPage extends React.Component {
                   </div>
                   <List className={classes.prospects}>
                     {prospectsToDisplay.map(prospect => (
-                      <ProspectListItem
-                        key={prospect.id}
-                        prospect={prospect}
-                        onClick={() => this.handleProspectlick(prospect)}
-                      />
+                      <Fragment>
+                        <DashboardProspectListItem key={prospect.id} prospect={prospect} />
+                        <Divider className={classes.divider} />
+                      </Fragment>
                     ))}
                   </List>
                 </Fragment>

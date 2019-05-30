@@ -8,7 +8,7 @@ const logger = require('../logger');
 const { getClientReferralUrl } = require('../services/clientService');
 
 const PROSPECT_STATE = Object.freeze({
-  NEW: 'New'
+  NEW: 'new'
 });
 
 router.get(
@@ -17,13 +17,24 @@ router.get(
   agentAuth,
   withAsync(async (req, res) => {
     const agentId = req.agent.id;
-    logger.info(`Fetching all prospects for agentId ${agentId}`);
+    const status = req.query.status || null;
+    logger.info(req.query);
+    
+    let where = { 
+      agentId,
+    }
+
+    if(status){
+      where.status = status;
+    }
+
+    logger.info(`Fetching all prospects for agentId ${agentId} status:${status}`);
     const prospects = await Prospect.findAll({
       include: [{
         model: Client,
         required: true
        }],
-      where: { agentId }
+       where
     });
 
     res.json(prospects);
@@ -91,7 +102,7 @@ router.post(
     }
 
     const newProspect = req.body;
-    newProspect.status = 'New'; // dv: todo - move to constants
+    newProspect.status = PROSPECT_STATE.NEW;
 
     const agent = await Agent.findOne({ where: { id: newProspect.agentId } });
     const client = await Client.findOne({
