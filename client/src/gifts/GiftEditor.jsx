@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 
 import { Grid, TextField, Paper, Button, Typography, withStyles } from '@material-ui/core';
 
+import { Currency } from '../components';
+
+import { fromBaseValue } from '../services/feeService';
+
 const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2
@@ -17,13 +21,12 @@ const styles = theme => ({
 class GiftEditor extends React.Component {
   constructor(props) {
     super(props);
-    const details = this.props.details || {};
 
     this.state = {
       formData: {
-        message: details.message || '',
-        giftValue: details.giftValue || 5,
-        from: details.from || '',
+        message: '',
+        giftValue: 5,
+        from: props.from || '',
         touched: {
           message: false,
           giftValue: false,
@@ -63,9 +66,15 @@ class GiftEditor extends React.Component {
   };
 
   validate = ({ message, giftValue, from }) => {
+    const { availableFunds } = this.props;
+    const fundsInCurrency = fromBaseValue(availableFunds);
+    const maxAmount = fundsInCurrency > 100
+      ? 100
+      : fundsInCurrency;
+
     const errors = {
       message: message.length === 0,
-      giftValue: giftValue < 5 || giftValue > 100 || giftValue % 5 !== 0,
+      giftValue: giftValue < 5 || giftValue > maxAmount || giftValue % 5 !== 0,
       from: from.length === 0
     };
     return errors;
@@ -89,6 +98,7 @@ class GiftEditor extends React.Component {
     const validation = this.validate(formData);
     const showValidation = field =>
       validation[field] && this.state.formData.touched[field] === true;
+
     const isSaveDisabled = Object.keys(validation).some(k => validation[k]);
 
     return (
@@ -98,6 +108,12 @@ class GiftEditor extends React.Component {
             <Typography variant="h6">Send Gift card to the client</Typography>
             <Typography>
               This operation is irreversible! Make sure you are sending gift to the right client.
+            </Typography>
+            <Typography variant="subtitle1">
+              Available Funds:{' '}
+              <strong>
+                <Currency baseAmount={availableFunds} />
+              </strong>
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -138,7 +154,12 @@ class GiftEditor extends React.Component {
               onBlur={() => this.handleBlur('giftValue')}
               error={showValidation('giftValue')}
               helperText={
-                showValidation('giftValue') && 'Gift value - from $5 to $100 in $5 increments'
+                <span>
+                  Gift value - from $5 to $100 in $5 increments up to{' '}
+                  <strong>
+                    <Currency baseAmount={availableFunds} />
+                  </strong>{' '}
+                </span>
               }
             />
           </Grid>
@@ -162,6 +183,7 @@ class GiftEditor extends React.Component {
 
 GiftEditor.propTypes = {
   availableFunds: PropTypes.number.isRequired,
+  from: PropTypes.string,
   details: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired

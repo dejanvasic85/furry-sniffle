@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
 
 import { withApiClient } from '../decorators';
+import { 
+  Loader
+} from '../components';
 
 import GiftEditor from './GiftEditor';
 
@@ -21,15 +24,20 @@ class NewGiftPage extends React.Component {
   state = {
     saved: false,
     isFetching: true,
-    account: { availableFunds: 0 }
+    account: { availableFunds: 0 },
+    agentName: ''
   };
 
   async componentDidMount() {
     const { api } = this.props;
-    const { account } = api.getAccount();
+    const agent = await api.getAgent();
+    const { account } = await api.getAccount();
+
     if (account) {
-      this.setState({ account });
+      this.setState({ account, agentName: agent.firstName });
     }
+
+    this.setState({ isFetching: false });
   }
 
   handleSave = async giftDetails => {
@@ -45,19 +53,24 @@ class NewGiftPage extends React.Component {
     const {
       isFetching,
       saved,
+      agentName,
       account: { availableFunds }
     } = this.state;
 
-    return (
-      <>
-        {saved && <Redirect to="/app/gifts" />}
+    if (isFetching) {
+      return <Loader />;
+    }
 
+    return (
+      <Fragment>
+        {saved && <Redirect to="/app/gifts" />}
         <GiftEditor
+          from={agentName}
           onSave={this.handleSave}
           isFetching={isFetching}
-          availableFunds={availableFunds}
+          availableFunds={Number(availableFunds)}
         />
-      </>
+      </Fragment>
     );
   }
 }
