@@ -2,10 +2,11 @@ import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
-import { List, Paper, Typography, withStyles, Divider } from '@material-ui/core';
+import { Paper, Typography, withStyles} from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
-import DashboardProspectListItem from './DashboardProspectListItem';
+import RawProspectList from './RawProspectList';
+
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
 
@@ -76,14 +77,9 @@ export class ProspectsPage extends React.Component {
                   <div className={classes.padded}>
                     <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
                   </div>
-                  <List className={classes.prospects}>
-                    {prospectsToDisplay.map(prospect => (
-                      <Fragment>
-                        <DashboardProspectListItem key={prospect.id} prospect={prospect} />
-                        <Divider className={classes.divider} />
-                      </Fragment>
-                    ))}
-                  </List>
+                  <div className={classes.prospects}>
+                    <RawProspectList prospects={prospects} />
+                  </div>
                 </Fragment>
               )}
               {prospects.length === 0 && (

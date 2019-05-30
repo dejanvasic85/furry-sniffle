@@ -93,8 +93,8 @@ class Api {
     return this.doCall(`/clients/${id}/gift`, 'POST', request);
   }
 
-  getDashboard() {
-    return this.doGet(`/dashboard`);
+  getDashboard(days) {
+    return this.doGet(`/dashboard?xdaysago=${days}`);
   }
 
   getClientGifts(id) {

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import {  Card, CardContent, CardHeader, Divider } from '@material-ui/core';
-import DashboardProspectListItem from './DashboardProspectListItem';
+
+import RawProspectList from './RawProspectList';
 
 const styles = theme => ({
   root: {
@@ -29,12 +30,7 @@ export class ProspectList extends React.Component {
         <Divider />
         <CardContent>
         
-            {prospects.map(prospect => (
-              <Fragment>
-              <DashboardProspectListItem key={prospect.id} prospect={prospect} />
-              <Divider className={classes.divider} />
-              </Fragment>
-            ))}
+          <RawProspectList prospects={prospects} />
          
         </CardContent>
       </Card>
