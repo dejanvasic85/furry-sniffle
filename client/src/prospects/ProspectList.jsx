@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
-import { List, Card, CardContent, CardHeader, Divider } from '@material-ui/core';
-import ProspectListItem from './ProspectListItem';
+import {  Card, CardContent, CardHeader, Divider } from '@material-ui/core';
+import DashboardProspectListItem from './DashboardProspectListItem';
 
 const styles = theme => ({
   root: {
@@ -15,6 +15,9 @@ const styles = theme => ({
   inline: {
     display: 'inline',
   },
+  divider:{
+    margin:'10px'
+  }
 });
 
 export class ProspectList extends React.Component {
@@ -25,11 +28,14 @@ export class ProspectList extends React.Component {
         <CardHeader title="Prospects" />
         <Divider />
         <CardContent>
-          <List className={classes.prospects}>
+        
             {prospects.map(prospect => (
-              <ProspectListItem key={prospect.id} prospect={prospect} />
+              <Fragment>
+              <DashboardProspectListItem key={prospect.id} prospect={prospect} />
+              <Divider className={classes.divider} />
+              </Fragment>
             ))}
-          </List>
+         
         </CardContent>
       </Card>
     );
@@ -37,8 +43,7 @@ export class ProspectList extends React.Component {
 }
 
 ProspectList.propTypes = {
-  prospects: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onClick: PropTypes.func,
+  prospects: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default withStyles(styles)(ProspectList);

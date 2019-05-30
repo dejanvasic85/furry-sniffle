@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 
-import PersonAvatar from '../components/PersonAvatar';
 
 const styles = theme => ({
   root: {

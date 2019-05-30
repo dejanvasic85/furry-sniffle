@@ -14,13 +14,17 @@ import {
   ListItemText,
   withStyles,
   Typography,
-  Avatar
+  Chip,
 } from '@material-ui/core';
 
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EditIcon from '@material-ui/icons/Edit';
 import GiftCardIcon from '@material-ui/icons/CardGiftcard';
+
+import purple from '@material-ui/core/colors/purple';
+import green from '@material-ui/core/colors/green';
+import yellow from '@material-ui/core/colors/yellow';
 
 import DateTime from '../components/DateTime';
 import Button from '../components/Button';
@@ -31,37 +35,50 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  avatar: {
+    backgroundColor: purple['600'],
+    color: '#fff',
+    marginRight: '20px',
+  },
+  newChip:{
+    backgroundColor: purple['600'],
+    color: '#fff',
+  },
+  canceledChip:{
+    backgroundColor: yellow['100'],
+    color: '#0e0e0e',
+  },
+  processedChip:{
+    backgroundColor: green['400'],
+    color: '#fff',
+  }
 });
 
 class ProspectDetails extends React.Component {
   state = {};
 
-
   render() {
     const { classes, prospect, onCancel, onProcess } = this.props;
     const client = prospect.Client;
-    
-    const displayStatus={
-      "New":"New",
-      "cancel":"Cancelled",
-      "processed":"Processed"
 
-    }
-    const status = displayStatus[prospect.status];
-    const showActions = status === 'New';
+    const displayStatus = {
+      new: <Chip label="New" className={classes.newChip}/>,
+      cancelled: <Chip label="Cancelled" className={classes.canceledChip}/>,
+      processed: <Chip label="Processed" className={classes.processedChip}/>,
+    };
+
+    const chip = displayStatus[prospect.status];
+
+    const showActions = prospect.status === 'new';
     return (
       <>
         <Card>
           <CardHeader
-          avatar={
-            <Typography variant="h6">
-              {status}
-           </Typography> }
-          
+            avatar={chip}
             title={`${prospect.firstName} ${prospect.lastName}`}
             subheader={
               <>
-                enquired: <DateTime date={prospect.createdAt} />
+                enquired on <DateTime date={prospect.createdAt} />
               </>
             }
           />
