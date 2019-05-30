@@ -14,8 +14,8 @@ const deposit = async (req, res) => {
     const { amount, stripeToken } = req.body;
     const { id: agentId, accountId, firstName, lastName } = req.agent;
 
-    if (amount <= 0) {
-      res.json({ error: 'The amount must be greater than zero.' });
+    if (amount <= 0 || amount > 1000) {
+      res.json({ error: 'The amount must be between more than zero and up to 1,000 dollars.' });
       return;
     }
 

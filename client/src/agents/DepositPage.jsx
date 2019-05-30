@@ -30,7 +30,7 @@ const styles = theme => ({
   },
   cardElement: {
     marginTop: '16px',
-    border: `1px solid ${colors.blueGrey[400]}`,
+    borderBottom: `1px solid ${colors.grey[600]}`,
     padding: '12px'
   },
   feeSummary: {
@@ -54,9 +54,9 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
 
   useEffect(() => {
     const fetchAccount = async () => {
-      const accountResponse = await api.getAccount();
-      if (accountResponse) {
-        setAccount(accountResponse.account);
+      const { account: accountFromApi } = await api.getAccount();
+      if (accountFromApi) {
+        setAccount(accountFromApi);
       }
 
       setIsFetching(false);
@@ -104,6 +104,10 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
     return totalAmount;
   };
 
+  const isValid = () => {
+    return amount > 0 && amount <= 1000;
+  };
+
   if (isFetching) {
     return <Loader />;
   }
@@ -131,6 +135,8 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
                 value={amount}
                 onChange={handleAmountChange}
                 type="number"
+                helperText="Max deposit amount is $1,000"
+                error={!isValid()}
                 InputLabelProps={{
                   shrink: true
                 }}
@@ -163,7 +169,7 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
               <Button
                 variant="contained"
                 color="primary"
-                disabled={!isPaymentFormReady}
+                disabled={!isPaymentFormReady || !isValid()}
                 onClick={startDeposit}
                 isFetching={isDepositing}>
                 Deposit
