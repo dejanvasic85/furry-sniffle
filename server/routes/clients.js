@@ -94,6 +94,8 @@ router.post(
   '/:id/gift',
   withAsync(async (req, res) => {
     const { id: agentId, accountId } = req.agent;
+    const id = req.params.id;
+    const { giftValue, message, from } = req.body;
 
     if (!accountId) {
       res
@@ -102,10 +104,14 @@ router.post(
       return;
     }
 
-    const account = Account.findOne({ where: { id: accountId } });
-    const id = req.params.id;
-    const { giftValue, message, from } = req.body;
+    const client = await Client.findOne({ where: { id, agentId } });
+    if (!client) {
+      res.status(404).json({ error: 'unknown client id' });
+      return;
+    }
 
+    const account = Account.findOne({ where: { id: accountId } });
+  
     let maxValue = account.availableFunds / 100;
     if (maxValue > 100) {
       // dv: Maximum allowed to gift is 100?? Alex?
@@ -120,12 +126,6 @@ router.post(
     logger.info(
       `Sending gift to client: ${id}, agentId: ${agentId}, value:${giftValue}, message:${message}`
     );
-
-    const client = await Client.findOne({ where: { id, agentId } });
-    if (!client) {
-      res.status(404).json({ error: 'unknown client id' });
-      return;
-    }
 
     // generate Gift URL
     const generatedGift = await generateGiftLink(from, client.email, giftValue, message);
