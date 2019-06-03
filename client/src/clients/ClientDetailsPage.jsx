@@ -50,6 +50,8 @@ class ClientDetailsPage extends React.Component {
   render() {
     const { client, emails, gifts, prospects, isFetching } = this.state;
     const { classes } = this.props;
+    const prospectCount = prospects ? prospects.length : 0;
+    const giftCount = gifts ? gifts.length : 0;
 
     return (
       <Fragment>
@@ -57,6 +59,8 @@ class ClientDetailsPage extends React.Component {
         {!isFetching && (
           <Fragment>
             <ClientDetails 
+              giftCount={giftCount}
+              prospectCount={prospectCount}
               client={client} 
               onEmailSent={this.handleEmailSent} 
               onNewGift={this.handleOnNewGift} />

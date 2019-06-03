@@ -14,13 +14,16 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  withStyles,
+  colors,
+  withStyles
 } from '@material-ui/core';
 
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
 import LinkIcon from '@material-ui/icons/Link';
 import EditIcon from '@material-ui/icons/Edit';
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import GiftCardIcon from '@material-ui/icons/CardGiftcard';
 
 import withApiClient from '../decorators/withApiClient';
@@ -31,13 +34,16 @@ import Button from '../components/Button';
 const styles = theme => ({
   actions: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
+  helpText: {
+    color: colors.grey[600]
+  }
 });
 
 class ClientDetails extends React.Component {
   state = {
-    isEmailSending: false,
+    isEmailSending: false
   };
 
   handleSendGiftClick = () => {
@@ -53,7 +59,7 @@ class ClientDetails extends React.Component {
   };
 
   render() {
-    const { classes, client } = this.props;
+    const { classes, client, giftCount, prospectCount } = this.props;
     const { isEmailSending } = this.state;
     return (
       <>
@@ -67,7 +73,10 @@ class ClientDetails extends React.Component {
               </>
             }
             action={
-              <IconButton aria-label="Edit" component={RouterLink} to={`/app/clients/${client.id}/edit`}>
+              <IconButton
+                aria-label="Edit"
+                component={RouterLink}
+                to={`/app/clients/${client.id}/edit`}>
                 <EditIcon />
               </IconButton>
             }
@@ -93,9 +102,33 @@ class ClientDetails extends React.Component {
                   <LinkIcon />
                 </ListItemIcon>
                 <ListItemText>
+                  Referral URL: &nbsp;
                   <a href={client.referralUrl} target="_blank" rel="noopener noreferrer">
                     {client.referralCode}
                   </a>
+                  <br />
+                  <span className={classes.helpText}>
+                    Each client has their own identifiable URL for your prospects.
+                  </span>
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <QuestionAnswerIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  Number of Prospects:
+                  {prospectCount}
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <CardGiftcardIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  Number Of Gifts:
+                  {giftCount} <br />
+                  <span className={classes.helpText}>For each prospect there should be a gift to your client.</span>
                 </ListItemText>
               </ListItem>
             </List>
@@ -111,8 +144,7 @@ class ClientDetails extends React.Component {
               variant="outlined"
               color="secondary"
               isFetching={isEmailSending}
-              onClick={this.handleSendEmailClick}
-            >
+              onClick={this.handleSendEmailClick}>
               <EmailIcon />
               &nbsp;Send Email
             </Button>
@@ -127,6 +159,8 @@ ClientDetails.propTypes = {
   client: PropTypes.object.isRequired,
   onEmailSent: PropTypes.func,
   onNewGift: PropTypes.func,
+  prospectCount: PropTypes.number,
+  giftCount: PropTypes.number
 };
 
 export default compose(
