@@ -64,7 +64,7 @@ class DashboardItem extends React.Component {
         <Grid container alignItems="center">
 
           <Grid item xs={12}>
-            <Typography variant="subheading">{title}</Typography>
+            <Typography variant="subtitle1">{title}</Typography>
           </Grid>
           
           <Grid item xs={6}>
@@ -99,7 +99,7 @@ DashboardItem.propTypes = {
   data: PropTypes.shape({
     now: PropTypes.number,
     before: PropTypes.number,
-    daysCount: PropTypes.number,
+    daysCount: PropTypes.string,
   }),
   icon: PropTypes.object,
 };

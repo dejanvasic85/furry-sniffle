@@ -48,8 +48,6 @@ export class DashboardPage extends React.Component {
       this.props.api.getNewProspects()
     ]);
 
-    console.log('received', result);
-
     this.setState({ data: result[0], newProspects: result[1], isFetching: false });
   }
 
@@ -84,23 +82,23 @@ export class DashboardPage extends React.Component {
           <RadioGroup
             aria-label="position"
             name="position"
-            value={days}
+            value={String(days)}
             onChange={this.handleDaysChange}
             row>
             <FormControlLabel
-              value={7}
+              value="7"
               control={<Radio color="primary" />}
               label="Last 7 Days"
               labelPlacement="end"
             />
             <FormControlLabel
-              value={30}
+              value="30"
               control={<Radio color="primary" />}
               label="Last 30 Days"
               labelPlacement="end"
             />
             <FormControlLabel
-              value={90}
+              value="90"
               control={<Radio color="primary" />}
               label="Last 90 Days"
               labelPlacement="end"
