@@ -8,16 +8,23 @@ import { agentRequiresSetup } from '../services/agentService';
 
 const styles = theme => ({});
 
-const AgentProgress = ({ agent }) => {
+const AgentProgress = ({ agent, clients }) => {
   const requiresSetup = agentRequiresSetup(agent);
+  const hasClients = clients && clients.now > 0;
 
-  let activeStep = requiresSetup ? 1 : 2;
+  const activeStep = requiresSetup ? 1 : !hasClients ? 2 : 3;
 
   return (
     <Fragment>
-      <Stepper activeStep={activeStep}>
+      <Stepper activeStep={3}>
         <Step>
-          <StepLabel>Sign up</StepLabel>
+          <Tooltip title="Sign up to our awesome application">
+            <StepLabel>
+              <Link component={RouterLink} to="/app">
+                Sign up
+              </Link>
+            </StepLabel>
+          </Tooltip>
         </Step>
         <Step>
           <Tooltip title="Complete my account details.">
@@ -29,20 +36,24 @@ const AgentProgress = ({ agent }) => {
           </Tooltip>
         </Step>
         <Step>
-          <StepLabel>
-            <Link component={RouterLink} to="/app/clients">
-              Add Client
-            </Link>
-          </StepLabel>
+          <Tooltip title="Add your first client">
+            <StepLabel>
+              <Link component={RouterLink} to="/app/clients">
+                Add Client
+              </Link>
+            </StepLabel>
+          </Tooltip>
         </Step>
         {/* <Step>
         <StepLabel>Gift Client</StepLabel>
       </Step> */}
       </Stepper>
-
-      <Typography>
-
-      </Typography>
+      {activeStep === 1 && (
+        <Typography>Please complete your business and personal details.</Typography>
+      )}
+      {activeStep === 2 && (
+        <Typography>This does not quite work unless you have some clients.</Typography>
+      )}
     </Fragment>
   );
 };

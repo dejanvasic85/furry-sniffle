@@ -34,7 +34,6 @@ class NewClientPage extends React.Component {
       isAgentFetching: false,
       signupRequired: agentRequiresSetup(agent)
     });
-    console.log('requires setup', agentRequiresSetup(agent));
   }
 
   handleAlertClose = () => {

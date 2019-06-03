@@ -36,10 +36,10 @@ export class DashboardPage extends React.Component {
     days: 7,
     data: {
       agent: {},
-      clients: [],
-      gifts: [],
-      emails: [],
-      prospects: []
+      clients: null,
+      gifts: null,
+      emails: null,
+      prospects: null
     },
     newProspects: []
   };
@@ -56,16 +56,14 @@ export class DashboardPage extends React.Component {
   handleDaysChange = async event => {
     const days = Number.parseInt(event.target.value);
     this.setState({ days: days, isFetching: true });
-
     const dashboardData = await this.props.api.getDashboard(days);
-
     this.setState({ data: dashboardData, isFetching: false });
   };
 
   render() {
     const { classes } = this.props;
     const { data, newProspects, days } = this.state;
-
+    
     return (
       <Fragment>
         <Paper className={classes.section}>
