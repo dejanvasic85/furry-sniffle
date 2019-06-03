@@ -17,6 +17,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import DashboardItem from './DashboardItem';
 import withApiClient from '../decorators/withApiClient';
 import RawProspectList from '../prospects/RawProspectList';
+import AgentProgress from './AgentProgress';
 
 const styles = theme => ({
   section: {
@@ -34,6 +35,7 @@ export class DashboardPage extends React.Component {
     isFetching: true,
     days: 7,
     data: {
+      agent: {},
       clients: null,
       gifts: null,
       emails: null,
@@ -54,20 +56,19 @@ export class DashboardPage extends React.Component {
   handleDaysChange = async event => {
     const days = Number.parseInt(event.target.value);
     this.setState({ days: days, isFetching: true });
-
     const dashboardData = await this.props.api.getDashboard(days);
-
     this.setState({ data: dashboardData, isFetching: false });
   };
 
   render() {
     const { classes } = this.props;
     const { data, newProspects, days } = this.state;
-
+    
     return (
       <Fragment>
         <Paper className={classes.section}>
-          <Typography variant="h5">Complete Signup</Typography>
+          <Typography variant="h5">Progress</Typography>
+          <AgentProgress agent={data.agent} clients={data.clients} />
         </Paper>
         {newProspects.length > 0 && (
           <Paper className={classes.section}>

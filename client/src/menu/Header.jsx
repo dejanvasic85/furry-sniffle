@@ -45,10 +45,6 @@ class Header extends React.Component {
     isDrawerOpened: false,
   };
 
-  handleAccountClick = () => {
-    console.log('clicking');
-  };
-
   handleDrawerToggle = () => {
     const isOpened = this.state.isDrawerOpened;
     this.setState({ isDrawerOpened: !isOpened });
