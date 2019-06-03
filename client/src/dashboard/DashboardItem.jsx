@@ -35,7 +35,7 @@ const styles = () => ({
 
 class DashboardItem extends React.Component {
   render() {
-    const { icon, title, data, classes, link } = this.props;
+    const { title, data, classes, link } = this.props;
     if (!data) {
       return (
         <div>
@@ -46,7 +46,7 @@ class DashboardItem extends React.Component {
 
     const createdInLastXDays = data.now - data.before;
     let beforeText = createdInLastXDays > 0 ? `+${createdInLastXDays}` : `-${createdInLastXDays}`;
-    if(createdInLastXDays ==0){
+    if(createdInLastXDays === 0){
       beforeText = ".";
     }
     const periodText = `last ${data.daysCount} days`;
@@ -54,7 +54,7 @@ class DashboardItem extends React.Component {
       <ArrowDropUp className={classes.upIcon} />:
       <ArrowDropDown className={classes.downIcon} />;
 
-    if (createdInLastXDays == 0) {
+    if (createdInLastXDays === 0) {
       growthIcon = null;
     }
  

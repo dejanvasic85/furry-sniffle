@@ -1,15 +1,24 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, CardActions, CardContent, CardHeader, Divider, Grid, TextField, withStyles, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  TextField,
+  withStyles
+} from '@material-ui/core';
 
 import Button from '../components/Button';
 
 const styles = theme => ({
   buttons: {
     display: 'flex',
-    justifyContent: 'flex-end',
-  },
+    justifyContent: 'flex-end'
+  }
 });
 
 class AgentEditor extends React.Component {
@@ -24,8 +33,8 @@ class AgentEditor extends React.Component {
         phone: this.props.agent.phone || '',
         businessName: this.props.agent.businessName || '',
         abn: this.props.agent.abn || '',
-        touched: [],
-      },
+        touched: []
+      }
     };
   }
 
@@ -36,7 +45,7 @@ class AgentEditor extends React.Component {
       lastName: this.state.formData.lastName,
       businessName: this.state.formData.businessName,
       abn: this.state.formData.abn,
-      phone: this.state.formData.phone,
+      phone: this.state.formData.phone
     };
     await this.props.onSaveAgent(agent);
     this.setState({ isFetching: false });
@@ -54,8 +63,8 @@ class AgentEditor extends React.Component {
       ...this.state.formData,
       touched: {
         ...this.state.formData.touched,
-        [field]: true,
-      },
+        [field]: true
+      }
     };
 
     this.setState({ formData });
@@ -65,7 +74,7 @@ class AgentEditor extends React.Component {
     const errors = {
       firstName: firstName.length === 0,
       lastName: lastName.length === 0,
-      phone: phone.length === 0 || !/^\d+$/.test(phone),
+      phone: phone.length === 0 || !/^\d+$/.test(phone)
     };
     return errors;
   };
@@ -84,9 +93,7 @@ class AgentEditor extends React.Component {
     return (
       <Fragment>
         <Card>
-          <CardHeader
-            title="My Details"
-            subheader={`Email: ${agent.email}`} />
+          <CardHeader title="My Details" subheader={`Email: ${agent.email}`} />
           <Divider />
           <CardContent>
             <Grid container spacing={24}>
@@ -143,21 +150,27 @@ class AgentEditor extends React.Component {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField id="abn" name="abn" value={formData.abn} label="ABN" fullWidth onChange={this.handleChange} />
+                <TextField
+                  id="abn"
+                  name="abn"
+                  value={formData.abn}
+                  label="ABN"
+                  fullWidth
+                  onChange={this.handleChange}
+                />
               </Grid>
             </Grid>
           </CardContent>
-          
+
           <CardActions className={classes.buttons}>
             <Button
               variant="contained"
               color="primary"
               onClick={this.handleSave}
               disabled={isSaveDisabled}
-              isFetching={isFetching}
-            >
+              isFetching={isFetching}>
               Save
-          </Button>
+            </Button>
           </CardActions>
         </Card>
       </Fragment>
@@ -170,5 +183,5 @@ export default withStyles(styles)(AgentEditor);
 AgentEditor.propTypes = {
   agent: PropTypes.object.isRequired,
   onSaveAgent: PropTypes.func.isRequired,
-  isFetching: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool.isRequired
 };
