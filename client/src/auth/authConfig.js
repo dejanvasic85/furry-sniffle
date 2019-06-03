@@ -1,7 +1,12 @@
 export const authConfig = {
-  audience: 'https://www.foxrewarder.com.au/api',
-  domain: 'foxrewarder.au.auth0.com',
-  clientId: 'WgWzBgqXpTQn2DPJKlmYVllf6OHu3fjJ',
+  audience:
+    process.env.REACT_APP_AUTH_AUDIENCE || "https://www.foxrewarder.com.au/api",
+
+  domain: process.env.REACT_APP_AUTH_DOMAIN || "foxrewarder.au.auth0.com",
+
+  clientId:
+    process.env.REACT_APP_AUTH_CLIENT_ID || "WgWzBgqXpTQn2DPJKlmYVllf6OHu3fjJ",
+
   callbackUrl:
-    process.env.REACT_APP_AUTH_CALLBACK_URL || 'http://localhost:3000/callback'
+    process.env.REACT_APP_AUTH_CALLBACK_URL || "http://localhost:3000/callback"
 };

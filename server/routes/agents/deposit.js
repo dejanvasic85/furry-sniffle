@@ -14,15 +14,15 @@ const deposit = async (req, res) => {
     const { amount, stripeToken } = req.body;
     const { id: agentId, accountId, firstName, lastName } = req.agent;
 
-    if (amount <= 0 || amount > 1000) {
-      res.json({ error: 'The amount must be between more than zero and up to 1,000 dollars.' });
+    if (amount <= 0 && amount > 1000) {
+      res.status(400).json({ error: 'The amount must be between more than zero and up to 1,000 dollars.' });
       return;
     }
 
     logger.info(`Depositing money using stripe for Agent ${agentId}`);
 
     const amountWithFee = calculateFee(amount, feeConfiguration);
-
+    
     const { id, status } = await stripe.charges.create({
       amount: amountWithFee.total,
       currency: 'aud',
@@ -44,12 +44,10 @@ const deposit = async (req, res) => {
       ...amountWithFee
     });
 
-    res.json({ status, account });
 
   } catch (err) {
     logger.error(`Stripe Payment failed. Request ${JSON.stringify(req.body)}`);
-    logger.error(err);
-    throw err;
+    res.status(400).json({ error: 'Payment failed. Please check the card information and try again.'});
   }
 };
 

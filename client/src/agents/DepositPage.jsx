@@ -45,6 +45,7 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
   const [isDepositing, setIsDepositing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [isPaymentFormReady, setIsPaymentFormReady] = useState(false);
+  const [paymentError, setPaymentError] = useState({ isDisplayed: false, isDismissed: false });
   const [amount, setAmount] = useState(50);
   const [account, setAccount] = useState({
     balance: 0,
@@ -71,16 +72,22 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
   const startDeposit = async () => {
     setIsDepositing(true);
     const profile = auth.getProfile();
-    const { token } = await stripe.createToken({ name: profile.email });
+    const response = await stripe.createToken({ name: profile.email });
     const baseAmount = toBaseValue(amount);
-    const { status, account: updatedAccount } = await api.completeDeposit({
-      amount: baseAmount,
-      stripeToken: token.id
-    });
+    
+    try {
+      const { status, account: updatedAccount } = await api.completeDeposit({
+        amount: baseAmount,
+        stripeToken: response.token.id
+      });
 
-    if (status === 'succeeded') {
-      setIsComplete(true);
-      setAccount(updatedAccount);
+      if (status === 'succeeded') {
+        setIsComplete(true);
+        setAccount(updatedAccount);
+      }
+    } catch(err) {
+      setIsDepositing(false);
+      setPaymentError({ isDisplayed: true });
     }
   };
 
@@ -108,6 +115,13 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
   const isValid = () => {
     return amount > 0 && amount <= 1000;
   };
+
+  const dismissError = () => {
+    setPaymentError({
+      ...paymentError,
+      isDismissed: true
+    });
+  }
 
   if (isFetching) {
     return <Loader />;
@@ -169,6 +183,13 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
         </CardContent>
         {!isComplete && (
           <React.Fragment>
+            {
+              paymentError.isDisplayed && !paymentError.isDismissed && (
+                <React.Fragment>
+                  <Alert message="Payment failed. Please check your card and try again!" variant="error"  onClose={dismissError} />
+                </React.Fragment>
+              )
+            }
             <Divider />
             <CardActions className={classes.buttons}>
               <Typography className={classes.disclaimer}>

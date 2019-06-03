@@ -24,8 +24,8 @@ const conf = {
   webBaseUrl: WEB_BASE_URL || 'http://localhost:3000',
   connectionString: DATABASE_URL,
   feeConfiguration: {
-    depositFeePercent: DEPOSIT_FEE_PERCENT,
-    depositFeeCents: DEPOSIT_FEE_CENTS,
+    depositFeePercent: DEPOSIT_FEE_PERCENT || 3,
+    depositFeeCents: DEPOSIT_FEE_CENTS || 50,
   },
   auth0: {
     baseUri: AUTH0_URI || 'https://foxrewarder.au.auth0.com/',
@@ -41,7 +41,7 @@ const conf = {
     baseUrl: GIFTPAY_BASEURL || 'https://sandbox.express.giftpay.com'
   },
   stripeConfig: {
-    key: STRIPE_KEY || '123',
+    key: STRIPE_KEY || 'pk_test_up5zZ6Vfb5BBGawIb2ugkN0o00ezT4zWqH',
     secret: STRIPE_SECRET
   }
 };

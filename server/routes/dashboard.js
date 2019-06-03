@@ -4,8 +4,6 @@ var subDays = require('date-fns/sub_days');
 
 const Sequelize = require('sequelize');
 
-const op = Sequelize.Op;
-
 const { Client, Email, Gift, Prospect } = require('../db');
 const { withAsync } = require('../middleware');
 
@@ -17,8 +15,11 @@ router.get(
   withAsync(async (req, res) => {
     const agentId = req.agent.id;
     logger.info(`Fetch dashboard by agentId: ${agentId}`);
+
+    const xDaysAgo = req.query.xdaysago || X_DAYS_AGO;
+    
     const today = new Date();
-    const dateBefore = subDays(today, X_DAYS_AGO);
+    const dateBefore = subDays(today, xDaysAgo);
 
     const clientsToday = await Client.count({
       where: {
@@ -45,6 +46,20 @@ router.get(
       where: {
         agentId,
         createdAt: { [Sequelize.Op.lt]: dateBefore.toUTCString() },
+      },
+    });
+
+    const emailsOpenedToday = await Email.count({
+      where: {
+        agentId,
+        openedAt: { [Sequelize.Op.ne]: null },
+      },
+    });
+
+    const emailsOpenedXDaysAgo = await Email.count({
+      where: {
+        agentId,
+        openedAt: { [Sequelize.Op.lt]: dateBefore.toUTCString() },
       },
     });
 
@@ -76,22 +91,27 @@ router.get(
 
     res.json({
       clients: {
-        daysCount: X_DAYS_AGO,
+        daysCount: xDaysAgo,
         now: clientsToday,
         before: clientsXDaysAgo,
       },
       emails: {
-        daysCount: X_DAYS_AGO,
+        daysCount: xDaysAgo,
         now: emailsToday,
         before: emailsXDaysAgo,
       },
+      emailsOpened: {
+        daysCount: xDaysAgo,
+        now: emailsOpenedToday,
+        before: emailsOpenedXDaysAgo,
+      },
       gifts: {
-        daysCount: X_DAYS_AGO,
+        daysCount: xDaysAgo,
         now: giftsToday,
         before: giftsXDaysAgo,
       },
       prospects: {
-        daysCount: X_DAYS_AGO,
+        daysCount: xDaysAgo,
         now: prospectsToday,
         before: prospectsXDaysAgo,
       },

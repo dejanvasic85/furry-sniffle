@@ -2,10 +2,11 @@ import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
-import { List, Paper, Typography, withStyles } from '@material-ui/core';
+import { Paper, Typography, withStyles} from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
-import ProspectListItem from './ProspectListItem';
+import RawProspectList from './RawProspectList';
+
 import SearchInput from '../components/SearchInput';
 import Loader from '../components/Loader';
 
@@ -20,9 +21,13 @@ const styles = theme => ({
   },
   prospects: {
     backgroundColor: theme.palette.background.paper,
+    padding: '20px',
   },
   padded: {
     padding: '20px',
+  },
+  divider: {
+    margin: '10px',
   },
 });
 
@@ -72,15 +77,9 @@ export class ProspectsPage extends React.Component {
                   <div className={classes.padded}>
                     <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
                   </div>
-                  <List className={classes.prospects}>
-                    {prospectsToDisplay.map(prospect => (
-                      <ProspectListItem
-                        key={prospect.id}
-                        prospect={prospect}
-                        onClick={() => this.handleProspectlick(prospect)}
-                      />
-                    ))}
-                  </List>
+                  <div className={classes.prospects}>
+                    <RawProspectList prospects={prospects} />
+                  </div>
                 </Fragment>
               )}
               {prospects.length === 0 && (

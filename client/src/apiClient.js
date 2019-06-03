@@ -5,15 +5,57 @@ class Api {
     this.authService = new AuthService();
   }
 
-  async doFetch(path, method, data, accessToken) {
+  async processResponse(res){
+    if (res.ok) {
+      return await res.json();
+    }
+
+    if (res.status >= 400) {
+      let payload;
+      try {
+        payload = await res.json();
+      } catch (parsingError) {
+        throw new Error('failed to parse payload');
+      }
+
+      if (payload.error) {
+        throw new Error(payload.error);
+      }      
+    }
+
+    throw new Error('Oops.. something went wrong. Check your connect or try again.', res);
+  }
+
+  createHeaders(auth) {
+    return  {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${auth}`,
+    };
+  }
+
+  async doGet(path, queryParams) {
+    const auth = this.authService.getToken();
+
+    let options = {
+      method: 'GET',
+      headers: this.createHeaders(auth),
+      params: queryParams
+    };
+    
+    const res = await fetch(`/api${path}`, options);
+    return this.processResponse(res);
+  }
+
+  async doCall(path, method, data, accessToken) {
+    if(!method){
+      throw new Error('method is required.',path);
+    }
+
     const auth = accessToken || this.authService.getToken();
 
     let options = {
-      method: method || 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth}`,
-      },
+      method: method,
+      headers: this.createHeaders(auth),
     };
 
     if (data) {
@@ -21,34 +63,23 @@ class Api {
     }
 
     const res = await fetch(`/api${path}`, options);
-    if (res.ok) {
-      return await res.json();
-    }
-
-    if (res.status >= 400) {
-      const payload = await res.json();
-      if (payload.error) {
-        throw new Error(payload.error);
-      }
-    }
-
-    throw new Error('Oops.. something went wrong. Check your connect or try again.', res);
+    return this.processResponse(res);
   }
 
   createClient(client) {
-    return this.doFetch('/clients', 'POST', client);
+    return this.doCall('/clients', 'POST', client);
   }
 
   getClients() {
-    return this.doFetch('/clients');
+    return this.doGet('/clients');
   }
 
   getClient(id) {
-    return this.doFetch(`/clients/${id}`);
+    return this.doGet(`/clients/${id}`);
   }
 
   sendEmail(id) {
-    return this.doFetch(`/clients/${id}/sendEmail`, 'POST', {});
+    return this.doCall(`/clients/${id}/sendEmail`, 'POST', {});
   }
 
   sendGift(id, giftDetails) {
@@ -57,68 +88,76 @@ class Api {
       giftValue: Number.parseInt(giftDetails.giftValue),
       from: giftDetails.from,
     };
-    return this.doFetch(`/clients/${id}/gift`, 'POST', request);
+    return this.doCall(`/clients/${id}/gift`, 'POST', request);
   }
 
-  getDashboard() {
-    return this.doFetch(`/dashboard`);
+  getDashboard(days) {
+    return this.doGet(`/dashboard?xdaysago=${days}`);
   }
 
   getClientGifts(id) {
-    return this.doFetch(`/clients/${id}/gift`);
+    return this.doGet(`/clients/${id}/gift`);
   }
 
   getGifts() {
-    return this.doFetch(`/gifts`);
+    return this.doGet(`/gifts`);
   }
 
   updateClient(id, client) {
-    return this.doFetch(`/clients/${id}`, 'PUT', client);
+    return this.doCall(`/clients/${id}`, 'PUT', client);
   }
 
   login(accessToken) {
-    return this.doFetch('/agents/login', 'POST', null, accessToken);
+    return this.doCall('/agents/login', 'POST', null, accessToken);
   }
 
   getAgent() {
     // Returns the current agent stored in token (local storage)
-    return this.doFetch('/agents');
+    return this.doGet('/agents');
   }
 
   createAgent() {
-    return this.doFetch('/agents', 'POST', {});
+    return this.doCall('/agents', 'POST', {});
   }
 
   getProspect(prospectId) {
-    return this.doFetch(`/prospects/${prospectId}`);
+    return this.doGet(`/prospects/${prospectId}`);
+  }
+
+  getNewProspects() {
+    return this.doGet(`/prospects?status=new`);
+  }
+
+  getSignupCompletion() {
+    return this.doGet(`/signup`);
   }
 
   updateProspectStatus(prospectId, status) {
-    return this.doFetch(`/prospects/${prospectId}`,'PUT',{status});
+    return this.doCall(`/prospects/${prospectId}`,'PUT',{status});
   }
 
   getProspects() {
-    return this.doFetch('/prospects');
+    return this.doGet('/prospects');
   }
 
   createProspect(prospect) {
-    return this.doFetch('/prospects', 'POST', prospect);
+    return this.doCall('/prospects', 'POST', prospect);
   }
 
   updateAgent(agent) {
-    return this.doFetch('/agents', 'PUT', agent);
+    return this.doCall('/agents', 'PUT', agent);
   }
 
   invite(data) {
-    return this.doFetch(`/prospects/invite`, 'POST', data);
+    return this.doCall(`/prospects/invite`, 'POST', data);
   }
 
   completeDeposit({ amount, stripeToken }) {
-    return this.doFetch(`/agents/deposit`, 'POST', { amount, stripeToken });
+    return this.doCall(`/agents/deposit`, 'POST', { amount, stripeToken });
   }
 
   getAccount() {
-    return this.doFetch(`/accounts`);
+    return this.doGet(`/accounts`);
   }
 }
 

@@ -43,7 +43,7 @@ class GiftsPage extends React.Component {
   }
 
   addClient = () => {
-    this.props.history.push('/app/clients/new');
+    this.props.history.push('/app/clients-new');
   };
 
   handleClientClick = clientId => {
