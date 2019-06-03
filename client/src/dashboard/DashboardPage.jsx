@@ -7,7 +7,11 @@ import {
   Grid,
   RadioGroup,
   Radio,
-  FormControlLabel
+  FormControlLabel,
+  List,
+  ListItem,
+  ListItemText,
+  Divider
 } from '@material-ui/core';
 
 import PeopleIcon from '@material-ui/icons/People';
@@ -63,7 +67,7 @@ export class DashboardPage extends React.Component {
   render() {
     const { classes } = this.props;
     const { data, newProspects, days } = this.state;
-    
+
     return (
       <Fragment>
         <Paper className={classes.section}>
@@ -141,6 +145,32 @@ export class DashboardPage extends React.Component {
               />
             </Grid>
           </Grid>
+        </Paper>
+        <Paper className={classes.section}>
+          <Fragment>
+            <Typography variant="h5">How does this all work?</Typography>
+            <List>
+              <ListItem>
+                <ListItemText>We create a unique page for each client</ListItemText>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText>We send an email to each client with your detail</ListItemText>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText>
+                  Your client does a super job in sharing their link to a prospect
+                </ListItemText>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText>
+                  Prospect visits the page and fills out the form and you have a Prospect!
+                </ListItemText>
+              </ListItem>
+            </List>
+          </Fragment>
         </Paper>
       </Fragment>
     );
