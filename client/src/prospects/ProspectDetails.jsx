@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
@@ -14,7 +14,7 @@ import {
   ListItemText,
   withStyles,
   Typography,
-  Chip,
+  Chip
 } from '@material-ui/core';
 
 import EmailIcon from '@material-ui/icons/Email';
@@ -33,24 +33,27 @@ import ClientListItem from '../clients/ClientListItem';
 const styles = theme => ({
   actions: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   avatar: {
     backgroundColor: purple['600'],
     color: '#fff',
-    marginRight: '20px',
+    marginRight: '20px'
   },
-  newChip:{
+  newChip: {
     backgroundColor: purple['600'],
-    color: '#fff',
+    color: '#fff'
   },
-  canceledChip:{
+  canceledChip: {
     backgroundColor: yellow['100'],
-    color: '#0e0e0e',
+    color: '#0e0e0e'
   },
-  processedChip:{
+  processedChip: {
     backgroundColor: green['400'],
-    color: '#fff',
+    color: '#fff'
+  },
+  gutter: {
+    marginTop: theme.spacing.unit * 2
   }
 });
 
@@ -62,74 +65,77 @@ class ProspectDetails extends React.Component {
     const client = prospect.Client;
 
     const displayStatus = {
-      new: <Chip label="New" className={classes.newChip}/>,
-      cancelled: <Chip label="Cancelled" className={classes.canceledChip}/>,
-      processed: <Chip label="Processed" className={classes.processedChip}/>,
+      new: <Chip label="New" className={classes.newChip} />,
+      cancelled: <Chip label="Cancelled" className={classes.canceledChip} />,
+      processed: <Chip label="Processed" className={classes.processedChip} />
     };
 
     const chip = displayStatus[prospect.status];
 
     const showActions = prospect.status === 'new';
     return (
-      <>
-        <Card>
-          <CardHeader
-            avatar={chip}
-            title={`${prospect.firstName} ${prospect.lastName}`}
-            subheader={
-              <>
-                enquired on <DateTime date={prospect.createdAt} />
-              </>
-            }
-          />
+      <Card>
+        <CardHeader
+          avatar={chip}
+          title={`${prospect.firstName} ${prospect.lastName}`}
+          subheader={
+            <>
+              enquired on <DateTime date={prospect.createdAt} />
+            </>
+          }
+        />
 
-          <Divider />
-          <CardContent>
-            <List dense={true}>
-              <ListItem>
-                <ListItemIcon>
-                  <EmailIcon />
-                </ListItemIcon>
-                <ListItemText>{prospect.email}</ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon>
-                  <PhoneIcon />
-                </ListItemIcon>
-                <ListItemText>{prospect.phone}</ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                <ListItemText>{prospect.message}</ListItemText>
-              </ListItem>
-            </List>
-            <Divider />
-            <Typography variant="subheading">Referred By</Typography>
-            <ClientListItem client={client} />
-          </CardContent>
-          <Divider />
-
-          <Divider />
-
-          <CardActions className={classes.actions}>
-            {showActions && (
-              <Button variant="outlined" color="secondary" onClick={onCancel}>
-                <GiftCardIcon />
-                &nbsp;Mark as invalid
-              </Button>
-            )}
-
-            {showActions && (
-              <Button variant="outlined" color="secondary" onClick={onProcess}>
+        <Divider />
+        <CardContent>
+          <List dense={true}>
+            <ListItem>
+              <ListItemIcon>
                 <EmailIcon />
-                &nbsp;Mark as processed
-              </Button>
-            )}
-          </CardActions>
-        </Card>
-      </>
+              </ListItemIcon>
+              <ListItemText>{prospect.email}</ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <PhoneIcon />
+              </ListItemIcon>
+              <ListItemText>{prospect.phone}</ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <ListItemText>{prospect.message}</ListItemText>
+            </ListItem>
+          </List>
+          <Divider />
+          <Typography variant="subtitle1" className={classes.gutter}>
+            Referred By
+          </Typography>
+          <ClientListItem client={client} />
+        </CardContent>
+        <Divider />
+
+        {showActions && (
+          <Fragment>
+            <Divider />
+            <CardActions className={classes.actions}>
+              {showActions && (
+                <Button variant="outlined" color="secondary" onClick={onCancel}>
+                  <GiftCardIcon />
+                  &nbsp;Mark as invalid
+                </Button>
+              )}
+
+              {showActions && (
+                <Button variant="outlined" color="secondary" onClick={onProcess}>
+                  <EmailIcon />
+                  &nbsp;Mark as processed
+                </Button>
+              )}
+            </CardActions>
+          </Fragment>
+        )}
+      </Card>
     );
   }
 }
@@ -137,7 +143,7 @@ class ProspectDetails extends React.Component {
 ProspectDetails.propTypes = {
   prospect: PropTypes.object.isRequired,
   onCancel: PropTypes.func.isRequired,
-  onProcess: PropTypes.func.isRequired,
+  onProcess: PropTypes.func.isRequired
 };
 
 export default compose(withStyles(styles))(ProspectDetails);

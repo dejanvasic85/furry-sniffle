@@ -27,7 +27,7 @@ export class ProspectListItem extends React.Component {
     const createdAt = format(prospect.createdAt, 'Do MMM YYYY H:mA');
 
     return (
-      <Grid container spacing="0" justify="center" alignItems="center">
+      <Grid container justify="center" alignItems="center">
         <Grid item xs={1}>
           <Avatar className={classes.avatar}>
             <QuestionAnswerIcon />
