@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { Account, Client, Email, Gift, Prospect } = require('../db');
+const { Client, Email, Gift, Prospect } = require('../db');
 const { withAsync } = require('../middleware');
 const { getClientReferralUrl, generateReferralCode } = require('../services/clientService');
-
-const { generateGiftLink } = require('../services/giftpayClient');
 
 const emails = require('../emails');
 const logger = require('../logger');
@@ -90,78 +88,7 @@ router.post(
   })
 );
 
-router.post(
-  '/:id/gift',
-  withAsync(async (req, res) => {
-    const { id: agentId, accountId } = req.agent;
-    const id = req.params.id;
-    const { giftValue, message, from } = req.body;
-
-    if (!accountId) {
-      res
-        .status(400)
-        .json({ error: `Agent ${agentId} needs to deposit some money first. No account found.` });
-      return;
-    }
-
-    const client = await Client.findOne({ where: { id, agentId } });
-    if (!client) {
-      res.status(404).json({ error: 'unknown client id' });
-      return;
-    }
-
-    const account = Account.findOne({ where: { id: accountId } });
-  
-    let maxValue = account.availableFunds / 100;
-    if (maxValue > 100) {
-      // dv: Maximum allowed to gift is 100?? Alex?
-      maxValue = 100;
-    }
-
-    if (!giftValue || !Number.isInteger(giftValue) || giftValue > maxValue) {
-      res.status(404).json({ error: `gift value is invalid ${giftValue}` });
-      return;
-    }
-
-    logger.info(
-      `Sending gift to client: ${id}, agentId: ${agentId}, value:${giftValue}, message:${message}`
-    );
-
-    // generate Gift URL
-    const generatedGift = await generateGiftLink(from, client.email, giftValue, message);
-
-    logger.info(
-      `Link generated clientRef: ${generatedGift.clientRef}, value:${giftValue}, message:${message}`
-    );
-
-    // URL is not stored in DB yet (sensitive information)
-    const createGiftCommand = {
-      id: generatedGift.clientRef,
-      agentId,
-      clientId: id,
-      message,
-      giftValue,
-      from: from,
-      value: giftValue,
-      giftpayId: generatedGift.giftId,
-      giftpayStatus: generatedGift.status
-    };
-
-    await Gift.create(createGiftCommand);
-
-    logger.info(
-      `Gift persisted: ${generatedGift.clientRef}, value:${giftValue}, message:${message}`
-    );
-
-    await emails.sendNewGiftEmail(req.agent, client, message, giftValue, generatedGift.giftUrl);
-
-    logger.info(`Gift emailed: ${generatedGift.clientRef}, value:${giftValue}, message:${message}`);
-
-    res.json({
-      id: generatedGift.giftUrl
-    });
-  })
-);
+router.post('/:id/gift', withAsync(require('./clients/gift')));
 
 router.put(
   '/:id',

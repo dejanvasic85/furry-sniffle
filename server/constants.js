@@ -13,6 +13,7 @@ module.exports = {
   }),
 
   PAYMENT_METHOD: Object.freeze({ 
-    CREDIT_CARD: 'credit_card'
+    CREDIT_CARD: 'credit_card',
+    ACCOUNT: 'account'
   })
 };
