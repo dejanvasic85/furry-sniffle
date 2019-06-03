@@ -15,6 +15,7 @@ import {
 
 import { withApiClient, withConfig, withAuth } from '../decorators';
 import { Alert, Button, Currency, Loader } from '../components';
+import { toBaseValue } from '../services/feeService';
 
 const styles = theme => ({
   root: {
@@ -72,8 +73,8 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
     setIsDepositing(true);
     const profile = auth.getProfile();
     const response = await stripe.createToken({ name: profile.email });
-
-    const baseAmount = amount * 100;
+    const baseAmount = toBaseValue(amount);
+    
     try {
       const { status, account: updatedAccount } = await api.completeDeposit({
         amount: baseAmount,
@@ -133,8 +134,14 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
           title="Deposit"
           subheader={
             <Fragment>
-              Balance <strong><Currency baseAmount={Number(account.balance)} /></strong>{' '}
-              Available Funds <strong><Currency baseAmount={Number(account.availableFunds)} /></strong>{' '}
+              Balance{' '}
+              <strong>
+                <Currency baseAmount={Number(account.balance)} />
+              </strong>{' '}
+              Available Funds{' '}
+              <strong>
+                <Currency baseAmount={Number(account.availableFunds)} />
+              </strong>{' '}
             </Fragment>
           }
         />
@@ -149,6 +156,7 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
                 value={amount}
                 onChange={handleAmountChange}
                 type="number"
+                fullWidth
                 helperText="Max deposit amount is $1,000"
                 error={!isValid()}
                 InputLabelProps={{

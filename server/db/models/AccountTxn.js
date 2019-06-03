@@ -22,6 +22,10 @@ module.exports = (sequelize, type) => {
       allowNull: true,
       type: type.STRING
     },
+    paymentMethod: { 
+      allowNull: true,
+      type: type.STRING
+    },
     amount: {
       allowNull: false,
       type: type.BIGINT

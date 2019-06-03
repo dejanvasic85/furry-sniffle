@@ -3,12 +3,7 @@ const router = express.Router();
 
 const { Client, Email, Gift, Prospect } = require('../db');
 const { withAsync } = require('../middleware');
-const {
-  getClientReferralUrl,
-  generateReferralCode
-} = require('../services/clientService');
-
-const { generateGiftLink } = require('../services/giftpayClient');
+const { getClientReferralUrl, generateReferralCode } = require('../services/clientService');
 
 const emails = require('../emails');
 const logger = require('../logger');
@@ -54,10 +49,12 @@ router.get(
 
     const prospects = await Prospect.findAll({
       where: { clientId: id, agentId: agentId },
-      include: [{
-        model: Client,
-        required: true
-      }],
+      include: [
+        {
+          model: Client,
+          required: true
+        }
+      ],
       order: [['createdAt', 'DESC']]
     });
 
@@ -91,80 +88,7 @@ router.post(
   })
 );
 
-router.post(
-  '/:id/gift',
-  withAsync(async (req, res) => {
-    const agentId = req.agent.id;
-    const id = req.params.id;
-    const { giftValue, message, from } = req.body;
-    logger.info(
-      `Sending gift to client: ${id}, agentId: ${agentId}, value:${giftValue}, message:${message}`
-    );
-    if (!giftValue || !Number.isInteger(giftValue) || giftValue > 100) {
-      res.status(404).json({ error: 'gift value is invalid' + giftValue });
-      return;
-    }
-
-    const client = await Client.findOne({ where: { id, agentId } });
-    if (!client) {
-      res.status(404).json({ error: 'unknown client id' });
-      return;
-    }
-
-    // generate Gift URL
-    const generatedGift = await generateGiftLink(
-      from,
-      client.email,
-      giftValue,
-      message
-    );
-
-    logger.info(
-      `Link generated clientRef: ${
-      generatedGift.clientRef
-      }, value:${giftValue}, message:${message}`
-    );
-
-    // URL is not stored in DB yet (sensitive information)
-    const createGiftCommand = {
-      id: generatedGift.clientRef,
-      agentId,
-      clientId: id,
-      message,
-      giftValue,
-      from: from,
-      value: giftValue,
-      giftpayId: generatedGift.giftId,
-      giftpayStatus: generatedGift.status
-    };
-
-    await Gift.create(createGiftCommand);
-
-    logger.info(
-      `Gift persisted: ${
-      generatedGift.clientRef
-      }, value:${giftValue}, message:${message}`
-    );
-
-    await emails.sendNewGiftEmail(
-      req.agent,
-      client,
-      message,
-      giftValue,
-      generatedGift.giftUrl
-    );
-
-    logger.info(
-      `Gift emailed: ${
-      generatedGift.clientRef
-      }, value:${giftValue}, message:${message}`
-    );
-
-    res.json({
-      id: generatedGift.giftUrl
-    });
-  })
-);
+router.post('/:id/gift', withAsync(require('./clients/gift')));
 
 router.put(
   '/:id',
@@ -210,7 +134,7 @@ router.post(
         agentId: agentId,
         email: details.email
       }
-    })
+    });
 
     if (existingClient) {
       console.log('Unable to create client as it already exists.', details.email);
@@ -223,7 +147,7 @@ router.post(
     const createClientRequest = Object.assign({}, details, {
       agentId,
       isActive: true,
-      referralCode: "temp"
+      referralCode: 'temp'
     });
 
     const createResult = await Client.create(createClientRequest);
@@ -232,10 +156,7 @@ router.post(
     const referalCode = generateReferralCode(createdClient);
 
     // Now that we have an id, we can create a new client with referral code
-    await Client.update(
-      { referralCode: referalCode },
-      { where: { id: createdClient.id } }
-    );
+    await Client.update({ referralCode: referalCode }, { where: { id: createdClient.id } });
 
     createdClient.referralCode = referalCode;
 
