@@ -90,6 +90,7 @@ router.get(
     });
 
     res.json({
+      agent: req.agent,
       clients: {
         daysCount: xDaysAgo,
         now: clientsToday,
