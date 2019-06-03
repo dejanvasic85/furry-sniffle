@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { Client, Email, Gift, Prospect } = require('../db');
 const { withAsync } = require('../middleware');
-const { getClientReferralUrl, generateReferralCode } = require('../services/clientService');
+const { getClientReferralUrl } = require('../services/clientService');
 
 const emails = require('../emails');
 const logger = require('../logger');
@@ -118,55 +118,6 @@ router.put(
   })
 );
 
-router.post(
-  '/',
-  withAsync(async (req, res) => {
-    if (!req.body) {
-      res.status(400).json({ error: 'missing client details in request body' });
-      return;
-    }
-
-    const agentId = req.agent.id;
-    const details = req.body;
-
-    const existingClient = await Client.findOne({
-      where: {
-        agentId: agentId,
-        email: details.email
-      }
-    });
-
-    if (existingClient) {
-      console.log('Unable to create client as it already exists.', details.email);
-      res.status(400).json({
-        error: `Client with email ${details.email} already exists`
-      });
-      return;
-    }
-
-    const createClientRequest = Object.assign({}, details, {
-      agentId,
-      isActive: true,
-      referralCode: 'temp'
-    });
-
-    const createResult = await Client.create(createClientRequest);
-
-    const createdClient = createResult.dataValues;
-    const referalCode = generateReferralCode(createdClient);
-
-    // Now that we have an id, we can create a new client with referral code
-    await Client.update({ referralCode: referalCode }, { where: { id: createdClient.id } });
-
-    createdClient.referralCode = referalCode;
-
-    if (createClientRequest.sendEmail === true) {
-      logger.info(`Sending email to ${createdClient.email}`);
-      await emails.sendNewClientEmail(req.agent, createdClient);
-    }
-
-    res.status(201).json({ createdClient });
-  })
-);
+router.post('/', withAsync(require('./clients/createClient')));
 
 module.exports = router;
