@@ -10,25 +10,7 @@ const logger = require('../logger');
 
 router.get('/', withAsync(require('./clients/getClientsForAgent')));
 router.get('/:id', withAsync(require('./clients/getClient')));
-
-router.post(
-  '/:id/sendEmail',
-  withAsync(async (req, res) => {
-    const agentId = req.agent.id;
-    const id = req.params.id;
-
-    logger.info(`Send email to client: ${id}, agentId: ${agentId}`);
-    const client = await Client.findOne({ where: { id, agentId } });
-    if (!client) {
-      res.status(404).json({ error: 'unknown client id' });
-      return;
-    }
-
-    const sentEmail = await emails.sendNewClientEmail(req.agent, client);
-    res.json(sentEmail);
-  })
-);
-
+router.post('/:id/sendEmail', withAsync(require('./clients/sendEmail')));
 router.post('/:id/gift', withAsync(require('./clients/gift')));
 
 router.put(
