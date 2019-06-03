@@ -44,6 +44,8 @@ const deposit = async (req, res) => {
       ...amountWithFee
     });
 
+    res.json({ status, account });
+
 
   } catch (err) {
     logger.error(`Stripe Payment failed. Request ${JSON.stringify(req.body)}`);
