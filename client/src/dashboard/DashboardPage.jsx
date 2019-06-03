@@ -148,14 +148,14 @@ export class DashboardPage extends React.Component {
         </Paper>
         <Paper className={classes.section}>
           <Fragment>
-            <Typography variant="h5">How does this all work?</Typography>
+            <Typography variant="h5">How it works</Typography>
             <List>
               <ListItem>
                 <ListItemText>We create a unique page for each client</ListItemText>
               </ListItem>
               <Divider />
               <ListItem>
-                <ListItemText>We send an email to each client with your detail</ListItemText>
+                <ListItemText>We send an email to each client with your details</ListItemText>
               </ListItem>
               <Divider />
               <ListItem>
@@ -166,7 +166,7 @@ export class DashboardPage extends React.Component {
               <Divider />
               <ListItem>
                 <ListItemText>
-                  Prospect visits the page and fills out the form and you have a Prospect!
+                  Prospect visits the page and fills out the form and you get contacted!
                 </ListItemText>
               </ListItem>
             </List>
