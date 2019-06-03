@@ -15,6 +15,7 @@ import {
   ListItemIcon,
   ListItemText,
   colors,
+  Tooltip,
   withStyles
 } from '@material-ui/core';
 
@@ -128,26 +129,32 @@ class ClientDetails extends React.Component {
                 <ListItemText>
                   Number Of Gifts:
                   {giftCount} <br />
-                  <span className={classes.helpText}>For each prospect there should be a gift to your client.</span>
+                  <span className={classes.helpText}>
+                    For each prospect there should be a gift to your client.
+                  </span>
                 </ListItemText>
               </ListItem>
             </List>
           </CardContent>
           <Divider />
           <CardActions className={classes.actions}>
-            <Button variant="outlined" onClick={this.handleSendGiftClick} color="secondary">
-              <GiftCardIcon />
-              &nbsp;Send Gift
-            </Button>
+            <Tooltip title="You can gift your clients at any time by clicking here.">
+              <Button variant="outlined" onClick={this.handleSendGiftClick} color="secondary">
+                <GiftCardIcon />
+                &nbsp;Send Gift
+              </Button>
+            </Tooltip>
 
-            <Button
-              variant="outlined"
-              color="secondary"
-              isFetching={isEmailSending}
-              onClick={this.handleSendEmailClick}>
-              <EmailIcon />
-              &nbsp;Send Email
-            </Button>
+            <Tooltip title="Sends an email to client containing a unique referral URL.">
+              <Button
+                variant="outlined"
+                color="secondary"
+                isFetching={isEmailSending}
+                onClick={this.handleSendEmailClick}>
+                <EmailIcon />
+                &nbsp;Send Email
+              </Button>
+            </Tooltip>
           </CardActions>
         </Card>
       </>
