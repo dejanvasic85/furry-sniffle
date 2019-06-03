@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
 import { Divider } from '@material-ui/core';
@@ -16,8 +16,8 @@ class RawProspectList extends React.Component {
   render() {
     const { prospects, classes } = this.props;
     return prospects.map((prospect, index) => (
-      <div>
-        <ProspectListItem key={prospect.id} prospect={prospect} />
+      <div key={prospect.id}>
+        <ProspectListItem prospect={prospect} />
         {index < prospects.length - 1 && <Divider className={classes.prospects} />}
       </div>
     ));

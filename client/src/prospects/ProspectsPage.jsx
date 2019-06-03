@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 
 import { withRouter } from 'react-router-dom';
-import { Paper, Typography, withStyles} from '@material-ui/core';
+import { Paper, Typography, withStyles } from '@material-ui/core';
 
 import withApiClient from '../decorators/withApiClient';
 import RawProspectList from './RawProspectList';
@@ -14,21 +14,21 @@ const styles = theme => ({
   fab: {
     position: 'absolute',
     bottom: theme.spacing.unit * 4,
-    right: theme.spacing.unit * 4,
+    right: theme.spacing.unit * 4
   },
   extendedIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   prospects: {
     backgroundColor: theme.palette.background.paper,
-    padding: '20px',
+    padding: '20px'
   },
   padded: {
-    padding: '20px',
+    padding: '20px'
   },
   divider: {
-    margin: '10px',
-  },
+    margin: '10px'
+  }
 });
 
 export class ProspectsPage extends React.Component {
@@ -36,7 +36,7 @@ export class ProspectsPage extends React.Component {
     prospects: [],
     filteredProspects: [],
     filter: '',
-    isFetching: true,
+    isFetching: true
   };
 
   async componentDidMount() {
@@ -56,7 +56,7 @@ export class ProspectsPage extends React.Component {
 
     this.setState({
       filter: event.target.value,
-      filteredProspects,
+      filteredProspects
     });
   };
 
@@ -78,7 +78,7 @@ export class ProspectsPage extends React.Component {
                     <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
                   </div>
                   <div className={classes.prospects}>
-                    <RawProspectList prospects={prospects} />
+                    <RawProspectList prospects={prospectsToDisplay} />
                   </div>
                 </Fragment>
               )}
@@ -87,7 +87,8 @@ export class ProspectsPage extends React.Component {
                   <div className={classes.padded}>
                     <Typography variant="h6">No prospects at the moment</Typography>
                     <Typography variant="body1">
-                      Start sharing invitation with your existing clients so they could refer their friends to you...
+                      Start sharing invitation with your existing clients so they could refer their
+                      friends to you...
                     </Typography>
                   </div>
                 </Fragment>

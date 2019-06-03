@@ -1,12 +1,14 @@
 {
   "name": "example-create-react-app-express",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.15.3"
+  },
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "start": "node api.js",
     "client": "cd client && yarn start",
     "server": "npm run db:migrate && nodemon api.js",
-    "try": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL -a fox-rewarder) yarn run db:migrate",
     "heroku:deploy": "git push heroku master",
     "heroku:logs": "heroku logs --tail",
     "heroku-postbuild": "yarn run db:migrate && cd client && yarn && yarn run build",

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -23,7 +23,7 @@ const styles = theme => ({
 
 export class ProspectList extends React.Component {
   render() {
-    const { classes, prospects } = this.props;
+    const { prospects } = this.props;
     return (
       <Card>
         <CardHeader title="Prospects" />
