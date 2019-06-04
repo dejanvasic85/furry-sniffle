@@ -1,4 +1,4 @@
-const { Client, Email, db } = require('../../db');
+const { Client, db } = require('../../db');
 const logger = require('../../logger');
 
 module.exports = async (req, res) => {
