@@ -1,4 +1,4 @@
-const { Client } = require('../../db');
+const { Client, Email, db } = require('../../db');
 const logger = require('../../logger');
 
 module.exports = async (req, res) => {
@@ -11,5 +11,11 @@ module.exports = async (req, res) => {
     }
   });
 
-  res.json(clients);
+  const [[results]] = await db.query(`
+    select count(id) 
+    from "Clients" 
+    where id not in (select "clientId" from "Emails")
+  `);
+
+  res.json({ clients, clientsWithoutEmails: Number(results.count) });
 };

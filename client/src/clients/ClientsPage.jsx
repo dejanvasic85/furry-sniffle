@@ -6,10 +6,9 @@ import { Fab, List, Paper, Typography, withStyles } from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
 
-import withApiClient from '../decorators/withApiClient';
+import { withApiClient } from '../decorators';
 import ClientListItem from './ClientListItem';
-import SearchInput from '../components/SearchInput';
-import Loader from '../components/Loader';
+import { Loader, SearchInput } from '../components';
 
 const styles = theme => ({
   fab: {
@@ -31,20 +30,20 @@ const styles = theme => ({
 export class ClientsPage extends React.Component {
   state = {
     clients: [],
+    clientsWithoutEmails: 0,
     filteredClients: [],
     filter: '',
-    isFetching: true,
+    isFetching: true
   };
 
   async componentDidMount() {
-    const clients = await this.props.api.getClients();
-    this.setState({ clients, isFetching: false });
+    const { clients, clientsWithoutEmails } = await this.props.api.getClients();
+    this.setState({ clients, clientsWithoutEmails, isFetching: false });
   }
 
   addClient = () => {
     this.props.history.push('/app/clients-new');
   };
-
 
   handleSearchTextchange = event => {
     const filter = event.target.value.toLowerCase();
