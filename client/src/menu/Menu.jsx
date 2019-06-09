@@ -40,7 +40,7 @@ function Menu(props) {
         {
           showTitle && <Fragment>
             <ListItem>
-              <Typography className={classes.appName}>Fox Rewarder</Typography>
+              <Typography className={classes.appName}>Biz Rewarder</Typography>
             </ListItem>
             <Divider />
           </Fragment>

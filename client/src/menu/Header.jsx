@@ -74,7 +74,7 @@ class Header extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Fox Rewarder
+              Biz Rewarder
             </Typography>
             <div className={classes.grow} />
             <Link className={classes.headerIcons} to="/app/agent/details">

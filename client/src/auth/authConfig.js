@@ -1,8 +1,8 @@
 export const authConfig = {
   audience:
-    process.env.REACT_APP_AUTH_AUDIENCE || "https://www.foxrewarder.com.au/api",
+    process.env.REACT_APP_AUTH_AUDIENCE || "https://www.bizrewarder.com.au/api",
 
-  domain: process.env.REACT_APP_AUTH_DOMAIN || "foxrewarder.au.auth0.com",
+  domain: process.env.REACT_APP_AUTH_DOMAIN || "bizrewarder.au.auth0.com",
 
   clientId:
     process.env.REACT_APP_AUTH_CLIENT_ID || "WgWzBgqXpTQn2DPJKlmYVllf6OHu3fjJ",

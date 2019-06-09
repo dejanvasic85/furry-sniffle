@@ -12,8 +12,8 @@ const logger = require('../logger');
 const { Email } = require('../db');
 sgMail.setApiKey(sendGrid.apiKey);
 
-const FROM_EMAIL = 'no-reply@foxrewarder.com.au';
-const FROM_NAME = 'Fox Rewarder';
+const FROM_EMAIL = 'no-reply@bizrewarder.com.au';
+const FROM_NAME = 'Biz Rewarder';
 const getFullName = ({firstName, lastName}) => `${firstName} ${lastName}`;
 
 const TEMPLATE_IDS = Object.freeze({
