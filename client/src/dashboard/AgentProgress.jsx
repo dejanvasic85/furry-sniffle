@@ -16,7 +16,7 @@ const AgentProgress = ({ agent, clients }) => {
 
   return (
     <Fragment>
-      <Stepper activeStep={3}>
+      <Stepper activeStep={activeStep}>
         <Step>
           <Tooltip title="Sign up to our awesome application">
             <StepLabel>
