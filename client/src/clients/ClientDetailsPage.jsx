@@ -65,7 +65,7 @@ class ClientDetailsPage extends React.Component {
               onEmailSent={this.handleEmailSent} 
               onNewGift={this.handleOnNewGift} />
               
-            <div className={classes.interactions}>
+            {/* <div className={classes.interactions}>
               <ProspectList prospects={prospects || []} />
             </div>
 
@@ -75,7 +75,7 @@ class ClientDetailsPage extends React.Component {
 
             <div className={classes.interactions}>
               <ClientEmails emails={emails || []} />
-            </div>
+            </div> */}
           </Fragment>
         )}
       </Fragment>
