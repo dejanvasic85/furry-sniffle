@@ -1,6 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
+import { withAuth } from '../decorators';
+
 const PrivateRoute = ({ component: Component, auth, ...rest }) => {
   if (auth.isAuthenticated()) {
     return <Route {...rest} render={(props) => <Component {...props} />} />
@@ -10,4 +12,4 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
   return null;
 }
 
-export default PrivateRoute;
+export default withAuth(PrivateRoute);
