@@ -33,7 +33,7 @@ class ClientDetailsPage extends React.Component {
     client: {}
   };
 
-  async componentDidMount() {
+  async _fetchClient() {
     const clientId = this.props.match.params.id;
     const client = await this.props.api.getClient(clientId);
     this.setState({
@@ -42,9 +42,17 @@ class ClientDetailsPage extends React.Component {
     });
   }
 
+  async componentDidMount() {
+    this._fetchClient();
+  }
+
   handleOnNewGift = clientId => {
     this.props.history.push(`/app/clients/${clientId}/gifts/new`);
   };
+
+  handleEmailSent = () => {
+    this._fetchClient();
+  }
 
   renderIcon({ type }) {
     switch (type) {

@@ -50,6 +50,7 @@ class ClientDetails extends React.Component {
   handleSendGiftClick = () => {
     const clientId = this.props.client.id;
     this.props.onNewGift(clientId);
+
   };
 
   handleSendEmailClick = async () => {
