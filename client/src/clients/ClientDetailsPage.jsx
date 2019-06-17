@@ -1,21 +1,24 @@
 import React, { Fragment } from 'react';
 import { compose } from 'recompose';
 import {
+  Avatar,
   Card,
   CardHeader,
   CardContent,
   Divider,
   List,
-  ListItemIcon,
   ListItem,
   ListItemText,
   withStyles
 } from '@material-ui/core';
+
+import { Email, CardGiftcard, QuestionAnswer } from '@material-ui/icons';
+
 import { withRouter } from 'react-router-dom';
 
 import withApiClient from '../decorators/withApiClient';
 import ClientDetails from './ClientDetails';
-import Loader from '../components/Loader';
+import { DateDisplay, Loader } from '../components';
 
 const styles = theme => ({
   root: {},
@@ -43,6 +46,22 @@ class ClientDetailsPage extends React.Component {
     this.props.history.push(`/app/clients/${clientId}/gifts/new`);
   };
 
+  renderIcon({ type }) {
+    switch (type) {
+      case 'email': {
+        return <Email />;
+      }
+      case 'prospect': {
+        return <QuestionAnswer />;
+      }
+      case 'gift': {
+        return <CardGiftcard />;
+      }
+      default:
+        return null;
+    }
+  }
+
   render() {
     const { client, isFetching } = this.state;
     const { classes } = this.props;
@@ -65,9 +84,9 @@ class ClientDetailsPage extends React.Component {
               <CardContent>
                 <List>
                   {client.interactions.map(interaction => (
-                    <ListItem>
-                      <ListItemIcon></ListItemIcon>
-                      <ListItemText>interaction.type</ListItemText>
+                    <ListItem key={interaction.id}>
+                      <Avatar>{this.renderIcon(interaction)}</Avatar>
+                      <ListItemText primary={interaction.description} secondary={<DateDisplay date={interaction.date}/>} />
                     </ListItem>
                   ))}
                 </List>

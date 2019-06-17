@@ -16,11 +16,23 @@ const generateReferralCode = ({ firstName, id }) => {
   return `${firstName.toLowerCase()}-${id}`;
 };
 
+const mapDateToText = ({ deliveredAt, openedAt }) => {
+  if (openedAt) {
+    return 'Welcome Email Sent and Viewed'
+  }
+
+  if (deliveredAt) {
+    return 'Welcome Email Sent'
+  }
+
+  return 'Welcome Email Sending...'
+};
+
 const mapEmailToInteraction = ({ id, deliveredAt, openedAt, createdAt }) => ({
   id,
-  description: 'Welcome Email',
+  description: mapDateToText({ deliveredAt, openedAt }),
   type: 'email',
-  date: deliveredAt || openedAt || createdAt
+  date: openedAt || deliveredAt || createdAt
 });
 
 const mapProspectToInteraction = ({ id, firstName, lastName, createdAt }) => ({
