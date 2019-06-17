@@ -43,16 +43,12 @@ class ClientDetailsPage extends React.Component {
   }
 
   async componentDidMount() {
-    this._fetchClient();
+    await this._fetchClient();
   }
 
-  handleOnNewGift = clientId => {
-    this.props.history.push(`/app/clients/${clientId}/gifts/new`);
+  handleEmailSent = async () => {
+    await this._fetchClient();
   };
-
-  handleEmailSent = () => {
-    this._fetchClient();
-  }
 
   renderIcon({ type }) {
     switch (type) {
@@ -94,7 +90,10 @@ class ClientDetailsPage extends React.Component {
                   {client.interactions.map(interaction => (
                     <ListItem key={interaction.id}>
                       <Avatar>{this.renderIcon(interaction)}</Avatar>
-                      <ListItemText primary={interaction.description} secondary={<DateDisplay date={interaction.date}/>} />
+                      <ListItemText
+                        primary={interaction.description}
+                        secondary={<DateDisplay date={interaction.date} />}
+                      />
                     </ListItem>
                   ))}
                 </List>
