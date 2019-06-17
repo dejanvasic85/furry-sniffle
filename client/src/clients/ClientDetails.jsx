@@ -47,12 +47,6 @@ class ClientDetails extends React.Component {
     isEmailSending: false
   };
 
-  handleSendGiftClick = () => {
-    const clientId = this.props.client.id;
-    this.props.onNewGift(clientId);
-
-  };
-
   handleSendEmailClick = async () => {
     this.setState({ isEmailSending: true });
     const email = await this.props.api.sendEmail(this.props.client.id);
@@ -63,6 +57,7 @@ class ClientDetails extends React.Component {
   render() {
     const { classes, client, giftCount, prospectCount } = this.props;
     const { isEmailSending } = this.state;
+    
     return (
       <>
         <Card>
@@ -140,7 +135,7 @@ class ClientDetails extends React.Component {
           <Divider />
           <CardActions className={classes.actions}>
             <Tooltip title="You can gift your clients at any time by clicking here.">
-              <Button variant="outlined" onClick={this.handleSendGiftClick} color="secondary">
+              <Button variant="outlined" to={`/app/clients/${client.id}/gifts/new`} component={RouterLink} color="secondary">
                 <GiftCardIcon />
                 &nbsp;Send Gift
               </Button>
