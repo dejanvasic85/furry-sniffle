@@ -1,81 +1,104 @@
 import React, { Fragment } from 'react';
 import { compose } from 'recompose';
-import { withStyles } from '@material-ui/core';
+import {
+  Avatar,
+  Card,
+  CardHeader,
+  CardContent,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  withStyles
+} from '@material-ui/core';
+
+import { Email, CardGiftcard, QuestionAnswer } from '@material-ui/icons';
+
 import { withRouter } from 'react-router-dom';
 
 import withApiClient from '../decorators/withApiClient';
 import ClientDetails from './ClientDetails';
-import ClientEmails from './ClientEmails';
-import ClientGifts from './ClientGifts';
-import Loader from '../components/Loader';
-import ProspectList from '../prospects/ProspectList';
+import { DateDisplay, Loader } from '../components';
 
 const styles = theme => ({
   root: {},
   interactions: {
-    marginTop: '20px',
-  },
+    marginTop: '20px'
+  }
 });
 
 class ClientDetailsPage extends React.Component {
   state = {
     isFetching: true,
-    client: {},
-    emails: [],
+    client: {}
   };
 
-  async componentDidMount() {
+  async _fetchClient() {
     const clientId = this.props.match.params.id;
     const client = await this.props.api.getClient(clientId);
     this.setState({
       client,
-      emails: client.emails,
-      gifts: client.gifts,
-      prospects: client.prospects,
-      isFetching: false,
+      isFetching: false
     });
   }
 
-  handleEmailSent = email => {
-    const newState = [email];
-    this.setState({
-      emails: [...newState, ...this.state.emails],
-    });
+  async componentDidMount() {
+    await this._fetchClient();
+  }
+
+  handleEmailSent = async () => {
+    await this._fetchClient();
   };
 
-  handleOnNewGift = clientId => {
-    this.props.history.push(`/app/clients/${clientId}/gifts/new`);
-  };
+  renderIcon({ type }) {
+    switch (type) {
+      case 'email': {
+        return <Email />;
+      }
+      case 'prospect': {
+        return <QuestionAnswer />;
+      }
+      case 'gift': {
+        return <CardGiftcard />;
+      }
+      default:
+        return null;
+    }
+  }
 
   render() {
-    const { client, emails, gifts, prospects, isFetching } = this.state;
+    const { client, isFetching } = this.state;
     const { classes } = this.props;
-    const prospectCount = prospects ? prospects.length : 0;
-    const giftCount = gifts ? gifts.length : 0;
 
     return (
       <Fragment>
         {isFetching && <Loader />}
         {!isFetching && (
           <Fragment>
-            <ClientDetails 
-              giftCount={giftCount}
-              prospectCount={prospectCount}
-              client={client} 
-              onEmailSent={this.handleEmailSent} 
-              onNewGift={this.handleOnNewGift} />
-              
-            <div className={classes.interactions}>
-              <ProspectList prospects={prospects || []} />
-            </div>
+            <ClientDetails
+              giftCount={client.giftCount}
+              prospectCount={client.prospectCount}
+              client={client}
+              onEmailSent={this.handleEmailSent}
+            />
 
-            <div className={classes.interactions}>
-              <ClientGifts gifts={gifts || []} />
-            </div>
-
-            <div className={classes.interactions}>
-              <ClientEmails emails={emails || []} />
-            </div>
+            <Card className={classes.interactions}>
+              <CardHeader title="Interactions" />
+              <Divider />
+              <CardContent>
+                <List>
+                  {client.interactions.map(interaction => (
+                    <ListItem key={interaction.id}>
+                      <Avatar>{this.renderIcon(interaction)}</Avatar>
+                      <ListItemText
+                        primary={interaction.description}
+                        secondary={<DateDisplay date={interaction.date} />}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
           </Fragment>
         )}
       </Fragment>
