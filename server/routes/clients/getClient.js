@@ -1,6 +1,6 @@
 const { Client, Email, Gift, Prospect } = require('../../db');
 const logger = require('../../logger');
-const { getClientReferralUrl } = require('../../services/clientService');
+const { getClientReferralUrl, createInteractions } = require('../../services/clientService');
 
 module.exports = async (req, res) => {
   const agentId = req.agent.id;
@@ -37,9 +37,9 @@ module.exports = async (req, res) => {
   const response = {
     ...client.dataValues,
     referralUrl: getClientReferralUrl(client.referralCode),
-    emails: sentEmails,
-    gifts: sentGifts,
-    prospects: prospects
+    prospectCount: prospects.length,
+    giftCount: sentGifts.length,
+    interactions: createInteractions({ emails: sentEmails, gifts: sentGifts, prospects })
   };
 
   res.json(response);
