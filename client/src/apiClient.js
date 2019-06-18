@@ -99,6 +99,10 @@ class Api {
     return this.doGet(`/clients/${id}/gift`);
   }
 
+  getClientEmails(ids) {
+    return this.doGet(`/clients/emails/list?ids=${ids}`);
+  }
+
   getGifts() {
     return this.doGet(`/gifts`);
   }

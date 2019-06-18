@@ -5,6 +5,7 @@ const { withAsync } = require('../../middleware');
 
 router.get('/', withAsync(require('./getClientsForAgent')));
 router.get('/:id', withAsync(require('./getClient')));
+router.get('/emails/list', withAsync(require('./getEmailsForClients')));
 router.post('/:id/sendEmail', withAsync(require('./sendEmail')));
 router.post('/:id/gift', withAsync(require('./gift')));
 router.put('/:id', withAsync(require('./updateClient')));
