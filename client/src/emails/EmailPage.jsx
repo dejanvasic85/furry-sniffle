@@ -33,8 +33,8 @@ const EmailPage = ({ api, location, classes, ...props }) => {
 
   useEffect(() => {
     const fetchRecipients = async () => {
-      const recipients = await api.getClientEmails(clientIds);
-      setRecipients(recipients.emails);
+      const { clients } = await api.getClientEmails(clientIds);
+      setRecipients(clients.map(c => c.email));
       setIsFetching(false);
     };
 
