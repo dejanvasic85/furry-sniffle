@@ -3,7 +3,7 @@ const logger = require('../../logger');
 
 module.exports = async (req, res) => {
   const agentId = req.agent.id;
-  logger.info(`Fetch client by agentId: ${agentId}`);
+  logger.info(`Fetch clients by agentId: ${agentId}`);
   const clients = await Client.findAll({
     where: {
       agentId,

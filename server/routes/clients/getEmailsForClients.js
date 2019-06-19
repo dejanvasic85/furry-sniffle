@@ -3,14 +3,28 @@ const logger = require('../../logger');
 
 module.exports = async (req, res) => {
   const agentId = req.agent.id;
-  logger.info(`Fetch email list for agentId: ${agentId}. Client ids ${JSON.stringify(req.query)}`);
-  
-  const [results] = await db.query(`
-    select email
-    from "Clients" 
-    where "agentId" = ${agentId}
-    and "id" in (${req.query.ids})
-  `);
+  const ids = req.query.ids;
+  if (!ids) {
+    res.status(400).json({ error: 'ids is required' });
+    return;
+  }
 
-  res.json({ emails: results.map(c => c.email) });
+  logger.info(`Fetch email list for agentId: ${agentId}. Client ids ${JSON.stringify(ids)}`);
+
+  if (ids !== 'unnotified') {
+    const [results] = await db.query(`
+      select "id", "firstName", "lastName", "email"
+      from "Clients" 
+      where "agentId" = ${agentId}
+      and "id" in (${ids})
+    `);
+    res.json({ clients: results });
+  } else {
+    const [results] = await db.query(`
+      select "id", "firstName", "lastName", "email"
+      from "Clients" 
+      where id not in (select "clientId" from "Emails")
+    `);
+    res.json({ clients: results });
+  }
 };
