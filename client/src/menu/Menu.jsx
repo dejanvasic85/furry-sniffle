@@ -20,15 +20,19 @@ import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import logo from '../images/logo-pink.png';
+
 const styles = theme => ({
   root: {
     width: '100%',
     height: '100%',
-    maxWidth: 360,
     backgroundColor: theme.palette.background.paper
   },
   appName: {
     fontSize: '1.2em'
+  },
+  logo: {
+    width: 240
   }
 });
 
@@ -40,7 +44,7 @@ function Menu(props) {
         {
           showTitle && <Fragment>
             <ListItem>
-              <Typography className={classes.appName}>Biz Rewarder</Typography>
+              <img src={logo} className={classes.logo} />
             </ListItem>
             <Divider />
           </Fragment>
