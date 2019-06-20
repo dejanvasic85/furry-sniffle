@@ -12,6 +12,8 @@ import Drawer from '@material-ui/core/Drawer';
 
 import Menu from './Menu';
 
+import logo from '../images/biz-logo.png';
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -36,8 +38,13 @@ const styles = theme => ({
     color: '#fff',
   },
   drawer: {
-    minWidth: '200px',
+    minWidth: '240px',
   },
+  logo: {
+    height: 35,
+    width: 35,
+    marginRight: '8px'
+  }
 });
 
 class Header extends React.Component {
@@ -73,6 +80,7 @@ class Header extends React.Component {
             >
               <MenuIcon />
             </IconButton>
+            <img src={logo} className={classes.logo} />
             <Typography variant="h6" color="inherit" noWrap>
               Biz Rewarder
             </Typography>
