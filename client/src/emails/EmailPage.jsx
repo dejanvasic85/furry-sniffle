@@ -17,11 +17,16 @@ const styles = theme => ({
     paddingBottom: '8px',
     borderBottom: `1px solid ${colors.grey[500]}`
   },
-  emailChip: {
-    marginRight: '8px'
-  },
   label: {
     color: colors.grey[600]
+  },
+  chips: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
+  },
+  chip: {
+    margin: (theme.spacing.unit / 2)
   }
 });
 
@@ -63,7 +68,17 @@ const EmailPage = ({ api, location, classes, ...props }) => {
           </Typography>
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Recipients: </Typography>
-            {recipients.map(r => <Chip color="primary" key={r} label={r} className={classes.emailChip}/>) }
+            <div className={classes.chips}>
+              {recipients.map(r => 
+                <div className={classes.chip}>
+                  <Chip 
+                    color="primary" 
+                    key={r} 
+                    label={r} 
+                  />
+                </div>) 
+              }
+            </div>
           </div>
 
           <div className={classes.emailInfo}>
