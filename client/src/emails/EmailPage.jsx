@@ -2,11 +2,25 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { parse } from 'query-string';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
-import { Chip, Paper, withStyles, Typography, colors } from '@material-ui/core';
+import {
+  Avatar,
+  Chip,
+  Paper,
+  withStyles,
+  Typography,
+  colors
+} from '@material-ui/core';
 
 import { withApiClient, withAuth } from '../decorators';
 
 import { Alert, Loader } from '../components';
+
+const getAvatar = ({ firstName, lastName }) => 
+  (<span>
+    {firstName.substring(0, 1).toUpperCase()}
+    {lastName.substring(0, 1).toUpperCase()}
+  </span>
+);
 
 const styles = theme => ({
   root: {
@@ -39,7 +53,7 @@ const EmailPage = ({ api, location, classes, ...props }) => {
   useEffect(() => {
     const fetchRecipients = async () => {
       const { clients } = await api.getClientEmails(clientIds);
-      setRecipients(clients.map(c => c.email));
+      setRecipients(clients);
       setIsFetching(false);
     };
 
@@ -51,7 +65,7 @@ const EmailPage = ({ api, location, classes, ...props }) => {
   if (!clientIds) {
     return (
       <Paper className={classes.root}>
-        <Alert 
+        <Alert
           message="Ooops. Something seems to be missing."
           variant="error" />
       </Paper>
@@ -69,14 +83,14 @@ const EmailPage = ({ api, location, classes, ...props }) => {
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Recipients: </Typography>
             <div className={classes.chips}>
-              {recipients.map(r => 
-                <div className={classes.chip}>
-                  <Chip 
-                    color="primary" 
-                    key={r} 
-                    label={r} 
+              {recipients.map(r =>
+                <div key={r.id} className={classes.chip}>
+                  <Chip
+                    avatar={<Avatar>{getAvatar(r)}</Avatar>}
+                    color="primary"
+                    label={<span>{r.email}</span>}
                   />
-                </div>) 
+                </div>)
               }
             </div>
           </div>
