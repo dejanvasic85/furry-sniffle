@@ -16,6 +16,8 @@ import { withApiClient, withAuth } from '../decorators';
 import { Alert, Button, Loader } from '../components';
 import EmailPreview from './EmailPreview';
 
+const MAX_RECIPIENTS_TO_SHOW = 5;
+
 const getAvatar = ({ firstName, lastName }) =>
   (<span>
     {firstName.substring(0, 1).toUpperCase()}
@@ -97,6 +99,9 @@ const EmailPage = ({ api, location, classes, ...props }) => {
   }
 
   const hasMultipleRecipients = recipients && recipients.length > 1;
+  const recipientsToDisplay = recipients && recipients.length > MAX_RECIPIENTS_TO_SHOW 
+    ? recipients.slice(0, 5)
+    : recipients;
 
   return (
     <Paper className={classes.root}>
@@ -107,9 +112,12 @@ const EmailPage = ({ api, location, classes, ...props }) => {
             Preview Email and Send
           </Typography>
           <div className={classes.emailInfo}>
-            <Typography className={classes.label}>Recipients: </Typography>
+            <Typography className={classes.label}>
+              Recipients: 
+              {recipients.length > 1 && (<span> (Total {recipients.length})</span>) }
+            </Typography>
             <div className={classes.chips}>
-              {recipients.map(r =>
+              {recipientsToDisplay.map(r =>
                 <div key={r.id} className={classes.chip}>
                   <Chip
                     avatar={<Avatar>{getAvatar(r)}</Avatar>}
@@ -117,6 +125,16 @@ const EmailPage = ({ api, location, classes, ...props }) => {
                     label={<span>{r.email}</span>}
                   />
                 </div>)
+              }
+              {
+                recipients.length > MAX_RECIPIENTS_TO_SHOW && (
+                  <div className={classes.chip}>
+                    <Chip
+                      label={`... +${recipients.length - MAX_RECIPIENTS_TO_SHOW}`}
+                      color="primary"
+                      />
+                  </div>
+                )
               }
             </div>
           </div>
