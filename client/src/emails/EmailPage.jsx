@@ -14,6 +14,7 @@ import {
 import { withApiClient, withAuth } from '../decorators';
 
 import { Alert, Loader } from '../components';
+import EmailPreview from './EmailPreview';
 
 const getAvatar = ({ firstName, lastName }) => 
   (<span>
@@ -46,21 +47,25 @@ const styles = theme => ({
 
 const EmailPage = ({ api, location, classes, ...props }) => {
   const [recipients, setRecipients] = useState([]);
+  const [agent, setAgent] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
 
   const { clientIds } = parse(location.search);
 
   useEffect(() => {
-    const fetchRecipients = async () => {
+    const fetchData = async () => {
       const { clients } = await api.getClientEmails(clientIds);
+      const agent = await api.getAgent();
+
       setRecipients(clients);
+      setAgent(agent);
       setIsFetching(false);
     };
 
     if (isFetching && clientIds) {
-      fetchRecipients();
+      fetchData();
     }
-  }, [isFetching, recipients, clientIds, api]);
+  }, [isFetching, recipients, clientIds, agent, api]);
 
   if (!clientIds) {
     return (
@@ -71,7 +76,7 @@ const EmailPage = ({ api, location, classes, ...props }) => {
       </Paper>
     );
   }
-
+  
   return (
     <Paper className={classes.root}>
       {isFetching && <Loader />}
@@ -103,7 +108,7 @@ const EmailPage = ({ api, location, classes, ...props }) => {
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Body</Typography>
             <div>
-
+              <EmailPreview agentName={agent.firstName} />
             </div>
           </div>
         </Fragment>
