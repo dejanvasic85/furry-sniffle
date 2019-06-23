@@ -13,15 +13,15 @@ import {
 
 import { withApiClient, withAuth } from '../decorators';
 
-import { Alert, Loader } from '../components';
+import { Alert, Button, Loader } from '../components';
 import EmailPreview from './EmailPreview';
 
-const getAvatar = ({ firstName, lastName }) => 
+const getAvatar = ({ firstName, lastName }) =>
   (<span>
     {firstName.substring(0, 1).toUpperCase()}
     {lastName.substring(0, 1).toUpperCase()}
   </span>
-);
+  );
 
 const styles = theme => ({
   root: {
@@ -42,6 +42,19 @@ const styles = theme => ({
   },
   chip: {
     margin: (theme.spacing.unit / 2)
+  },
+  alert: {
+    marginTop: '8px'
+  },
+  actions: {
+    marginTop: '8px',
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'row-reverse',
+    alignItems: 'center'
+  },
+  progress: {
+    margin: '0 20px'
   }
 });
 
@@ -49,6 +62,8 @@ const EmailPage = ({ api, location, classes, ...props }) => {
   const [recipients, setRecipients] = useState([]);
   const [agent, setAgent] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
+  const [isSendingEmails, setIsSendingEmails] = useState(false);
+  const [sentEmailCount, setSentEmailCount] = useState(0);
 
   const { clientIds } = parse(location.search);
 
@@ -76,7 +91,13 @@ const EmailPage = ({ api, location, classes, ...props }) => {
       </Paper>
     );
   }
-  
+
+  const sendEmails = () => {
+    setIsSendingEmails(true);
+  }
+
+  const hasMultipleRecipients = recipients && recipients.length > 1;
+
   return (
     <Paper className={classes.root}>
       {isFetching && <Loader />}
@@ -107,9 +128,35 @@ const EmailPage = ({ api, location, classes, ...props }) => {
 
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Body</Typography>
-            <div>
-              <EmailPreview agentName={agent.firstName} />
-            </div>
+            <EmailPreview
+              agentName={agent.firstName}
+              clientName={recipients[0].firstName} />
+            {
+              recipients.length > 1 && (
+                <Alert
+                  message="Note: The first name is changed based on each recipient"
+                  variant="success"
+                  className={classes.alert} />
+              )
+            }
+          </div>
+
+          <div className={classes.actions}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={sendEmails}
+              isFetching={isSendingEmails}>
+              Send
+            </Button>
+
+            {
+              isSendingEmails && hasMultipleRecipients && (
+                <div className={classes.progress}>
+                  <Typography>Sending {sentEmailCount} / {recipients.length} - Please Wait...</Typography>
+                </div>
+              )
+            }
           </div>
         </Fragment>
       )}

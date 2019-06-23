@@ -43,7 +43,7 @@ function Menu(props) {
         {
           showTitle && <Fragment>
             <ListItem>
-              <img src={logo} className={classes.logo} />
+              <img src={logo} className={classes.logo} alt="logo" />
             </ListItem>
             <Divider />
           </Fragment>
