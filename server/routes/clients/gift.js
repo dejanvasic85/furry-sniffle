@@ -36,10 +36,14 @@ module.exports = async (req, res) => {
   let maxValue = account.availableFunds / AUD_BASE_VALUE;
   if (maxValue > 100) {
     // dv: Maximum allowed to gift is 100?? Alex?
+    // am: just insurance. will make it conmfigurable per Agent later
     maxValue = 100;
   }
 
   if (!giftValue || !Number.isInteger(giftValue) || giftValue > maxValue) {
+    logger.error(
+      `Invalid gift value. agentId: ${agentId}, value:${giftValue}, maxValue:${maxValue}`);
+      
     res
       .status(404)
       .json({ error: `gift value is invalid ${giftValue}. Check the amount or account balance.` });
