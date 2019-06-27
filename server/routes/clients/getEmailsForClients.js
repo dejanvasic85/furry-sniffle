@@ -1,4 +1,4 @@
-const { Client, db } = require('../../db');
+const { db } = require('../../db');
 const logger = require('../../logger');
 
 module.exports = async (req, res) => {
@@ -24,6 +24,7 @@ module.exports = async (req, res) => {
       select "id", "firstName", "lastName", "email"
       from "Clients" 
       where id not in (select "clientId" from "Emails")
+      and "agentId" = ${agentId}
     `);
     res.json({ clients: results });
   }

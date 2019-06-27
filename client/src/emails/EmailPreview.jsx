@@ -47,12 +47,12 @@ const styles = () => ({
   }
 });
 
-const EmailPreview = ({ classes, agentName, clientName }) => {
+const EmailPreview = ({ classes, agentName }) => {
   return (
     <div className={classes.main}>
       <div className={classes.standout}>
         <div className={classes.highlighted}>
-          Hi {clientName}
+          Hi [xxxx]
         </div>
         <p>
           If you have a friend with a geniune home loan need, you can earn a gift card
@@ -87,7 +87,7 @@ const EmailPreview = ({ classes, agentName, clientName }) => {
         </table>
         <hr />
         <p>
-          Simply click on the icon or copy the following <strong><a href="#">xxx</a></strong> and give it to your friend any way you like.
+          Simply click on the icon or copy the following <strong><a href="#">[xxxx]</a></strong> and give it to your friend any way you like.
         </p>
         <div className={classes.icons}>
           <a className={classes.icon} href="#">

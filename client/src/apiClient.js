@@ -82,6 +82,12 @@ class Api {
     return this.doCall(`/clients/${id}/sendEmail`, 'POST', {});
   }
 
+  sendBatchClientEmails(ids) {
+    return this.doCall(`/clients/sendBatchClientEmails`, 'POST', {
+      ids
+    });
+  }
+
   sendGift(id, giftDetails) {
     const request = {
       message: giftDetails.message,

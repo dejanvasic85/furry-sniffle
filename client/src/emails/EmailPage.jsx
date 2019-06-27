@@ -2,14 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { parse } from 'query-string';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
-import {
-  Avatar,
-  Chip,
-  Paper,
-  withStyles,
-  Typography,
-  colors
-} from '@material-ui/core';
+import { Avatar, Chip, Paper, withStyles, Typography, colors } from '@material-ui/core';
 
 import { withApiClient, withAuth } from '../decorators';
 
@@ -18,12 +11,12 @@ import EmailPreview from './EmailPreview';
 
 const MAX_RECIPIENTS_TO_SHOW = 5;
 
-const getAvatar = ({ firstName, lastName }) =>
-  (<span>
+const getAvatar = ({ firstName, lastName }) => (
+  <span>
     {firstName.substring(0, 1).toUpperCase()}
     {lastName.substring(0, 1).toUpperCase()}
   </span>
-  );
+);
 
 const styles = theme => ({
   root: {
@@ -43,7 +36,7 @@ const styles = theme => ({
     flexWrap: 'wrap'
   },
   chip: {
-    margin: (theme.spacing.unit / 2)
+    margin: theme.spacing.unit / 2
   },
   alert: {
     marginTop: '8px'
@@ -64,8 +57,8 @@ const EmailPage = ({ api, location, classes, ...props }) => {
   const [recipients, setRecipients] = useState([]);
   const [agent, setAgent] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
-  const [isSendingEmails, setIsSendingEmails] = useState(false);
-  const [sentEmailCount, setSentEmailCount] = useState(0);
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
 
   const { clientIds } = parse(location.search);
 
@@ -94,48 +87,45 @@ const EmailPage = ({ api, location, classes, ...props }) => {
     );
   }
 
-  const sendEmails = () => {
-    setIsSendingEmails(true);
-  }
+  const sendEmails = async () => {
+    setIsSending(true);
+    await api.sendBatchClientEmails(recipients.map(({ id }) => id));
+    setIsSent(true);
+  };
 
   const hasMultipleRecipients = recipients && recipients.length > 1;
-  const recipientsToDisplay = recipients && recipients.length > MAX_RECIPIENTS_TO_SHOW 
-    ? recipients.slice(0, 5)
-    : recipients;
+  const recipientsToDisplay =
+    recipients && recipients.length > MAX_RECIPIENTS_TO_SHOW ? recipients.slice(0, 5) : recipients;
 
   return (
     <Paper className={classes.root}>
       {isFetching && <Loader />}
       {!isFetching && (
         <Fragment>
-          <Typography variant="h5">
-            Preview Email and Send
-          </Typography>
+          <Typography variant="h5">Preview Email and Send</Typography>
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>
-              Recipients: 
-              {recipients.length > 1 && (<span> (Total {recipients.length})</span>) }
+              Recipients:
+              {recipients.length > 1 && <span> (Total {recipients.length})</span>}
             </Typography>
             <div className={classes.chips}>
-              {recipientsToDisplay.map(r =>
+              {recipientsToDisplay.map(r => (
                 <div key={r.id} className={classes.chip}>
                   <Chip
                     avatar={<Avatar>{getAvatar(r)}</Avatar>}
                     color="primary"
                     label={<span>{r.email}</span>}
                   />
-                </div>)
-              }
-              {
-                recipients.length > MAX_RECIPIENTS_TO_SHOW && (
-                  <div className={classes.chip}>
-                    <Chip
-                      label={`... +${recipients.length - MAX_RECIPIENTS_TO_SHOW}`}
-                      color="primary"
-                      />
-                  </div>
-                )
-              }
+                </div>
+              ))}
+              {recipients.length > MAX_RECIPIENTS_TO_SHOW && (
+                <div className={classes.chip}>
+                  <Chip
+                    label={`... +${recipients.length - MAX_RECIPIENTS_TO_SHOW}`}
+                    color="primary"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -146,36 +136,34 @@ const EmailPage = ({ api, location, classes, ...props }) => {
 
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Body</Typography>
-            <EmailPreview
-              agentName={agent.firstName}
-              clientName={recipients[0].firstName} />
-            {
-              recipients.length > 1 && (
-                <Alert
-                  message="Note: The first name is changed based on each recipient"
-                  variant="success"
-                  className={classes.alert} />
-              )
-            }
+            <EmailPreview agentName={agent.firstName} />
           </div>
 
-          <div className={classes.actions}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={sendEmails}
-              isFetching={isSendingEmails}>
-              Send
-            </Button>
+          {
+            !isSent && (
+              <div className={classes.actions}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={sendEmails}
+                  isFetching={isSending}
+                >
+                  Send
+                </Button>
+              </div>
+            )
+          }
 
-            {
-              isSendingEmails && hasMultipleRecipients && (
-                <div className={classes.progress}>
-                  <Typography>Sending {sentEmailCount} / {recipients.length} - Please Wait...</Typography>
-                </div>
-              )
-            }
-          </div>
+          {
+            isSent && (
+              <Alert
+                className={classes.alert}
+                variant="success"
+                message="Successfuly Sent"
+              />
+            )
+          }
+
         </Fragment>
       )}
     </Paper>

@@ -1,7 +1,7 @@
 const sgMail = require('@sendgrid/mail');
 const uuidv4 = require('uuid/v4');
 const { MESSAGE_CHANNEL} = require('../constants');
-const { webBaseUrl, sendGrid } = require('../config');
+const { sendGrid } = require('../config');
 const {
   getClientReferralUrl,
   getProspectDetailUrl,
@@ -94,6 +94,33 @@ const sendNewClientEmail = async (agent, client) => {
   return await sendAndTrackEmail(msg, client.id, agent.id);
 };
 
+const sendWelcomeEmailToClients = async (agent, clients) => {
+  const personalizations = clients.map(({ email, firstName, referralCode, emailId }) => ({
+    to: email,
+    customArgs: { emailId },
+    dynamic_template_data: {
+      agentName: agent.firstName,
+      clientName: firstName,
+      inviteLinkWhatsApp: getMessageLink(referralCode, MESSAGE_CHANNEL.WHATSAPP),
+      inviteLinkEmail: getMessageLink(referralCode, MESSAGE_CHANNEL.EMAIL)
+    }
+  }));
+
+  const msg = {
+    personalizations,
+    from: {
+      email: 'no-reply@bizrewarder.com.au',
+      name: 'Biz Rewarder'
+    },
+    subject: 'Will be replaced',
+    text: 'Will be replaced',
+    html: '<p>Will be replaced</p>',
+    templateId: 'd-3cd3de0b1a7345d384e9662fbd7ebbe1'
+  };
+
+  await sgMail.send(msg);
+}
+
 const sendNewProspectEmail = async (prospect, client, agent) => {
   const emailToAgent = createEmailMsg({
     from: {
@@ -139,6 +166,7 @@ const sendNewProspectEmail = async (prospect, client, agent) => {
 };
 
 module.exports = {
+  sendWelcomeEmailToClients,
   sendNewClientEmail,
   sendNewProspectEmail,
   sendNewGiftEmail
