@@ -46,10 +46,6 @@ class ClientDetailsPage extends React.Component {
     await this._fetchClient();
   }
 
-  handleEmailSent = async () => {
-    await this._fetchClient();
-  };
-
   renderIcon({ type }) {
     switch (type) {
       case 'email': {
@@ -79,7 +75,6 @@ class ClientDetailsPage extends React.Component {
               giftCount={client.giftCount}
               prospectCount={client.prospectCount}
               client={client}
-              onEmailSent={this.handleEmailSent}
             />
 
             <Card className={classes.interactions}>

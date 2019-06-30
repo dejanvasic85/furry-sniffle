@@ -7,8 +7,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
-  Typography
+  ListItemText
 } from '@material-ui/core';
 
 import HomeIcon from '@material-ui/icons/Home';
@@ -44,7 +43,7 @@ function Menu(props) {
         {
           showTitle && <Fragment>
             <ListItem>
-              <img src={logo} className={classes.logo} />
+              <img src={logo} className={classes.logo} alt="logo" />
             </ListItem>
             <Divider />
           </Fragment>

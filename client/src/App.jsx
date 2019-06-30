@@ -25,6 +25,7 @@ import ClientDetailsPage from './clients/ClientDetailsPage';
 import ClientEditPage from './clients/ClientEditPage';
 import AgentDetailsPage from './agents/AgentDetailsPage';
 import DepositPage from './agents/DepositPage';
+import EmailPage from './emails/EmailPage';
 
 const styles = theme => ({
   root: {
@@ -51,7 +52,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { auth, classes, config } = this.props;
+    const { classes, config } = this.props;
 
     return (
       <Router>
@@ -69,22 +70,18 @@ class App extends React.Component {
                       <Elements>
                         <div>
                           {/* Private Routes */}
-                          <PrivateRoute path="/app" exact component={DashboardPage} auth={auth} />
-                          <PrivateRoute path="/app/agent/details" exact component={AgentDetailsPage} auth={auth} />
-                          <PrivateRoute path="/app/agent/deposit" exact component={DepositPage} auth={auth} />
-                          <PrivateRoute path="/app/clients" exact component={ClientsPage} auth={auth} />
-                          <PrivateRoute path="/app/gifts" exact component={GiftsPage} auth={auth} />
-                          <PrivateRoute path="/app/clients-new" exact component={NewClientPage} auth={auth} />
-                          <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} auth={auth} />
-                          <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} auth={auth} />
-                          <PrivateRoute path="/app/clients/:id" exact component={ClientDetailsPage} auth={auth} />
-                          <PrivateRoute path="/app/prospects" exact={true} component={ProspectsPage} auth={auth} />
-                          <PrivateRoute
-                            path="/app/prospects/:id"
-                            exact={true}
-                            component={ProspectDetailsPage}
-                            auth={auth}
-                          />
+                          <PrivateRoute path="/app" exact component={DashboardPage} />
+                          <PrivateRoute path="/app/agent/details" exact component={AgentDetailsPage} />
+                          <PrivateRoute path="/app/agent/deposit" exact component={DepositPage} />
+                          <PrivateRoute path="/app/clients" exact component={ClientsPage} />
+                          <PrivateRoute path="/app/gifts" exact component={GiftsPage} />
+                          <PrivateRoute path="/app/clients-new" exact component={NewClientPage} />
+                          <PrivateRoute path="/app/clients/:id/edit" exact={true} component={ClientEditPage} />
+                          <PrivateRoute path="/app/clients/:id/gifts/new" exact component={NewGiftPage} />
+                          <PrivateRoute path="/app/clients/:id" exact component={ClientDetailsPage} />
+                          <PrivateRoute path="/app/prospects" exact={true} component={ProspectsPage} />
+                          <PrivateRoute path="/app/prospects/:id" exact={true} component={ProspectDetailsPage} />
+                          <PrivateRoute path="/app/email" exact={true} component={EmailPage} />
                         </div>
                       </Elements>
                     </Switch>

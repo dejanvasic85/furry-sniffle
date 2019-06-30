@@ -1,14 +1,13 @@
 import React, { Fragment } from 'react';
 import { compose } from 'recompose';
-
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Fab, List, Paper, Typography, withStyles } from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
 
 import { withApiClient } from '../decorators';
 import ClientListItem from './ClientListItem';
-import { Loader, SearchInput } from '../components';
+import { Loader, SearchInput, Alert } from '../components';
 
 const styles = theme => ({
   fab: {
@@ -63,18 +62,27 @@ export class ClientsPage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { clients, filteredClients, filter, isFetching } = this.state;
+    const { clients, clientsWithoutEmails, filteredClients, filter, isFetching } = this.state;
 
     const clientsToDisplay = filter ? filteredClients : clients;
+    const shouldDisplayEmailLink = clients && clients.length > 0 && clientsWithoutEmails > 0;
 
     return (
       <Fragment>
         {isFetching && <Loader />}
         {!isFetching && (
           <Fragment>
-            <Paper>
+            <Paper className={classes.padded}>
               {!isFetching && (
                 <Fragment>
+                  { shouldDisplayEmailLink && (
+                    <Alert 
+                      message={<span>Looks like some clients need to be emailed. 
+                        <Link to="/app/email?clientIds=unnotified" color="inherit">
+                          -> Let's see
+                        </Link></span>}
+                      variant="warning" />
+                  )}
                   <div className={classes.padded}>
                     <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
                   </div>

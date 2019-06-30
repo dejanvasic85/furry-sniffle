@@ -43,21 +43,9 @@ const styles = theme => ({
 });
 
 class ClientDetails extends React.Component {
-  state = {
-    isEmailSending: false
-  };
-
-  handleSendEmailClick = async () => {
-    this.setState({ isEmailSending: true });
-    const email = await this.props.api.sendEmail(this.props.client.id);
-    this.setState({ isEmailSending: false });
-    this.props.onEmailSent(email);
-  };
-
   render() {
     const { classes, client, giftCount, prospectCount } = this.props;
-    const { isEmailSending } = this.state;
-    
+
     return (
       <>
         <Card>
@@ -145,8 +133,8 @@ class ClientDetails extends React.Component {
               <Button
                 variant="outlined"
                 color="secondary"
-                isFetching={isEmailSending}
-                onClick={this.handleSendEmailClick}>
+                to={`/app/email?clientIds=${client.id}`}
+                component={RouterLink}>
                 <EmailIcon />
                 &nbsp;Send Email
               </Button>
@@ -160,8 +148,6 @@ class ClientDetails extends React.Component {
 
 ClientDetails.propTypes = {
   client: PropTypes.object.isRequired,
-  onEmailSent: PropTypes.func,
-  onNewGift: PropTypes.func,
   prospectCount: PropTypes.number,
   giftCount: PropTypes.number
 };

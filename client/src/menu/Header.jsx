@@ -80,7 +80,7 @@ class Header extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <img src={logo} className={classes.logo} />
+            <img src={logo} className={classes.logo} alt="logo" />
             <Typography variant="h6" color="inherit" noWrap>
               Biz Rewarder
             </Typography>

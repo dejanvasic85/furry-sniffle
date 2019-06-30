@@ -3,7 +3,7 @@ const logger = require('../../logger');
 
 module.exports = async (req, res) => {
   const agentId = req.agent.id;
-  logger.info(`Fetch client by agentId: ${agentId}`);
+  logger.info(`Fetch clients by agentId: ${agentId}`);
   const clients = await Client.findAll({
     where: {
       agentId,
@@ -15,6 +15,7 @@ module.exports = async (req, res) => {
     select count(id) 
     from "Clients" 
     where id not in (select "clientId" from "Emails")
+    and "agentId" = ${agentId}
   `);
 
   res.json({ clients, clientsWithoutEmails: Number(results.count) });

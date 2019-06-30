@@ -49,12 +49,12 @@ const styles = theme => ({
 });
 
 function Alert(props) {
-  const { classes, message, onClose, variant, ...other } = props;
+  const { classes, message, onClose, variant, className, ...other } = props;
   const Icon = variantIcon[variant];
 
   return (
     <SnackbarContent
-      className={classNames(classes[variant], classes.root)}
+      className={classNames(classes[variant], classes.root, className)}
       aria-describedby="client-snackbar"
       message={
         <span id="client-snackbar" className={classes.message}>

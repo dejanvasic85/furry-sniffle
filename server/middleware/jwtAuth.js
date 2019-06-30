@@ -21,8 +21,7 @@ const jwtCheck = jwt({
 });
 
 module.exports = (req, res, next) => {
-  if (req.get(HEADERS.AUTHORIZATION)) {
-    logger.info('jwtAuth: verifying token');
+  if (req.get(HEADERS.AUTHORIZATION)) {    
     jwtCheck(req, res, next);
     return;
   }
@@ -33,6 +32,6 @@ module.exports = (req, res, next) => {
     return;
   }
 
-  logger.info('jwtAuth: Missing JWT authentication');
+  logger.error('jwtAuth: Missing JWT authentication');
   res.status(401).json({ error: 'Not Authorized' });
 };

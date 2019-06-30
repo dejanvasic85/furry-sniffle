@@ -82,6 +82,12 @@ class Api {
     return this.doCall(`/clients/${id}/sendEmail`, 'POST', {});
   }
 
+  sendBatchClientEmails(ids) {
+    return this.doCall(`/clients/sendBatchClientEmails`, 'POST', {
+      ids
+    });
+  }
+
   sendGift(id, giftDetails) {
     const request = {
       message: giftDetails.message,
@@ -97,6 +103,10 @@ class Api {
 
   getClientGifts(id) {
     return this.doGet(`/clients/${id}/gift`);
+  }
+
+  getClientEmails(ids) {
+    return this.doGet(`/clients/emails/list?ids=${ids}`);
   }
 
   getGifts() {
