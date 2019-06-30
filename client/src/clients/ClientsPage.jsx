@@ -65,6 +65,7 @@ export class ClientsPage extends React.Component {
     const { clients, clientsWithoutEmails, filteredClients, filter, isFetching } = this.state;
 
     const clientsToDisplay = filter ? filteredClients : clients;
+    const shouldDisplayEmailLink = clients && clients.length > 0 && clientsWithoutEmails > 0;
 
     return (
       <Fragment>
@@ -74,9 +75,12 @@ export class ClientsPage extends React.Component {
             <Paper className={classes.padded}>
               {!isFetching && (
                 <Fragment>
-                  {clientsWithoutEmails > 0 && (
+                  { shouldDisplayEmailLink && (
                     <Alert 
-                      message={<span>Looks like some clients need to be emailed. <Link to="/app/email?clientIds=unnotified">-> Let's see</Link></span>}
+                      message={<span>Looks like some clients need to be emailed. 
+                        <Link to="/app/email?clientIds=unnotified" color="inherit">
+                          -> Let's see
+                        </Link></span>}
                       variant="warning" />
                   )}
                   <div className={classes.padded}>
