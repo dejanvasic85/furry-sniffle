@@ -54,7 +54,7 @@ function Alert(props) {
 
   return (
     <SnackbarContent
-      className={classNames(classes[variant], classes.root, className)}
+      className={classNames(classes.root, className)}
       aria-describedby="client-snackbar"
       message={
         <span id="client-snackbar" className={classes.message}>
