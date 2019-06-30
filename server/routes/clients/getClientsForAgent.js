@@ -15,6 +15,7 @@ module.exports = async (req, res) => {
     select count(id) 
     from "Clients" 
     where id not in (select "clientId" from "Emails")
+    and "agentId" = ${agentId}
   `);
 
   res.json({ clients, clientsWithoutEmails: Number(results.count) });
