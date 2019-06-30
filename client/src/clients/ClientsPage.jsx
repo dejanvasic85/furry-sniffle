@@ -1,29 +1,42 @@
 import React, { Fragment } from 'react';
 import { compose } from 'recompose';
-import { Link, withRouter } from 'react-router-dom';
-import { Fab, List, Paper, Typography, withStyles } from '@material-ui/core';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { Fab, List, Paper, Typography, colors, withStyles } from '@material-ui/core';
 
 import AddIcon from '@material-ui/icons/Add';
+import WarningIcon from '@material-ui/icons/Warning';
 
 import { withApiClient } from '../decorators';
 import ClientListItem from './ClientListItem';
-import { Loader, SearchInput, Alert } from '../components';
+import { Loader, SearchInput, Button } from '../components';
 
 const styles = theme => ({
   fab: {
     position: 'absolute',
     bottom: theme.spacing.unit * 4,
-    right: theme.spacing.unit * 4,
+    right: theme.spacing.unit * 4
   },
   extendedIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   clients: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.paper
   },
   padded: {
-    padding: '20px',
+    padding: '20px'
   },
+  clientEmailWarning: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '8px',
+    marginBottom: '12px',
+    backgroundColor: colors.deepOrange[200]
+  },
+  warningText: {
+    display: 'flex',
+    alignItems: 'center'
+  }
 });
 
 export class ClientsPage extends React.Component {
@@ -56,7 +69,7 @@ export class ClientsPage extends React.Component {
 
     this.setState({
       filter: event.target.value,
-      filteredClients,
+      filteredClients
     });
   };
 
@@ -72,17 +85,29 @@ export class ClientsPage extends React.Component {
         {isFetching && <Loader />}
         {!isFetching && (
           <Fragment>
+            {shouldDisplayEmailLink && (
+              <Paper className={classes.clientEmailWarning}> 
+                <div className={classes.warningText}>
+                  <WarningIcon />
+                  <Typography>
+                    Looks like some clients need to be emailed.
+                  </Typography>
+                </div>
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    to={`/app/email?clientIds=unnotified`}
+                    component={RouterLink}>
+                    Show Me
+                  </Button>
+                </div>
+              </Paper>
+            )}
+
             <Paper className={classes.padded}>
               {!isFetching && (
                 <Fragment>
-                  { shouldDisplayEmailLink && (
-                    <Alert 
-                      message={<span>Looks like some clients need to be emailed. 
-                        <Link to="/app/email?clientIds=unnotified" color="inherit">
-                          -> Let's see
-                        </Link></span>}
-                      variant="warning" />
-                  )}
                   <div className={classes.padded}>
                     <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
                   </div>
@@ -98,8 +123,11 @@ export class ClientsPage extends React.Component {
                   <div className={classes.padded}>
                     <Typography variant="h6">No clients at the moment</Typography>
                     <Typography variant="body1">
-                      Click on the plus icon in the bottom right to add one. Or you can always &nbsp;
-                      <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">email</a>
+                      Click on the plus icon in the bottom right to add one. Or you can always
+                      &nbsp;
+                      <a href="mailto:dejanvasic24@gmail.com?subject=Import Clients Please">
+                        email
+                      </a>
                       &nbsp;us an exported file and we can add them for you.
                     </Typography>
                   </div>
