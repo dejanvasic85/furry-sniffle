@@ -47,9 +47,9 @@ const mapProspectToInteraction = ({ id, firstName, lastName, createdAt }) => ({
   date: createdAt
 });
 
-const mapGiftToInteraction = ({ id, createdAt}) => ({
+const mapGiftToInteraction = ({ id, createdAt, value }) => ({
   id,
-  description: 'Gift',
+  description: `Gift - Value $${value / 100}`,
   type: 'gift',
   date: createdAt
 });

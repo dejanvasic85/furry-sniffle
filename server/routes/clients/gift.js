@@ -42,8 +42,9 @@ module.exports = async (req, res) => {
 
   if (!giftValue || !Number.isInteger(giftValue) || giftValue > maxValue) {
     logger.error(
-      `Invalid gift value. agentId: ${agentId}, value:${giftValue}, maxValue:${maxValue}`);
-      
+      `Invalid gift value. agentId: ${agentId}, value:${giftValue}, maxValue:${maxValue}`
+    );
+
     res
       .status(404)
       .json({ error: `gift value is invalid ${giftValue}. Check the amount or account balance.` });
@@ -62,22 +63,21 @@ module.exports = async (req, res) => {
   );
 
   // URL is not stored in DB yet (sensitive information)
-  const createGiftCommand = {
+  const giftValueInCents = giftValue * AUD_BASE_VALUE;
+
+  await Gift.create({
     id: generatedGift.clientRef,
     agentId,
     clientId: id,
     message,
-    giftValue,
+    amountToDeduct: giftValueInCents,
     from: from,
-    value: giftValue,
+    value: giftValueInCents,
     giftpayId: generatedGift.giftId,
     giftpayStatus: generatedGift.status
-  };
+  });
 
-  await Gift.create(createGiftCommand);
-
-  const amountToDeduct = giftValue * AUD_BASE_VALUE;
-  await debit({ accountId, amount: amountToDeduct, description: 'Gift' });
+  await debit({ accountId, amount: giftValueInCents, description: 'Gift' });
 
   logger.info(
     `Gift persisted: ${generatedGift.clientRef}, value:${giftValue}, message:${message}.`

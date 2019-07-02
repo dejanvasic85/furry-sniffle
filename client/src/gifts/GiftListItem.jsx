@@ -1,8 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DateDisplay from '../components/DateDisplay';
 import { withStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Typography, ListItemIcon } from '@material-ui/core';
+
+import {
+  Currency,
+  DateDisplay
+} from '../components';
 
 const styles = theme => ({
   root: {
@@ -27,7 +31,9 @@ export class GiftListItem extends React.Component {
     return (
       <ListItem alignItems="center" className={classes.root} onClick={this.props.onClick}>
         <ListItemIcon>
-          <Typography variant="h6">{`$${giftDetails.value}`}</Typography>
+          <Typography variant="h6">
+            <Currency baseAmount={giftDetails.value} />
+          </Typography>
         </ListItemIcon>
         <div>{giftDetails.status}</div>
         <ListItemText>
