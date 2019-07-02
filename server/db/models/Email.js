@@ -15,6 +15,7 @@ module.exports = (sequelize, type) => {
         type: type.INTEGER,
         allowNull: false
       },
+      emailType: type.STRING, 
       deliveredAt: type.DATE,
       openedAt: type.DATE,
       createdAt: type.DATE,
