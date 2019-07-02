@@ -21,7 +21,8 @@ module.exports = (sequelize, type) => {
       giftpayId: type.STRING,
       giftpayStatus: type.STRING,
       createdAt: type.DATE,
-      updatedAt: type.DATE
+      updatedAt: type.DATE,
+      emailId: type.STRING
     },
     {}
   );
