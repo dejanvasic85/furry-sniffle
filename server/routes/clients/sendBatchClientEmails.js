@@ -1,5 +1,6 @@
 const uuidv4 = require('uuid/v4');
 const logger = require('../../logger');
+const { EMAIL_TYPE } = require('../../constants');
 const { db, Email } = require('../../db');
 const { sendWelcomeEmailToClients } = require('../../emails');
 
@@ -29,11 +30,11 @@ module.exports = async (req, res) => {
   await sendWelcomeEmailToClients(agent, clientsWithEmailId);
 
   await Promise.all(clientsWithEmailId.map(({ emailId, id }) => {
-    // save the email record
     return Email.create({
       id: emailId,
       clientId: id,
-      agentId: agent.id
+      agentId: agent.id,
+      emailType: EMAIL_TYPE.WELCOME_EMAIL
     });
   }));
 

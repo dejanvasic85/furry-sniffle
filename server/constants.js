@@ -15,5 +15,10 @@ module.exports = {
   PAYMENT_METHOD: Object.freeze({ 
     CREDIT_CARD: 'credit_card',
     ACCOUNT: 'account'
+  }),
+
+  EMAIL_TYPE: Object.freeze({
+    WELCOME_EMAIL: 'welcome_email',
+    GIFT_EMAIL: 'gift_email'
   })
 };

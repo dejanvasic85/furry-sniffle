@@ -1,6 +1,6 @@
 const sgMail = require('@sendgrid/mail');
 const uuidv4 = require('uuid/v4');
-const { MESSAGE_CHANNEL} = require('../constants');
+const { MESSAGE_CHANNEL, EMAIL_TYPE } = require('../constants');
 const { sendGrid } = require('../config');
 const {
   getClientReferralUrl,
@@ -34,7 +34,7 @@ const createEmailMsg = ({ templateId, templateData, from, to }) => ({
   dynamic_template_data: templateData
 });
 
-const sendAndTrackEmail = async (msg, clientId, agentId) => {
+const sendAndTrackEmail = async (msg, clientId, agentId, emailType) => {
   const emailId = uuidv4().toString();
   const msgWithId = {
     ...msg,
@@ -47,7 +47,8 @@ const sendAndTrackEmail = async (msg, clientId, agentId) => {
   return await Email.create({
     id: emailId,
     clientId: clientId,
-    agentId: agentId
+    agentId: agentId,
+    emailType
   });
 };
 
@@ -69,7 +70,7 @@ const sendNewGiftEmail = async (agent, client, message, giftValue, giftUrl) => {
     }
   });
 
-  return await sendAndTrackEmail(msg, client.id, agent.id);
+  return await sendAndTrackEmail(msg, client.id, agent.id, EMAIL_TYPE.GIFT_EMAIL);
 };
 
 const sendNewClientEmail = async (agent, client) => {
@@ -91,7 +92,7 @@ const sendNewClientEmail = async (agent, client) => {
     }
   });
 
-  return await sendAndTrackEmail(msg, client.id, agent.id);
+  return await sendAndTrackEmail(msg, client.id, agent.id, EMAIL_TYPE.WELCOME_EMAIL);
 };
 
 const sendWelcomeEmailToClients = async (agent, clients) => {

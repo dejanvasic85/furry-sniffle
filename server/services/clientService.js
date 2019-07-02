@@ -1,4 +1,5 @@
 const { webBaseUrl } = require('../config');
+const { EMAIL_TYPE } = require('../constants');
 
 const getClientReferralUrl = clientReferralCode => {
   return `${webBaseUrl}/invite/${clientReferralCode}`;
@@ -16,21 +17,25 @@ const generateReferralCode = ({ firstName, id }) => {
   return `${firstName.toLowerCase()}-${id}`;
 };
 
-const mapDateToText = ({ deliveredAt, openedAt }) => {
+const mapDateToText = ({ deliveredAt, openedAt, emailType }) => {
+  const prefix = emailType == EMAIL_TYPE.GIFT_EMAIL
+    ? 'Gift Email'
+    : 'Welcome Email';
+
   if (openedAt) {
-    return 'Welcome Email Sent and Viewed'
+    return `${prefix} Sent and Viewed`
   }
 
   if (deliveredAt) {
-    return 'Welcome Email Sent'
+    return `${prefix} Sent`
   }
 
-  return 'Welcome Email Sending...'
+  return `${prefix} Sending...`
 };
 
-const mapEmailToInteraction = ({ id, deliveredAt, openedAt, createdAt }) => ({
+const mapEmailToInteraction = ({ id, deliveredAt, openedAt, createdAt, emailType }) => ({
   id,
-  description: mapDateToText({ deliveredAt, openedAt }),
+  description: mapDateToText({ deliveredAt, openedAt, emailType }),
   type: 'email',
   date: openedAt || deliveredAt || createdAt
 });
