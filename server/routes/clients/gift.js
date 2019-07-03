@@ -1,3 +1,5 @@
+const uuidv4 = require('uuid/v4');
+
 const { Account, Client, Gift } = require('../../db');
 const { debit } = require('../../services/accountService');
 const { generateGiftLink } = require('../../services/giftpayClient');
@@ -64,6 +66,7 @@ module.exports = async (req, res) => {
 
   // URL is not stored in DB yet (sensitive information)
   const giftValueInCents = giftValue * AUD_BASE_VALUE;
+  const emailId = uuidv4().toString();
 
   await Gift.create({
     id: generatedGift.clientRef,
@@ -74,7 +77,8 @@ module.exports = async (req, res) => {
     from: from,
     value: giftValueInCents,
     giftpayId: generatedGift.giftId,
-    giftpayStatus: generatedGift.status
+    giftpayStatus: generatedGift.status,
+    emailId
   });
 
   await debit({ accountId, amount: giftValueInCents, description: 'Gift' });
@@ -83,7 +87,7 @@ module.exports = async (req, res) => {
     `Gift persisted: ${generatedGift.clientRef}, value:${giftValue}, message:${message}.`
   );
 
-  await emails.sendNewGiftEmail(req.agent, client, message, giftValue, generatedGift.giftUrl);
+  await emails.sendNewGiftEmail(req.agent, client, message, giftValue, generatedGift.giftUrl, emailId);
   logger.info(`Gift emailed: ${generatedGift.clientRef}, value:${giftValue}, message:${message}`);
 
   res.json({

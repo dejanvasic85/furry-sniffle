@@ -34,14 +34,14 @@ const createEmailMsg = ({ templateId, templateData, from, to }) => ({
   dynamic_template_data: templateData
 });
 
-const sendAndTrackEmail = async (msg, clientId, agentId, emailType) => {
-  const emailId = uuidv4().toString();
+const sendAndTrackEmail = async (msg, clientId, agentId, emailType, customEmailId) => {
+  const emailId = customEmailId || uuidv4().toString();
   const msgWithId = {
     ...msg,
-    customArgs: { emailId: emailId }
+    customArgs: { emailId }
   };
 
-  logger.info(`Sending email ${JSON.stringify(msgWithId)}`);
+  logger.info(`Sending email with message Id: ${JSON.stringify(msgWithId)}`);
 
   await sgMail.send(msgWithId);
   return await Email.create({
@@ -52,7 +52,7 @@ const sendAndTrackEmail = async (msg, clientId, agentId, emailType) => {
   });
 };
 
-const sendNewGiftEmail = async (agent, client, message, giftValue, giftUrl) => {
+const sendNewGiftEmail = async (agent, client, message, giftValue, giftUrl, emailId) => {
   const msg = createEmailMsg({
     from: {
       email: FROM_EMAIL,
@@ -70,7 +70,7 @@ const sendNewGiftEmail = async (agent, client, message, giftValue, giftUrl) => {
     }
   });
 
-  return await sendAndTrackEmail(msg, client.id, agent.id, EMAIL_TYPE.GIFT_EMAIL);
+  return await sendAndTrackEmail(msg, client.id, agent.id, EMAIL_TYPE.GIFT_EMAIL, emailId);
 };
 
 const sendNewClientEmail = async (agent, client) => {
