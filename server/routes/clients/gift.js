@@ -3,6 +3,7 @@ const uuidv4 = require('uuid/v4');
 const { Account, Client, Gift } = require('../../db');
 const { debit } = require('../../services/accountService');
 const { generateGiftLink } = require('../../services/giftpayClient');
+const { encrypt } = require('../../services/security');
 const logger = require('../../logger');
 const emails = require('../../emails');
 const { PAYMENT_METHOD } = require('../../constants');
@@ -61,12 +62,13 @@ module.exports = async (req, res) => {
   const generatedGift = await generateGiftLink(from, client.email, giftValue, message);
 
   logger.info(
-    `Link generated clientRef: ${generatedGift.clientRef}, value:${giftValue}, message:${message}`
+    `Link generated clientRef: ${generatedGift.clientRef}, value:${giftValue}, message:${message}, url: ${generateGiftLink.giftUrl}`
   );
 
   // URL is not stored in DB yet (sensitive information)
   const giftValueInCents = giftValue * AUD_BASE_VALUE;
   const emailId = uuidv4().toString();
+  const secureGiftUrl = encrypt(generateGiftLink.giftUrl);
 
   await Gift.create({
     id: generatedGift.clientRef,
@@ -78,7 +80,8 @@ module.exports = async (req, res) => {
     value: giftValueInCents,
     giftpayId: generatedGift.giftId,
     giftpayStatus: generatedGift.status,
-    emailId
+    emailId,
+    secureGiftUrl
   });
 
   await debit({ accountId, amount: giftValueInCents, description: 'Gift' });
