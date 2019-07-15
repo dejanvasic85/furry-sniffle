@@ -150,7 +150,8 @@ router.post(
         clientName: client.firstName,
         clientReferralUrl: getClientReferralUrl(referralCode),
         agentId: agent.id,
-        agentName: agent.firstName
+        agentName: agent.firstName,
+        agentBusinessName: agent.businessName
       }
     });
   })

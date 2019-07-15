@@ -201,7 +201,7 @@ class InvitationPage extends React.Component {
             <Fragment>
               <div className={classes.contactFormTitle}>
                 <Typography style={whiteTextStyle} variant="h4" gutterBottom align="center">
-                  Contact {invite.agentName}
+                  Contact {invite.agentName} from {invite.agentBusinessName}
                 </Typography>
 
                 <Typography style={whiteTextStyle} variant="h6" gutterBottom align="center">
