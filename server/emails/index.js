@@ -102,6 +102,7 @@ const sendWelcomeEmailToClients = async (agent, clients) => {
     dynamic_template_data: {
       agentName: agent.firstName,
       clientName: firstName,
+      clientReferralUrl: getClientReferralUrl(referralCode),
       inviteLinkWhatsApp: getMessageLink(referralCode, MESSAGE_CHANNEL.WHATSAPP),
       inviteLinkEmail: getMessageLink(referralCode, MESSAGE_CHANNEL.EMAIL)
     }
@@ -110,8 +111,8 @@ const sendWelcomeEmailToClients = async (agent, clients) => {
   const msg = {
     personalizations,
     from: {
-      email: 'no-reply@bizrewarder.com.au',
-      name: 'Biz Rewarder'
+      email: FROM_EMAIL,
+      name: getFullName(agent)
     },
     subject: 'Will be replaced',
     text: 'Will be replaced',
