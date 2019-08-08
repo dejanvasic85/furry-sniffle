@@ -83,11 +83,10 @@ const sendNewClientEmail = async (agent, client) => {
     templateId: TEMPLATE_IDS.NEW_CLIENT,
     templateData: {
       agentName: agent.firstName,
+      businessName: agent.businessName,
       clientName: client.firstName,
       clientReferralUrl: getClientReferralUrl(client.referralCode),
       inviteLinkWhatsApp: getMessageLink(client.referralCode, MESSAGE_CHANNEL.WHATSAPP),
-      inviteLinkMessenger: getMessageLink(client.referralCode, MESSAGE_CHANNEL.MESSENGER),
-      inviteLinkSms: getMessageLink(client.referralCode, MESSAGE_CHANNEL.SMS),
       inviteLinkEmail: getMessageLink(client.referralCode, MESSAGE_CHANNEL.EMAIL)
     }
   });
@@ -101,6 +100,7 @@ const sendWelcomeEmailToClients = async (agent, clients) => {
     customArgs: { emailId },
     dynamic_template_data: {
       agentName: agent.firstName,
+      businessName: agent.businessName,
       clientName: firstName,
       clientReferralUrl: getClientReferralUrl(referralCode),
       inviteLinkWhatsApp: getMessageLink(referralCode, MESSAGE_CHANNEL.WHATSAPP),
