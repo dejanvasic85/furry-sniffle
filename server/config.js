@@ -15,7 +15,8 @@ const {
   GIFTPAY_APIKEY,
   STRIPE_KEY,
   STRIPE_SECRET,
-  PROXY_EMAIL_HOOKS_TO
+  PROXY_EMAIL_HOOKS_TO,
+  USE_DB_SSL
 } = process.env;
 
 const conf = {
@@ -23,6 +24,7 @@ const conf = {
   portNumber: PORT || 5000,
   webBaseUrl: WEB_BASE_URL || 'http://localhost:3000',
   connectionString: DATABASE_URL,
+  useDbSSL: USE_DB_SSL || false,
   feeConfiguration: {
     depositFeePercent: DEPOSIT_FEE_PERCENT || 3,
     depositFeeCents: DEPOSIT_FEE_CENTS || 50,
