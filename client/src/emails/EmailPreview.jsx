@@ -47,7 +47,7 @@ const styles = () => ({
   }
 });
 
-const EmailPreview = ({ classes, agentName }) => {
+const EmailPreview = ({ classes, agentName, businessName }) => {
   return (
     <div className={classes.main}>
       <div className={classes.standout}>
@@ -101,7 +101,7 @@ const EmailPreview = ({ classes, agentName }) => {
           </a>
         </div>
         <p>
-          Sincerly {agentName}
+          Sincerly {agentName} from <strong>{businessName}</strong>
         </p>
       </div>
     </div>

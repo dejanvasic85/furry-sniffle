@@ -136,7 +136,7 @@ const EmailPage = ({ api, location, classes, ...props }) => {
 
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Body</Typography>
-            <EmailPreview agentName={agent.firstName} />
+            <EmailPreview agentName={agent.firstName} businessName={agent.businessName} />
           </div>
 
           {
