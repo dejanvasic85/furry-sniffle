@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { ListItem, ListItemText, Typography, ListItemIcon } from '@material-ui/core';
+import { ListItem, ListItemText, Typography, ListItemIcon, Chip } from '@material-ui/core';
+import purple from '@material-ui/core/colors/purple';
+import green from '@material-ui/core/colors/green';
+import yellow from '@material-ui/core/colors/yellow';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import Button from '../components/Button';
 
-import {
-  Currency,
-  DateDisplay
-} from '../components';
+import { Currency, DateDisplay } from '../components';
 
 const styles = theme => ({
-  root: {
+  value: {
     cursor: 'pointer',
   },
   item: {
@@ -23,19 +25,33 @@ const styles = theme => ({
   inline: {
     display: 'inline',
   },
+
+  statusChip: {
+    backgroundColor: green['200'],
+    color: '#fff',
+  },
+
+  statusDiv: {
+    display: 'flex',
+  },
 });
 
 export class GiftListItem extends React.Component {
   render() {
-    const { classes, giftDetails } = this.props;
+    const { classes, giftDetails, onRefreshStatus, isRefreshInProgress } = this.props;
     return (
-      <ListItem alignItems="center" className={classes.root} onClick={this.props.onClick}>
-        <ListItemIcon>
+      <ListItem alignItems="center" className={classes.root}>
+        <ListItemIcon onClick={this.props.onClick} className={classes.value}>
           <Typography variant="h6">
             <Currency baseAmount={giftDetails.value} />
           </Typography>
         </ListItemIcon>
-        <div>{giftDetails.status}</div>
+        <div className={classes.statusDiv}>
+          <Chip label={giftDetails.status} className={classes.statusChip} />
+          <Button variant="outlined" isFetching={isRefreshInProgress} color="secondary" onClick={onRefreshStatus}>
+            <RefreshIcon />
+          </Button>
+        </div>
         <ListItemText>
           <div className={classes.item}>
             <Typography>{giftDetails.message}</Typography>
@@ -52,6 +68,8 @@ export class GiftListItem extends React.Component {
 GiftListItem.propTypes = {
   giftDetails: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
+  onRefreshStatus: PropTypes.func.isRequired,
+  isRefreshInProgress: PropTypes.bool
 };
 
 export default withStyles(styles)(GiftListItem);

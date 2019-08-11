@@ -46,7 +46,7 @@ const generateGiftLink = async (from, to, value, message) => {
 };
 
 const getGiftStatus = async (email, giftId) => {
-  const url = `${giftPay.baseUri}/api/gift.svc/get`;
+  const url = `${giftPay.baseUrl}/api/gift.svc/status`
 
   logger.info(`Checking gift status: ${url}, ${email} giftId: ${giftId}`);
 

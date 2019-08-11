@@ -4,5 +4,8 @@ module.exports = {
   },
   error: (msg) => {
     console.error(msg);
+  },
+  warn: (msg) => {
+    console.warn(msg);
   }
 }

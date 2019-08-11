@@ -1,5 +1,6 @@
 import React from 'react';
 import { compose } from 'recompose';
+import classNames from 'classnames';
 
 import { withRouter } from 'react-router-dom';
 import { List, Paper, Typography, withStyles } from '@material-ui/core';
@@ -22,6 +23,8 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
   },
   gifts: {
+    paddingLeft: '10px',
+    paddingRight: '10px',
     backgroundColor: theme.palette.background.paper,
   },
   padded: {
@@ -35,6 +38,7 @@ class GiftsPage extends React.Component {
     filteredGifts: [],
     filter: '',
     isFetching: true,
+    refreshingStatusGiftId:null,
   };
 
   async componentDidMount() {
@@ -48,6 +52,15 @@ class GiftsPage extends React.Component {
 
   handleClientClick = clientId => {
     this.props.history.push(`/app/clients/${clientId}`);
+  };
+
+  handleRefreshStatusClick = async (giftId) => {
+    this.setState({ refreshingStatusGiftId:giftId});
+    const updatedGift = await this.props.api.getGiftStatus(giftId);
+    const newGifts = this.state.gifts.slice(0);
+    const index = newGifts.findIndex(x=>x.id === giftId);
+    newGifts[index] = updatedGift;
+    this.setState({ gifts:newGifts, refreshingStatusGiftId: null });
   };
 
   handleSearchTextchange = event => {
@@ -64,23 +77,25 @@ class GiftsPage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { gifts, filteredGifts, filter, isFetching } = this.state;
+    const { gifts, filteredGifts, filter, isFetching, refreshingStatusGiftId } = this.state;
 
     const giftsToDisplay = filter ? filteredGifts : gifts;
 
     return (
-      <Paper>
+      <Paper className={classes.padded}>
         {isFetching && <Loader />}
         {!isFetching && giftsToDisplay.length > 0 && (
           <>
             <div className={classes.padded}>
               <SearchInput value={filter} onSearchTextChange={this.handleSearchTextchange} />
             </div>
-            <List className={classes.gifts}>
-              {giftsToDisplay.map((gift, hackishIndex) => (
+            <List className={classNames(classes.gifts)}>
+              {giftsToDisplay.map((gift) => (
                 <GiftListItem
-                  key={hackishIndex}
+                  key={gift.id}
                   giftDetails={gift}
+                  isRefreshInProgress={refreshingStatusGiftId === gift.id}
+                  onRefreshStatus={() => this.handleRefreshStatusClick(gift.id)}
                   onClick={() => this.handleClientClick(gift.clientId)}
                 />
               ))}
