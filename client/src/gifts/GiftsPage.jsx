@@ -23,7 +23,7 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
   },
   gifts: {
-    paddingLeft: '10px',
+    paddingLeft: '20px',
     paddingRight: '10px',
     backgroundColor: theme.palette.background.paper,
   },

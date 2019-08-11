@@ -18,8 +18,9 @@ import { Alert, Button, Currency, Loader } from '../components';
 import { toBaseValue } from '../services/feeService';
 
 const styles = theme => ({
-  root: {
-    padding: '20px'
+
+  padded: {
+    padding: '20px',
   },
   buttons: {
     display: 'flex',
@@ -128,8 +129,8 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
   }
 
   return (
-    <div className={classes.root}>
-      <Card>
+ 
+      <Card className={classes.padded}>
         <CardHeader
           title="Deposit"
           subheader={
@@ -207,7 +208,6 @@ const DepositPage = ({ api, classes, config, stripe, auth }) => {
           </React.Fragment>
         )}
       </Card>
-    </div>
   );
 };
 

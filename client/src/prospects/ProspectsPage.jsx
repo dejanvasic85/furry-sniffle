@@ -71,7 +71,7 @@ export class ProspectsPage extends React.Component {
         {isFetching && <Loader />}
         {!isFetching && (
           <Fragment>
-            <Paper>
+            <Paper className={classes.padded}>
               {!isFetching && (
                 <Fragment>
                   <div className={classes.padded}>

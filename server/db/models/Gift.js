@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-  return sequelize.define(
+  const Gift = sequelize.define(
     'Gift',
     {
       id: {
@@ -27,4 +27,13 @@ module.exports = (sequelize, type) => {
     },
     {}
   );
+
+  Gift.associate = function (models) {
+    models.Gift.belongsTo(models.Client, {
+      foreignKey: "clientId"
+    });
+  };
+
+  return Gift;
+
 };

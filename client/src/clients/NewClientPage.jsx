@@ -10,7 +10,7 @@ import { agentRequiresSetup } from '../services/agentService';
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit * 2
+    padding:'40px',
   },
   buttons: {
     display: 'flex',

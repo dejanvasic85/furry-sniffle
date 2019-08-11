@@ -33,6 +33,9 @@ import PersonAvatar from '../components/PersonAvatar';
 import Button from '../components/Button';
 
 const styles = theme => ({
+  padded:{
+    padding:'20px',
+  },
   actions: {
     display: 'flex',
     justifyContent: 'flex-end'
@@ -48,7 +51,7 @@ class ClientDetails extends React.Component {
 
     return (
       <>
-        <Card>
+        <Card className={classes.padded}>
           <CardHeader
             avatar={<PersonAvatar details={client} />}
             title={`${client.firstName} ${client.lastName}`}

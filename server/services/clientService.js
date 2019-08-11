@@ -1,5 +1,6 @@
 const { webBaseUrl } = require('../config');
 const { EMAIL_TYPE } = require('../constants');
+const { mapGiftPayStatus } = require('./giftService');
 
 const getClientReferralUrl = clientReferralCode => {
   return `${webBaseUrl}/invite/${clientReferralCode}`;
@@ -47,9 +48,9 @@ const mapProspectToInteraction = ({ id, firstName, lastName, createdAt }) => ({
   date: createdAt
 });
 
-const mapGiftToInteraction = ({ id, createdAt, value }) => ({
+const mapGiftToInteraction = ({ id, createdAt, giftpayStatus, value }) => ({
   id,
-  description: `Gift - Value $${value / 100}`,
+  description: `Gift - Value $${value / 100} [status: ${mapGiftPayStatus(giftpayStatus)}]`,
   type: 'gift',
   date: createdAt
 });

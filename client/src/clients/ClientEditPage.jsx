@@ -9,7 +9,7 @@ import Loader from '../components/Loader';
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit * 2,
+    padding:'40px',
   },
 });
 

@@ -1,32 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { Gift } = require('../db');
+const { Gift, Client } = require('../db');
 const { withAsync } = require('../middleware');
 const { getGiftStatus } = require('../services/giftpayClient');
-
+const { needToCheckStatus, mapGiftPayStatus } = require('../services/giftService');
 const logger = require('../logger');
 
-  // from GiftPayAPI - transform to readable status but not leak gitPay details to consumers
-  // 0 Send Error
-  // 1 Not Yet Collected
-  // 2 Collected
-  // 3 Used/Expired
-  // -1 Cancelled
-
-const needToCheckStatus = (giftPayStatusId)=>{
-  return giftPayStatusId != -1 && giftPayStatusId !=3;
-}
-
-const mapGiftPayStatus = (giftPayStatusId)=>{
-  const idToText = {
-    "1": "Not yet collected",
-    "2": "Collected",
-    "3": "Used",
-    "-1": "Cancelled",
-  };
-  return idToText[giftPayStatusId] || "Unknown";
-}
 
 // make sure we don't leak any secure fields to consumers i.e. actual Gift link , giftPay ID etc..
 const toSecureResponse = (gift) => {
@@ -39,7 +19,8 @@ const toSecureResponse = (gift) => {
     value: gift.value,
     createdAt: gift.createdAt,
     updatedAt: gift.updatedAt,
-    status: mapGiftPayStatus(gift.giftpayStatus)
+    status: mapGiftPayStatus(gift.giftpayStatus),
+    Client: gift.Client
   }
 }
 
@@ -49,6 +30,10 @@ router.get(
     const agentId = req.agent.id;
     logger.info(`Fetch gifts by agentId: ${agentId}`);
     const gifts = await Gift.findAll({
+      include: [{
+        model: Client,
+        required: true
+       }],
       where: {
         agentId
       },
@@ -68,6 +53,10 @@ router.get(
 
     logger.info(`Check gift card status agentId: ${agentId} , giftCardId: ${giftCardId}`);
     const giftCard = await Gift.findOne({
+      include: [{
+        model: Client,
+        required: true
+       }],
       where: {
         id: giftCardId,
         agentId
@@ -96,6 +85,9 @@ router.get(
         where: { id: giftCardId },
         returning: true
       });
+
+       giftCard.giftpayStatus = fieldsToUpdate.giftpayStatus;
+       giftCard.updatedAt = fieldsToUpdate.updatedAt;
     }
 
     res.json(toSecureResponse(giftCard));
