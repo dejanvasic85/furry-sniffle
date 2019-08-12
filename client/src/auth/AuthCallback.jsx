@@ -12,6 +12,8 @@ const AuthCallback = ({ api, auth }) => {
     const login = async () => {
       const authResult = await auth.handleAuthentication();
       await api.login(authResult.accessToken);
+    
+
       setLoggedIn(true);
     };
 

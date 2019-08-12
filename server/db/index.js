@@ -31,5 +31,6 @@ const models = {
 Client.associate(models);
 Prospect.associate(models);
 Account.associate(models);
+Gift.associate(models);
 
 module.exports = models;

@@ -18,6 +18,9 @@ const styles = theme => ({
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  padded:{
+    padding:'20px'
   }
 });
 
@@ -92,7 +95,7 @@ class AgentEditor extends React.Component {
 
     return (
       <Fragment>
-        <Card>
+        <Card className={classes.padded}>
           <CardHeader title="My Details" subheader={`Email: ${agent.email}`} />
           <Divider />
           <CardContent>

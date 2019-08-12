@@ -21,9 +21,11 @@ import ClientDetails from './ClientDetails';
 import { DateDisplay, Loader } from '../components';
 
 const styles = theme => ({
-  root: {},
+  root: {
+  },
   interactions: {
-    marginTop: '20px'
+    marginTop: '20px',
+    padding:'20px'
   }
 });
 

@@ -20,7 +20,7 @@ const getAvatar = ({ firstName, lastName }) => (
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit * 2
+    padding:'40px',
   },
   emailInfo: {
     marginTop: '20px',
