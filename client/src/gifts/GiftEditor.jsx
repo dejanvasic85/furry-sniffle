@@ -10,7 +10,7 @@ import { fromBaseValue } from '../services/feeService';
 
 const styles = theme => ({
   paper: {
-    padding: theme.spacing.unit * 2
+    padding:'40px',
   },
   buttons: {
     display: 'flex',

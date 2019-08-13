@@ -7,7 +7,7 @@ const login = async (req, res) => {
   const userAuthId = req.user.sub;
   const agent = await Agent.findOne({ where: { userAuthId } });
   if (agent) {
-    logger.info('Agent found');
+    logger.info(`Agent found ${userAuthId}`);
     res.json(agent);
     return;
   }
@@ -23,7 +23,7 @@ const login = async (req, res) => {
     where: { email: newAgent.email },
     defaults: newAgent
   });
-  logger.info('Agent created successfully');
+  logger.info(`Agent created successfully ${newAgent.email} ${newAgent.newAgent}`);
   res.status(201).json(createdAgent);
 };
 

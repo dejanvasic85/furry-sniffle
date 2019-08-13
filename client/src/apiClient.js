@@ -113,6 +113,13 @@ class Api {
     return this.doGet(`/gifts`);
   }
 
+  getGiftStatus(giftId) {
+    if(!giftId){
+      throw new Error('giftID is requied');
+    }
+    return this.doGet(`/gifts/${giftId}/status`);
+  }
+
   updateClient(id, client) {
     return this.doCall(`/clients/${id}`, 'PUT', client);
   }

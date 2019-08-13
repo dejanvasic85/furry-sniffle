@@ -8,10 +8,7 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel,
-  List,
-  ListItem,
-  ListItemText,
-  Divider
+  Divider,
 } from '@material-ui/core';
 
 import PeopleIcon from '@material-ui/icons/People';
@@ -25,12 +22,21 @@ import AgentProgress from './AgentProgress';
 
 const styles = theme => ({
   section: {
-    padding: theme.spacing.unit * 2,
-    marginTop: '10px'
+    padding: '20px 40px',
+    marginBottom: '10px',
   },
   prospects: {
     marginTop: '12px',
-    marginBottom: '8px'
+    marginBottom: '8px',
+  },
+  overviewPeriodSelection: {
+    marginLeft: '20px',
+  },
+  howItWorksItem:{
+    margin:'10px 20px'
+  },
+  howItWorksDivider:{
+    marginLeft:'10px'
   }
 });
 
@@ -43,16 +49,13 @@ export class DashboardPage extends React.Component {
       clients: null,
       gifts: null,
       emails: null,
-      prospects: null
+      prospects: null,
     },
-    newProspects: []
+    newProspects: [],
   };
 
   async componentDidMount() {
-    const result = await Promise.all([
-      this.props.api.getDashboard(this.state.days),
-      this.props.api.getNewProspects()
-    ]);
+    const result = await Promise.all([this.props.api.getDashboard(this.state.days), this.props.api.getNewProspects()]);
 
     this.setState({ data: result[0], newProspects: result[1], isFetching: false });
   }
@@ -85,11 +88,13 @@ export class DashboardPage extends React.Component {
           <Typography variant="h5">Overview</Typography>
 
           <RadioGroup
+            className={classes.overviewPeriodSelection}
             aria-label="position"
             name="position"
             value={String(days)}
             onChange={this.handleDaysChange}
-            row>
+            row
+          >
             <FormControlLabel
               value="7"
               control={<Radio color="primary" />}
@@ -111,12 +116,7 @@ export class DashboardPage extends React.Component {
           </RadioGroup>
           <Grid container spacing={24}>
             <Grid item xs={6}>
-              <DashboardItem
-                link="/app/clients"
-                title="Clients "
-                icon={<PeopleIcon />}
-                data={data.clients}
-              />
+              <DashboardItem link="/app/clients" title="Clients " icon={<PeopleIcon />} data={data.clients} />
             </Grid>
 
             <Grid item xs={6}>
@@ -128,12 +128,7 @@ export class DashboardPage extends React.Component {
               />
             </Grid>
             <Grid item xs={6}>
-              <DashboardItem
-                link="/app/clients"
-                icon={<EmailIcon />}
-                title="Emails Sent"
-                data={data.emails}
-              />
+              <DashboardItem link="/app/clients" icon={<EmailIcon />} title="Emails Sent" data={data.emails} />
             </Grid>
 
             <Grid item xs={6}>
@@ -147,30 +142,22 @@ export class DashboardPage extends React.Component {
           </Grid>
         </Paper>
         <Paper className={classes.section}>
-          <Fragment>
-            <Typography variant="h5">How it works</Typography>
-            <List>
-              <ListItem>
-                <ListItemText>We create a unique page for each client</ListItemText>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemText>We send an email to each client with your details</ListItemText>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemText>
-                  Your client does a super job in sharing their link to a prospect
-                </ListItemText>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemText>
-                  Prospect visits the page and fills out the form and you get contacted!
-                </ListItemText>
-              </ListItem>
-            </List>
-          </Fragment>
+          <Typography variant="h5">How it works</Typography>
+          <Typography variant="body1" className={classes.howItWorksItem}>
+            We create a unique page for each client
+          </Typography>
+          <Divider className={classes.howItWorksDivider} />
+          <Typography variant="body1" className={classes.howItWorksItem}>
+            We send an email to each client with your details
+          </Typography>
+          <Divider className={classes.howItWorksDivider} />
+          <Typography variant="body1" className={classes.howItWorksItem}>
+            Your client does a super job in sharing their link to a prospect
+          </Typography>
+          <Divider className={classes.howItWorksDivider} />
+          <Typography variant="body1" className={classes.howItWorksItem}>
+            Prospect visits the page and fills out the form and you get contacted!
+          </Typography>
         </Paper>
       </Fragment>
     );

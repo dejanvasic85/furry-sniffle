@@ -24,6 +24,10 @@ const styles = theme => ({
   root: {},
   gutter: {
     marginTop: '10px',
+    padding: '20px',
+  },
+  padded: {
+    padding: '20px',
   },
   link: {
     color: '#fff',

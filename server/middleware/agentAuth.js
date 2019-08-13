@@ -15,10 +15,13 @@ module.exports = withAsync(async (req, res, next) => {
   } else {
     const userAuthId = req.user.sub;
     req.agent = await Agent.findOne({ where: { userAuthId } });
+    if (!req.agent) {
+      logger.warn(`agentAuth: Agent not found. Not authorized. userAuthId:${userAuthId}`);
+    }
   }
 
   if (req.agent === null) {
-    logger.info('agentAuth: Agent not found. Not authorized.');
+    logger.warn('agentAuth: Agent not found. Not authorized.');
     res.status(401).json({ error: 'Not Authorized' });
   } else {
     next();
