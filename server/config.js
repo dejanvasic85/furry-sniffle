@@ -30,7 +30,7 @@ const conf = {
     depositFeeCents: DEPOSIT_FEE_CENTS || 50,
   },
   auth0: {
-    baseUri: AUTH0_URI || 'https://bizrewarder.au.auth0.com/',
+    baseUri: `https://${AUTH0_URI}/` || 'https://bizrewarder.au.auth0.com/',
     audience: AUTH0_AUDIENCE || 'https://www.bizrewarder.com.au/api'
   },
   proxyEmailHooksTo:PROXY_EMAIL_HOOKS_TO || 'https://fox-rewarder.herokuapp.com/api/email/webhook',

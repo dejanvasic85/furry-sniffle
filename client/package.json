@@ -22,7 +22,8 @@
   },
   "proxy": "http://localhost:5000",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "export REACT_APP_CONFIG_ENV_NAME=local && react-scripts start",
+    "start-win": "set REACT_APP_CONFIG_ENV_NAME=local&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
