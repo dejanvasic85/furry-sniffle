@@ -53,6 +53,8 @@ const styles = theme => ({
   }
 });
 
+const getFullName = ({ firstName, lastName }) => (`${firstName} ${lastName}`);
+
 const EmailPage = ({ api, location, classes, ...props }) => {
   const [recipients, setRecipients] = useState([]);
   const [agent, setAgent] = useState(null);
@@ -93,7 +95,6 @@ const EmailPage = ({ api, location, classes, ...props }) => {
     setIsSent(true);
   };
 
-  const hasMultipleRecipients = recipients && recipients.length > 1;
   const recipientsToDisplay =
     recipients && recipients.length > MAX_RECIPIENTS_TO_SHOW ? recipients.slice(0, 5) : recipients;
 
@@ -131,12 +132,12 @@ const EmailPage = ({ api, location, classes, ...props }) => {
 
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Subject</Typography>
-            <Typography>Testing something</Typography>
+            <Typography>{`${getFullName(agent)} from ${agent.businessName} has invited you`} </Typography>
           </div>
 
           <div className={classes.emailInfo}>
             <Typography className={classes.label}>Body</Typography>
-            <EmailPreview agentName={agent.firstName} businessName={agent.businessName} />
+            <EmailPreview agentName={getFullName(agent)} businessName={agent.businessName} />
           </div>
 
           {
