@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js';
-import loadConfig from '../envConfig.js';
+import selectedConfigSet from '../envConfig';
 
 export default class Auth {
   accessToken;
@@ -9,7 +9,7 @@ export default class Auth {
   clientId;
 
   constructor(){
-    const authConfig = loadConfig().auth0;
+    const authConfig = selectedConfigSet.auth0;
     console.log('auth config', JSON.stringify(authConfig));
     this.clientId = authConfig.clientId;
 

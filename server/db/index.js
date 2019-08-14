@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const selectedConfigSet = require('../envConfig');
+const selectedConfigSet = require('../../client/src/envConfig');
 const { connectionString } = selectedConfigSet;
 
 // dv: First initialise the connection then load the models

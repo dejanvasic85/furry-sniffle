@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 const { Email } = require('../db');
-const { sendGrid } = require('../envConfig');
+const { sendGrid } = require('../../client/src/envConfig');
 const { proxyEmailHooksTo } = sendGrid;
 
 const processEvent = async singleEvent => {
