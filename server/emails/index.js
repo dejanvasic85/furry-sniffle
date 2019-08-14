@@ -2,7 +2,7 @@ const sgMail = require('@sendgrid/mail');
 const uuidv4 = require('uuid/v4');
 const { MESSAGE_CHANNEL, EMAIL_TYPE } = require('../constants');
 
-const selectedConfigSet = require('../envConfig');
+const selectedConfigSet = require('../../client/src/envConfig');
 const { sendGrid } = selectedConfigSet;
 
 const {

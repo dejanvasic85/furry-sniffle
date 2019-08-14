@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
 
-const { port } = require('./server/envConfig');
+const { port } = require('./client/src/envConfig');
 const gifts = require('./server/routes/gifts');
 const { db } = require('./server/db');
 const logger = require('./server/logger');

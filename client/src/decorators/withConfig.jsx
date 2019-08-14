@@ -1,11 +1,15 @@
 import React from 'react';
-import  loadConfig from '../envConfig.js';
+
+//import  loadConfig from '../envConfig.js';
+
+import  selectedConfigSet from '../envConfig';
+const { stripe } = selectedConfigSet;
 
 const config = {
-  stripe_key: loadConfig().stripe.apiKey,
+  stripe_key: stripe.apiKey,
   feeConfiguration: {
-    depositFeePercent: loadConfig().stripe.depositFeePercent,
-    depositFeeCents:  loadConfig().stripe.depositFeeCents,
+    depositFeePercent: stripe.depositFeePercent,
+    depositFeeCents:  stripe.depositFeeCents,
   }
 }
 

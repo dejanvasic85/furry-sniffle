@@ -24,7 +24,7 @@ class Api {
     }
 
     throw new Error('Oops.. something went wrong. Check your connect or try again.', res);
-  }
+  }F
 
   createHeaders(auth) {
     return  {

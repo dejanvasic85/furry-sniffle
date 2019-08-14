@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const { auth0 } = require('../../envConfig');
+const { auth0 } = require('../../../client/src/envConfig');
 
 const logger = require('../../logger');
 

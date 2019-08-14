@@ -1,5 +1,5 @@
 
-const selectedConfigSet = require('../../envConfig');
+const selectedConfigSet = require('../../../client/src/envConfig');
 const stripeConfig = selectedConfigSet.stripe;
 
 
