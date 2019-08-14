@@ -1,10 +1,10 @@
 const express = require('express');
-require('dotenv').config();
+
 const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
 
-const config = require('./server/config');
+const { port } = require('./server/envConfig');
 const gifts = require('./server/routes/gifts');
 const { db } = require('./server/db');
 const logger = require('./server/logger');
@@ -44,7 +44,7 @@ app.use(errorHandler);
 logger.info('DB Authenticating..');
 db.authenticate().then(() => {
   logger.info('DB Authentication successful');
-  app.listen(config.portNumber, () => {
-    logger.info(`Listening on port ${config.portNumber}`);
+  app.listen(port, () => {
+    logger.info(`Listening on port ${port}`);
   });
 });
