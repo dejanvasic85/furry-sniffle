@@ -1,4 +1,5 @@
-const { webBaseUrl } = require('../config');
+const  { webBaseUrl }  = require('../envConfig');
+
 const { EMAIL_TYPE } = require('../constants');
 const { mapGiftPayStatus } = require('./giftService');
 

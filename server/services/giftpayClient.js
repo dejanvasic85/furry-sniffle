@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { giftPay } = require('../config');
+const { giftPay } = require('../envConfig');
 const logger = require('../logger');
 const uuidv4 = require('uuid/v4');
 

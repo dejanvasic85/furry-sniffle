@@ -1,4 +1,8 @@
-const { feeConfiguration, stripeConfig } = require('../../config');
+
+const selectedConfigSet = require('../../envConfig');
+const stripeConfig = selectedConfigSet.stripe;
+
+
 const stripe = require('stripe')(stripeConfig.secret);
 const logger = require('../../logger');
 const { calculateFee } = require('../../services/feeCalculator');
@@ -21,7 +25,7 @@ const deposit = async (req, res) => {
 
     logger.info(`Depositing money using stripe for Agent ${agentId}`);
 
-    const amountWithFee = calculateFee(amount, feeConfiguration);
+    const amountWithFee = calculateFee(amount, stripeConfig);
     
     const { id, status } = await stripe.charges.create({
       amount: amountWithFee.total,
