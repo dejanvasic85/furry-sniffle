@@ -7,7 +7,7 @@ const envConfig = {
       depositFeePercent: 3,
       depositFeeCents: 50,
       apiKey: "pk_test_up5zZ6Vfb5BBGawIb2ugkN0o00ezT4zWqH",
-      secret: null, 
+      secret: null,
     },
     auth0: {
       domain: "foxrewarder.au.auth0.com",
@@ -16,14 +16,14 @@ const envConfig = {
       clientId: "WgWzBgqXpTQn2DPJKlmYVllf6OHu3fjJ",
       callback: "http://localhost:3000/callback"
     },
-    sendGrid:{
-      baseUrl:  'https://api.sendgrid.com/v3',
+    sendGrid: {
+      baseUrl: 'https://api.sendgrid.com/v3',
       proxyEmailHooksTo: null,
-      apiKey:  null,
+      apiKey: null,
     },
     giftPay: {
       baseUrl: 'https://sandbox.express.giftpay.com',
-      apiKey:  null,
+      apiKey: null,
     },
     webBaseUrl: 'http://localhost:3000',
     isDevelopment: true,
@@ -43,19 +43,17 @@ const envConfig = {
       clientId: "vBP5pNdN3pg0AF7cPTd6UlqolKxbD335",
       callback: "https://fox-rewarder.herokuapp.com/callback"
     },
-    sendGrid:{
-      baseUrl:  'https://api.sendgrid.com/v3',
+    sendGrid: {
+      baseUrl: 'https://api.sendgrid.com/v3',
       proxyEmailHooksTo: null,
-      apiKey:  null,
+      apiKey: null,
     },
     giftPay: {
       baseUrl: 'https://sandbox.express.giftpay.com',
-      apiKey:  null,
+      apiKey: null,
     },
     webBaseUrl: '"https://fox-rewarder.herokuapp.com',
     isDevelopment: false,
-    
-
   },
 
   production: {
@@ -63,7 +61,7 @@ const envConfig = {
       depositFeePercent: 3,
       depositFeeCents: 50,
       apiKey: "pk_live_x4W1DAyEBwy21HSNl3YXKbsi00qejINn0h",
-      secret: null, 
+      secret: null,
     },
     auth0: {
       domain: "bizrewarder.au.auth0.com",
@@ -72,49 +70,68 @@ const envConfig = {
       clientId: "GsbxpQ5tdkq8KGntRJOv33mKQbWtSZ77",
       callback: "https://www.bizrewarder.com.au/callback"
     },
-    sendGrid:{
-      baseUrl:  'https://api.sendgrid.com/v3',
+    sendGrid: {
+      baseUrl: 'https://api.sendgrid.com/v3',
       proxyEmailHooksTo: 'https://fox-rewarder.herokuapp.com/api/email/webhook',
-      apiKey:  null, 
+      apiKey: null,
     },
     giftPay: {
       baseUrl: 'https://express.giftpay.com',
-      apiKey:  null,
+      apiKey: null,
     },
     webBaseUrl: "https://www.bizrewarder.com.au",
     isDevelopment: false,
   }
 };
 
+const IS_SERVER = typeof window === 'undefined';
+
 // the below config is only applicable for Server side
-if (typeof window === 'undefined') {
+if (IS_SERVER) {
   require('dotenv').config();
 }
 
-const getEnvValue = (key) => {
+const getOptionalEnvValue = (key, defaultValue) => {
   const value = process.env[key];
-  if (!value) {
-    const errorMessage = `${key} is not defined. Non complete configuration`;
-    console.warn(errorMessage);
+  if(typeof value == 'undefined'){
+    console.info(`CONFIG - using default value for ${key}:${defaultValue}`);
+    return defaultValue;
   }
   return value;
 }
 
-const envName = getEnvValue('REACT_APP_CONFIG_ENV_NAME');
-if(!envName){
-  throw new Error('REACT_APP_CONFIG_ENV_NAME is crucial tp start app');
+const getEnvValue = (key, isMandatory) => {
+  const value = process.env[key];
+  if (!value) {
+    const errorMessage = `CONFIG - ${key} is not defined. Non complete configuration`;
+    if (isMandatory) {
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    } else {
+      console.warn(errorMessage);
+    }
+  }
+  return value;
 }
 
-let selectedConfigSet = envConfig[envName]
-console.log(`loaded config for:${envName}`, JSON.stringify(selectedConfigSet));
+const envName = getEnvValue('REACT_APP_CONFIG_ENV_NAME', true);
 
-// the below config is only applicable for Server side
-if (typeof window === 'undefined') {
-  selectedConfigSet.stripe.apiKey  = getEnvValue('STRIPE_SECRET');
-  selectedConfigSet.giftPay.apiKey  = getEnvValue('GIFTPAY_APIKEY');
-  selectedConfigSet.sendGrid.apiKey  = getEnvValue('SENDGRID_APIKEY');
-  selectedConfigSet.connectionString = getEnvValue('DATABASE_URL');
-  selectedConfigSet.port = getEnvValue('PORT') || 5000;
+let selectedConfigSet = envConfig[envName]
+console.log(`CONFIG - loaded for:${envName}`);
+console.log(JSON.stringify(selectedConfigSet));
+
+
+if (IS_SERVER) {
+  selectedConfigSet.stripe.apiKey = getEnvValue('STRIPE_SECRET', true);
+  selectedConfigSet.giftPay.apiKey = getEnvValue('GIFTPAY_APIKEY', true);
+  selectedConfigSet.sendGrid.apiKey = getEnvValue('SENDGRID_APIKEY', true);
+
+  selectedConfigSet.database = {
+    connectionString: getEnvValue('DATABASE_URL', true),
+    useSsl: getOptionalEnvValue('USE_DB_SSL', false)
+  }
+
+  selectedConfigSet.port = getOptionalEnvValue('PORT', 5000);
 }
 
 module.exports = selectedConfigSet;
