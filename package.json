@@ -2,7 +2,7 @@
   "name": "example-create-react-app-express",
   "version": "1.0.0",
   "engines": {
-    "node": "10.15.3"
+    "node": ">=10.15.3"
   },
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
@@ -16,6 +16,7 @@
     "db:migrate:undo": "./node_modules/.bin/sequelize db:migrate:undo",
     "db:generate-migration": "./node_modules/.bin/sequelize migration:generate --name",
     "db:docker-run": "docker run -d --name my_postgres -v my_dbdata:/var/lib/postgresql/data -p 54320:5432 postgres:11",
+    "db:docker-start": "docker start my_postgres",
     "db:get-connection": "heroku config:get DATABASE_URL -a fox-rewarder"
   },
   "dependencies": {

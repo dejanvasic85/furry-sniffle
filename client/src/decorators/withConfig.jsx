@@ -1,10 +1,15 @@
 import React from 'react';
 
+//import  loadConfig from '../envConfig.js';
+
+import  selectedConfigSet from '../envConfig';
+const { stripe } = selectedConfigSet;
+
 const config = {
-  stripe_key: process.env.REACT_APP_STRIPE_KEY || 'pk_test_up5zZ6Vfb5BBGawIb2ugkN0o00ezT4zWqH',
+  stripe_key: stripe.apiKey,
   feeConfiguration: {
-    depositFeePercent: Number(process.env.REACT_APP_DEPOSIT_FEE_PERCENT || 3),
-    depositFeeCents: Number(process.env.REACT_APP_DEPOSIT_FEE_CENTS || 50),
+    depositFeePercent: stripe.depositFeePercent,
+    depositFeeCents:  stripe.depositFeeCents,
   }
 }
 

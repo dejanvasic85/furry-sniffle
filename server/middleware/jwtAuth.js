@@ -1,6 +1,7 @@
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
-const { auth0, isDevelopment } = require('../config');
+const { auth0, isDevelopment }  = require('../../client/src/envConfig');
+
 const logger = require('../logger');
 
 const HEADERS = Object.freeze({
@@ -21,7 +22,6 @@ const jwtCheck = jwt({
 });
 
 module.exports = (req, res, next) => {
-  console.log('auth0',auth0);
   if (req.get(HEADERS.AUTHORIZATION)) {    
     jwtCheck(req, res, next);
     return;
