@@ -118,7 +118,12 @@ const envName = getEnvValue('REACT_APP_CONFIG_ENV_NAME', true);
 
 let selectedConfigSet = envConfig[envName]
 console.log(`CONFIG - loaded for:${envName}`);
-console.log(JSON.stringify(selectedConfigSet));
+if (IS_SERVER){
+  console.log(JSON.stringify(selectedConfigSet));
+}else{
+  // why? so we can always log in browser what is the config but we will not pollute clients browser
+  window.selectedConfigSet = selectedConfigSet;
+}
 
 
 if (IS_SERVER) {

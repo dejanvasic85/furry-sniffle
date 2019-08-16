@@ -10,7 +10,6 @@ export default class Auth {
 
   constructor(){
     const authConfig = selectedConfigSet.auth0;
-    console.log('auth config', JSON.stringify(authConfig));
     this.clientId = authConfig.clientId;
 
     this.auth0 = new auth0.WebAuth({

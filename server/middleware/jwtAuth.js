@@ -22,7 +22,6 @@ const jwtCheck = jwt({
 });
 
 module.exports = (req, res, next) => {
-  console.log('auth0',auth0);
   if (req.get(HEADERS.AUTHORIZATION)) {    
     jwtCheck(req, res, next);
     return;
