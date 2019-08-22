@@ -5,6 +5,10 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.2",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
     "auth0-js": "^9.11.1",
     "classnames": "^2.2.6",
     "date-fns": "^1.30.1",
@@ -18,6 +22,7 @@
     "react-scripts": "^3.0.1",
     "react-stripe-elements": "^4.0.0",
     "recompose": "^0.30.0",
+    "typescript": "^3.5.3",
     "webfontloader": "^1.6.28"
   },
   "proxy": "http://localhost:5000",

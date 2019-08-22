@@ -5,7 +5,16 @@ import React from 'react';
 import  selectedConfigSet from '../envConfig';
 const { stripe } = selectedConfigSet;
 
-const config = {
+export interface IConfig{
+  stripe_key: string,
+  feeConfiguration:{
+    depositFeePercent: number
+    depositFeeCents: number
+  }
+
+}
+
+const config: IConfig = {
   stripe_key: stripe.apiKey,
   feeConfiguration: {
     depositFeePercent: stripe.depositFeePercent,

@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react';
 import { compose } from 'recompose';
-import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/core';
+import { withStyles, WithStyles } from '@material-ui/core';
 import { StripeProvider } from 'react-stripe-elements';
 import { Elements } from 'react-stripe-elements';
 
@@ -26,6 +25,8 @@ import ClientEditPage from './clients/ClientEditPage';
 import AgentDetailsPage from './agents/AgentDetailsPage';
 import DepositPage from './agents/DepositPage';
 import EmailPage from './emails/EmailPage';
+import { IConfig } from './decorators/withConfig';
+import { IAuth } from './auth/AuthService';
 
 const styles = theme => ({
   root: {
@@ -46,14 +47,19 @@ const styles = theme => ({
   },
 });
 
-class App extends React.Component {
+interface AppProps extends WithStyles<typeof styles>{
+  auth: IAuth;
+  config: IConfig;
+}
+
+class App extends React.Component<AppProps> {
   handleLogout = () => {
     this.props.auth.logout();
   };
 
   render() {
     const { classes, config } = this.props;
-
+    
     return (
       <Router>
         <div className={classes.root}>
@@ -96,9 +102,6 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {
-  auth: PropTypes.object.isRequired,
-};
 
 export default compose(
   withRoot,
