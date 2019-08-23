@@ -1,6 +1,7 @@
 const { Agent } = require('../db');
 const logger = require('../logger');
-const { isDevelopment } = require('../config');
+const { isDevelopment } = require('../../client/src/envConfig');
+
 const withAsync = require('./withAsync');
 
 const HEADERS = Object.freeze({

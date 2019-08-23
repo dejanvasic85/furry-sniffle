@@ -1,6 +1,7 @@
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
-const { auth0, isDevelopment } = require('../config');
+const { auth0, isDevelopment }  = require('../../client/src/envConfig');
+
 const logger = require('../logger');
 
 const HEADERS = Object.freeze({

@@ -1,5 +1,7 @@
 const axios = require('axios');
-const { auth0 } = require('../../config');
+
+const { auth0 } = require('../../../client/src/envConfig');
+
 const logger = require('../../logger');
 
 const getUserInfo = (accessToken) => {

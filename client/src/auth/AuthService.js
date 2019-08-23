@@ -1,19 +1,27 @@
 import auth0 from 'auth0-js';
-import { authConfig } from './authConfig';
+import selectedConfigSet from '../envConfig';
 
 export default class Auth {
   accessToken;
   idToken;
   profile;
+  auth0;
+  clientId;
 
-  auth0 = new auth0.WebAuth({
-    domain: authConfig.domain,
-    clientID: authConfig.clientId,
-    redirectUri: authConfig.callbackUrl,
-    responseType: 'token id_token',
-    scope: 'openid email profile',
-    audience: authConfig.audience
-  });
+  constructor(){
+    const authConfig = selectedConfigSet.auth0;
+    this.clientId = authConfig.clientId;
+
+    this.auth0 = new auth0.WebAuth({
+      domain: authConfig.domain,
+      clientID: authConfig.clientId,
+      redirectUri: authConfig.callback,
+      responseType: 'token id_token',
+      scope: 'openid email profile',
+      audience: authConfig.audience
+    });
+  }
+
 
   getProfile() {
     return JSON.parse(localStorage.getItem('profile'));
@@ -71,7 +79,7 @@ export default class Auth {
     localStorage.removeItem('profile');
 
     this.auth0.logout({
-      clientID: authConfig.clientId,
+      clientID: this.clientId,
       returnTo: window.location.origin
     });
   }

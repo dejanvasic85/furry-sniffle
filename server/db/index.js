@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
-const { connectionString, useDbSSL } = require('../config');
+const { database } = require('../../client/src/envConfig');
 
 // dv: First initialise the connection then load the models
-const db = new Sequelize(connectionString, {
+const db = new Sequelize(database.connectionString, {
   dialect: 'postgres',
   dialectOptions: {
-    ssl: useDbSSL
+    ssl: database.useSsl
   }
 });
 

@@ -1,7 +1,9 @@
 const sgMail = require('@sendgrid/mail');
 const uuidv4 = require('uuid/v4');
 const { MESSAGE_CHANNEL, EMAIL_TYPE } = require('../constants');
-const { sendGrid } = require('../config');
+
+const { sendGrid } = require('../../client/src/envConfig');
+
 const {
   getClientReferralUrl,
   getProspectDetailUrl,
