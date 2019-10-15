@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-var subDays = require('date-fns/sub_days');
+var subDays = require('date-fns/subDays');
 
 const Sequelize = require('sequelize');
 

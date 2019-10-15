@@ -24,23 +24,23 @@
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "cryptr": "^4.0.2",
-    "csv-parser": "^2.3.0",
-    "date-fns": "^1.30.1",
+    "csv-parser": "^2.3.1",
+    "date-fns": "^2.4.1",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
     "jwks-rsa": "^1.6.0",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.15.1",
-    "sequelize-cli": "^5.4.0",
-    "stripe": "^7.8.0",
-    "uuid": "^3.3.2"
+    "sequelize": "^5.19.6",
+    "sequelize-cli": "^5.5.1",
+    "stripe": "^7.10.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "concurrently": "^4.1.2",
-    "mocha": "^6.2.0",
-    "nodemon": "^1.19.1"
+    "concurrently": "^5.0.0",
+    "mocha": "^6.2.1",
+    "nodemon": "^1.19.3"
   }
 }
