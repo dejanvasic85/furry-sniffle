@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { compose } from 'recompose';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,6 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Drawer from '@material-ui/core/Drawer';
 
+import { withApiClient } from '../decorators';
 import Menu from './Menu';
 
 import logo from '../images/biz-logo.png';
@@ -50,7 +52,14 @@ const styles = theme => ({
 class Header extends React.Component {
   state = {
     isDrawerOpened: false,
+    businessName:null
   };
+
+  async componentDidMount() {
+    const { api } = this.props;
+    const agent = await api.getAgent();
+    this.setState({ businessName: agent.businessName });
+  }
 
   handleDrawerToggle = () => {
     const isOpened = this.state.isDrawerOpened;
@@ -67,6 +76,7 @@ class Header extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const { businessName } = this.state;
 
     return (
       <div className={classes.root}>
@@ -82,7 +92,7 @@ class Header extends React.Component {
             </IconButton>
             <img src={logo} className={classes.logo} alt="logo" />
             <Typography variant="h6" color="inherit" noWrap>
-              Biz Rewarder
+              Biz Rewarder-{businessName}
             </Typography>
             <div className={classes.grow} />
             <Link className={classes.headerIcons} to="/app/agent/details">
@@ -107,4 +117,8 @@ Header.propTypes = {
   onLogout: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Header);
+
+export default compose(
+  withStyles(styles),
+  withApiClient
+)(Header);
