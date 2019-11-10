@@ -1,6 +1,11 @@
 import auth0 from 'auth0-js';
 import selectedConfigSet from '../envConfig';
 
+export interface IAuth {
+  login:() => void
+  logout: () => void
+}
+
 export default class Auth {
   accessToken;
   idToken;
@@ -24,7 +29,11 @@ export default class Auth {
 
 
   getProfile() {
-    return JSON.parse(localStorage.getItem('profile'));
+    const profile = localStorage.getItem('profile');
+    if(profile){
+      return JSON.parse(profile);
+    }
+    return null;
   }
 
   getToken() {
@@ -38,8 +47,8 @@ export default class Auth {
   setSession(authResult) {
     const expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
 
-    localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('expiresAt', expiresAt);
+    localStorage.setItem('isLoggedIn', true.toString());
+    localStorage.setItem('expiresAt', expiresAt.toString());
     localStorage.setItem('idToken', authResult.idToken);
     localStorage.setItem('accessToken', authResult.accessToken);
     localStorage.setItem('profile', JSON.stringify(authResult.idTokenPayload));
@@ -87,7 +96,12 @@ export default class Auth {
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    const expiresAt = localStorage.getItem('expiresAt');
-    return new Date().getTime() < expiresAt;
+    const storedExpiresAt = localStorage.getItem('expiresAt');
+    if(storedExpiresAt){
+      const expiresAt = Number.parseInt(storedExpiresAt);
+      return new Date().getTime() < expiresAt;
+    }
+    return false;
+
   }
 }
